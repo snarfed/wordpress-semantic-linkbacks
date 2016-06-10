@@ -55,6 +55,8 @@ class SemanticLinkbacksPlugin {
 		add_filter( 'comment_text', array( 'SemanticLinkbacksPlugin', 'comment_text_add_cite' ), 11, 3 );
 		add_filter( 'comment_text', array( 'SemanticLinkbacksPlugin', 'comment_text_excerpt' ), 12, 3 );
 		add_filter( 'comment_excerpt', array( 'SemanticLinkbacksPlugin', 'comment_text_excerpt' ), 5, 2 );
+		add_filter( 'wp_list_comments_args', array( 'SemanticLinkbacksPlugin', 'filter_comment_args' ) );
+		add_action( 'comment_form_before', array( 'SemanticLinkbacksPlugin', 'show_separated_comment_types' ) );
 
 		add_filter( 'get_comment_link', array( 'SemanticLinkbacksPlugin', 'get_comment_link' ), 99, 3 );
 		add_filter( 'get_comment_author_url', array( 'SemanticLinkbacksPlugin', 'get_comment_author_url' ), 99, 3 );
@@ -489,6 +491,26 @@ class SemanticLinkbacksPlugin {
 		return $types;
 	}
 
+	/**
+	 * Filter the comments and ignore every comment other than 'comment'
+	 *
+	 * @param array $args an array of arguments for displaying comments
+	 *
+	 * @return array the filtered array
+	 */
+	public static function filter_comment_args( $args ) {
+		$args['type'] = 'comment';
+
+		return $args;
+	}
+
+	/**
+	 *
+	 *
+	 */
+	public static function show_separated_comment_types() {
+		load_template( dirname( __FILE__ ) . '/templates/separated-comments.php' );
+	}
 }
 
 /**
@@ -521,6 +543,20 @@ function get_linkbacks_number( $type = null, $post_ID = 0 ) {
 }
 
 /**
+ *
+ *
+ *
+ *
+ */
+function has_linkbacks( $type = null, $post_ID = 0 ) {
+	if ( get_linkbacks( $type, $post_ID ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Returns comments of linkback type
  *
  * @param string $type the comment type
@@ -529,13 +565,31 @@ function get_linkbacks_number( $type = null, $post_ID = 0 ) {
  * @return the matching linkback "comments"
  */
 function get_linkbacks( $type = null, $post_ID = 0 ) {
+	if ( 0 == $post_ID ) {
+		global $post;
+
+		$post_ID = $post->ID;
+	}
+
 	$args = array(
 		'post_id'	=> $post_ID,
 		'status'	=> 'approve',
 	);
 
 	if ( $type ) { // use type if set
-		$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => $type ) );
+		if ( 'mention' == $type ) {
+			$args['type__not_in'] = 'comment';
+			$args['meta_query'] = array(
+				'relation' => 'OR',
+				array( 'key' => 'semantic_linkbacks_type', 'value' => '' ),
+				array( 'key' => 'semantic_linkbacks_type', 'compare' => 'NOT EXISTS' ),
+				array( 'key' => 'semantic_linkbacks_type', 'value' => 'mention' ),
+			);
+		} elseif ( 'rsvp' == $type ) {
+			$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => 'rsvp', 'compare' => 'LIKE' ) );
+		} else {
+			$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => $type ) );
+		}
 	} else { // check only if type exists
 		$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'compare' => 'EXISTS' ) );
 	}
