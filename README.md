@@ -3,7 +3,7 @@
 **Donate link:** http://14101978.de  
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.7  
-**Tested up to:** 4.7.1  
+**Tested up to:** 4.7.2  
 **Stable tag:** 3.3.0  
 
 Richer Comments and Linkbacks for WordPress!
@@ -25,7 +25,7 @@ to enhance linkbacks. The plugin is most useful with webmention support(separate
 
 ### Why Webmentions? ###
 
-[Webmention](http://indiewebcamp.com/webmention) is a modern reimplementation of Pingback and is now a W3C Recommendation. 
+[Webmention](http://indiewebcamp.com/webmention) is a modern reimplementation of Pingback and is now a W3C Recommendation.
 
 ### What about the semantic "comment" types? ###
 

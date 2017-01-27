@@ -3,7 +3,7 @@ Contributors: pfefferle, dshanske
 Donate link: http://14101978.de
 Tags: webmention, pingback, trackback, linkback, microformats, comments, indieweb
 Requires at least: 4.7
-Tested up to: 4.7.1
+Tested up to: 4.7.2
 Stable tag: 3.3.0
 
 Richer Comments and Linkbacks for WordPress!
@@ -25,7 +25,7 @@ to enhance linkbacks. The plugin is most useful with webmention support(separate
 
 = Why Webmentions? =
 
-[Webmention](http://indiewebcamp.com/webmention) is a modern reimplementation of Pingback and is now a W3C Recommendation. 
+[Webmention](http://indiewebcamp.com/webmention) is a modern reimplementation of Pingback and is now a W3C Recommendation.
 
 = What about the semantic "comment" types? =
 
@@ -51,7 +51,7 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
-= 3.3.0 = 
+= 3.3.0 =
 
 * Due to changes in WordPress 4.4 through 4.7 and version 3.0.0 of the Webmentions plugin this plugin can act on the retrieved remote source
 rather than rerequesting this information.
