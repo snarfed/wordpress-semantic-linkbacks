@@ -1,16 +1,16 @@
 # Semantic-Linkbacks #
-**Contributors:** pfefferle  
+**Contributors:** pfefferle, dshanske  
 **Donate link:** http://14101978.de  
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
-**Requires at least:** 4.6  
-**Tested up to:** 4.6.1  
-**Stable tag:** 3.2.1  
+**Requires at least:** 4.7  
+**Tested up to:** 4.7.1  
+**Stable tag:** 3.3.0  
 
 Richer Comments and Linkbacks for WordPress!
 
 ## Description ##
 
-Generates richer WordPress comments from linkbacks such as [WebMention](https://wordpress.org/plugins/webmention) or classic linkback protocols like Trackback or Pingback.
+Generates richer WordPress comments from linkbacks such as [Webmention](https://wordpress.org/plugins/webmention) or classic linkback protocols like Trackback or Pingback.
 
 The limited display for trackbacks and linkbacks is replaced by a clean full sentence, such as "Bob mentioned this article on bob.com." If Bob's site uses markup that the plugin can interpret, it may add his profile picture or other parts of his page to display as a full comment.
 
@@ -21,35 +21,44 @@ Semantic Linkbacks uses [Microformats 2](http://microformats.org/wiki/microforma
 ### Do I need to mark up my site? ###
 
 Most modern WordPress themes support the older Microformats standard, which means the plugin should be able to get basic information from
-to enhance linkbacks. The plugin is most useful with webmention support(separate plugin) and sites that support Microformats 2.
+to enhance linkbacks. The plugin is most useful with webmention support(separate plugin) and sites/themes that support Microformats 2.
 
-### Why WebMentions? ###
+### Why Webmentions? ###
 
-[WebMention](http://indiewebcamp.com/webmention) is a modern reimplementation of Pingback using only HTTP and x-www-urlencoded content rather than XMLRPC requests. WebMention supersedes Pingback and is simpler to implement.
+[Webmention](http://indiewebcamp.com/webmention) is a modern reimplementation of Pingback and is now a W3C Recommendation. 
 
 ### What about the semantic "comment" types? ###
 
 The IndieWeb community defines several types of feedback:
 
-* Replies: <http://indiewebcamp.com/replies>
-* Reposts: <http://indiewebcamp.com/repost>
-* Likes: <http://indiewebcamp.com/likes>
-* Favorites: <http://indiewebcamp.com/favorite>
-* RSVPs: <http://indiewebcamp.com/rsvp>
-* Tagging: <http://indiewebcamp.com/tag>
-* Classic "Mentions": <http://indiewebcamp.com/mentions>
+* Replies: <http://indieweb.org/replies>
+* Reposts: <http://indieweb.org/repost>
+* Likes: <http://indieweb.org/likes>
+* Favorites: <http://indieweb.org/favorite>
+* RSVPs: <http://indieweb.org/rsvp>
+* Tagging: <http://indieweb.org/tag>
+* Classic "Mentions": <http://indieweb.org/mentions>
 
 ### How do I extend this plugin? ###
 
-See [Extensions](https://indiewebcamp.com/Semantic_Linkbacks#Extensions)
+See [Extensions](https://indieweb.org/Semantic_Linkbacks#Extensions)
 
 ### Who made the logos? ###
 
-The WebMention and Pingback logos are made by [Aaron Parecki](http://aaronparecki.com) and the Microformats logo is made by [Dan Cederholm](http://simplebits.com/work/microformats/)
+The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronparecki.com) and the Microformats logo is made by [Dan Cederholm](http://simplebits.com/work/microformats/)
 
 ## Changelog ##
 
-Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks).
+Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.3.0 ###
+
+* Due to changes in WordPress 4.4 through 4.7 and version 3.0.0 of the Webmentions plugin this plugin can act on the retrieved remote source
+rather than rerequesting this information.
+* Major enhancement work is done in preprocessing now rather than post-processing
+* Refactoring
+* Render full mention content if short enough. Introduce MAX_INLINE_MENTION_LENGTH which defaults to 300 characters to implement same.
+* Fix text domain
 
 ### 3.2.1 ###
 
