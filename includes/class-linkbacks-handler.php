@@ -239,6 +239,7 @@ class Linkbacks_Handler {
 	 * Return correct URL
 	 *
 	 * @param WP_Comment $comment the comment object
+	 *
 	 * @return string the URL
 	 */
 	public static function get_url( $comment = null ) {
@@ -264,6 +265,7 @@ class Linkbacks_Handler {
 	 * @param string $text the comment text
 	 * @param WP_Comment $comment the comment object
 	 * @param array $args a list of arguments
+	 *
 	 * @return string the filtered comment text
 	 */
 	public static function comment_text_add_cite( $text, $comment = null, $args = array() ) {
@@ -299,6 +301,7 @@ class Linkbacks_Handler {
 	 * @param string $text the comment text
 	 * @param WP_Comment $comment the comment object
 	 * @param array $args a list of arguments
+	 *
 	 * @return string the filtered comment text
 	 */
 	public static function comment_text_excerpt( $text, $comment = null, $args = array() ) {
@@ -361,8 +364,9 @@ class Linkbacks_Handler {
 	/**
 	 * Replaces the default avatar with the WebMention uf2 photo
 	 *
-	 * @param array $args Arguments passed to get_avatar_data(), after processing.
+	 * @param array             $args Arguments passed to get_avatar_data(), after processing.
 	 * @param int|string|object $id_or_email A user ID, email address, or comment object
+	 *
 	 * @return array $args
 	 */
 	public static function pre_get_avatar_data( $args, $id_or_email ) {
@@ -392,9 +396,10 @@ class Linkbacks_Handler {
 	/**
 	 * Replace comment url with canonical url
 	 *
-	 * @param string $link the link url
-	 * @param obj $comment the comment object
-	 * @param array $args a list of arguments to generate the final link tag
+	 * @param string     $link the link url
+	 * @param WP_Comment $comment the comment object
+	 * @param array      $args a list of arguments to generate the final link tag
+	 *
 	 * @return string the linkback source or the original comment link
 	 */
 	public static function get_comment_link( $link, $comment, $args ) {
@@ -410,17 +415,18 @@ class Linkbacks_Handler {
 	/**
 	 * Replace comment url with author url
 	 *
-	 * @param string $link the author url
+	 * @param string     $url        The comment author's URL.
+	 * @param int        $comment_ID The comment ID.
+	 * @param WP_Comment $comment    The comment object.
+	 *
 	 * @return string the replaced/parsed author url or the original comment link
 	 */
-	public static function get_comment_author_url( $link ) {
-		global $comment;
-
-		if ( is_object( $comment ) && $author_url = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_author_url', true ) ) {
+	public static function get_comment_author_url( $url, $id, $comment ) {
+		if ( $author_url = get_comment_meta( $id, 'semantic_linkbacks_author_url', true ) ) {
 			return $author_url;
 		}
 
-		return $link;
+		return $url;
 	}
 
 	/**

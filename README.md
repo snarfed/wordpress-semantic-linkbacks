@@ -51,6 +51,10 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
+### 3.3.1 ###
+
+* fixed https://github.com/pfefferle/wordpress-semantic-linkbacks/issues/68
+
 ### 3.3.0 ###
 
 * Due to changes in WordPress 4.4 through 4.7 and version 3.0.0 of the Webmentions plugin this plugin can act on the retrieved remote source
