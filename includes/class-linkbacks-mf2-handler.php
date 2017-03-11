@@ -100,11 +100,10 @@ class Linkbacks_MF2_Handler {
 	 * generate the comment data from the microformatted content
 	 *
 	 * @param WP_Comment $commentdata the comment object
-	 * @param string $target the target url
 	 *
 	 * @return array
 	 */
-	public static function generate_commentdata( $commentdata, $target ) {
+	public static function generate_commentdata( $commentdata ) {
 		global $wpdb;
 
 		// add source
@@ -122,7 +121,7 @@ class Linkbacks_MF2_Handler {
 		}
 
 		// get the entry of interest
-		$entry = self::get_representative_entry( $entries, $target );
+		$entry = self::get_representative_entry( $entries, $commentdata['target'] );
 
 		if ( empty( $entry ) ) {
 			return array();
@@ -191,7 +190,7 @@ class Linkbacks_MF2_Handler {
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . $properties['rsvp'][0] );
 		} else {
 			// get post type
-			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $target, $entry, $mf_array ) );
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
 		}
 
 		return $commentdata;
@@ -406,6 +405,9 @@ class Linkbacks_MF2_Handler {
 	 * @return boolean
 	 */
 	public static function compare_urls( $needle, $haystack, $schemeless = true ) {
+		if ( ! is_string( $needle ) || ! is_array( $haystack ) ) {
+			return false;
+		}
 		if ( true === $schemeless ) {
 			// remove url-scheme
 			$schemeless_target = preg_replace( '/^https?:\/\//i', '', $needle );
