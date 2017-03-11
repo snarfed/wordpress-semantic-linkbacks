@@ -101,19 +101,20 @@ class Linkbacks_Handler {
 			$commentdata['comment_meta'] = array();
 		}
 
-		// generate target
-		$target = get_permalink( $commentdata['comment_post_ID'] );
-
+		//  If target is not set then set based on permalink
+		if ( ! isset( $commentdata['target'] ) ) {
+			$commentdata['target'] = get_permalink( $commentdata['comment_post_ID'] );
+		}
 		// add replytocom if present
 		if ( isset( $commentdata['comment_parent'] ) && ! empty( $commentdata['comment_parent'] ) ) {
-			$target = add_query_arg( array( 'replytocom' => $commentdata['comment_parent'] ), $target );
+			$commentdata['target'] = add_query_arg( array( 'replytocom' => $commentdata['comment_parent'] ), $commentdata['target'] );
 		}
 
 		// add source url as comment-meta
 		$commentdata['comment_meta']['semantic_linkbacks_source'] = esc_url_raw( $commentdata['comment_author_url'] );
 
 		// adds a hook to enable some other semantic handlers for example schema.org
-		$commentdata = apply_filters( 'semantic_linkbacks_commentdata', $commentdata, $target );
+		$commentdata = apply_filters( 'semantic_linkbacks_commentdata', $commentdata );
 
 		// remove "webmention" comment-type if $type is "reply"
 		if ( isset( $commentdata['comment_meta']['semantic_linkbacks_type'] ) ) {
@@ -479,7 +480,7 @@ class Linkbacks_Handler {
 		$types[] = 'trackback';
 		$types[] = 'webmention';
 
-		return $types;
+		return array_unique( $types );
 	}
 
 }
