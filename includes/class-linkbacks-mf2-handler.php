@@ -16,7 +16,7 @@ class Linkbacks_MF2_Handler {
 	 * initialize the plugin, registering WordPess hooks.
 	 */
 	public static function init() {
-		add_filter( 'semantic_linkbacks_commentdata', array( 'Linkbacks_MF2_Handler', 'generate_commentdata' ), 1, 3 );
+		add_filter( 'semantic_linkbacks_commentdata', array( 'Linkbacks_MF2_Handler', 'generate_commentdata' ), 1 );
 	}
 
 	/**
