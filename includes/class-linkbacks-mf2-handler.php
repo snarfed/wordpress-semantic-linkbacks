@@ -176,6 +176,11 @@ class Linkbacks_MF2_Handler {
 			}
 
 			if ( is_array( $author ) ) {
+				if ( ! isset( $author['me'] ) ) {
+					if ( isset( $mf_array['rels']['me'] ) ) {
+						$properties['author']['me'] = $author['me'] = $mf_array['rels']['me'];
+					}
+				}
 				if ( isset( $properties['name'] ) ) {
 					$commentdata['comment_author'] = wp_slash( $author['name'] );
 				}
@@ -396,13 +401,22 @@ class Linkbacks_MF2_Handler {
 					if ( isset( $mf['properties'] ) && isset( $mf['properties']['url'] ) ) {
 						foreach ( $mf['properties']['url'] as $url ) {
 							if ( wp_parse_url( $url, PHP_URL_HOST ) == wp_parse_url( $source, PHP_URL_HOST ) ) {
-								return self::flatten_microformats( $mf );
+								$flat = self::flatten_microformats( $mf );
+								if ( isset( $mf_array['rels']['me'] ) ) {
+									$flat['me'] = $mf_array['rels']['me'];
+								}
+								return $flat;
 								break;
 							}
 						}
 					}
 				}
 			}
+		}
+
+		// If there is no h-card then return rel=author and see what can be done with it
+		if ( isset( $mf_array['rels']['author'] ) ) {
+			return $mf_array['rels']['author'];
 		}
 
 		return null;
