@@ -130,67 +130,67 @@ class Linkbacks_MF2_Handler {
 			return array();
 		}
 
-		// the entry properties
-		$properties = $entry['properties'];
+		$commentdata['remote_source_properties'] = $properties = array_filter( self::flatten_microformats( $entry ) );
+		$commentdata['remote_source_rels'] = $rels = $mf_array['rels'];
 
 		// try to find some content
 		// @link http://indiewebcamp.com/comments-presentation
-		if ( self::check_mf_attr( 'summary', $properties ) ) {
-			$commentdata['comment_content'] = wp_slash( $properties['summary'][0] );
-		} elseif ( self::check_mf_attr( 'content', $properties ) ) {
-			$commentdata['comment_content'] = wp_filter_kses( $properties['content'][0]['html'] );
-		} elseif ( self::check_mf_attr( 'name', $properties ) ) {
-			$commentdata['comment_content'] = wp_slash( $properties['name'][0] );
+		if ( isset( $properties['summary'] ) ) {
+			$commentdata['comment_content'] = wp_slash( $properties['summary'] );
+		} elseif ( isset( $properties['content'] ) ) {
+			$commentdata['comment_content'] = wp_filter_kses( $properties['content']['html'] );
+		} elseif ( isset( $properties['name'] ) ) {
+			$commentdata['comment_content'] = wp_slash( $properties['name'] );
 		}
 		$commentdata['comment_content'] = trim( $commentdata['comment_content'] );
 
 		// set the right date
-		if ( self::check_mf_attr( 'published', $properties ) ) {
-			$time = strtotime( $properties['published'][0] );
+		if ( isset( $properties['published'] ) ) {
+			$time = strtotime( $properties['published'] );
 			$commentdata['comment_date'] = get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
 		} elseif ( self::check_mf_attr( 'updated', $properties ) ) {
-			$time = strtotime( $properties['updated'][0] );
+			$time = strtotime( $properties['updated'] );
 			$commentdata['comment_date'] = get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
 		}
 
 		$author = null;
 
 		// check if h-card has an author
-		if ( isset( $properties['author'] ) && isset( $properties['author'][0]['properties'] ) ) {
-			$author = $properties['author'][0]['properties'];
+		if ( isset( $properties['author'] ) ) {
+			$author = $properties['author'];
 		} else {
 			$author = self::get_representative_author( $mf_array, $source );
 		}
 
 		// if author is present use the informations for the comment
 		if ( $author ) {
-			if ( self::check_mf_attr( 'name', $author ) ) {
-				$commentdata['comment_author'] = wp_slash( $author['name'][0] );
+			if ( isset( $properties['name'] ) ) {
+				$commentdata['comment_author'] = wp_slash( $author['name'] );
 			}
 
-			if ( self::check_mf_attr( 'email', $author ) ) {
-				$commentdata['comment_author_email'] = wp_slash( $author['email'][0] );
+			if ( isset( $author['email'] ) ) {
+				$commentdata['comment_author_email'] = wp_slash( $author['email'] );
 			}
 
-			if ( self::check_mf_attr( 'url', $author ) ) {
-				$commentdata['comment_meta']['semantic_linkbacks_author_url'] = esc_url_raw( $author['url'][0] );
+			if ( isset( $author['url'] ) ) {
+				$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
 			}
 
-			if ( self::check_mf_attr( 'photo', $author ) ) {
-				$commentdata['comment_meta']['semantic_linkbacks_avatar'] = esc_url_raw( $author['photo'][0] );
+			if ( isset( $properties['photo'] ) ) {
+				$commentdata['comment_meta']['semantic_linkbacks_avatar'] = $author['photo'];
 			}
 		}
 
 		// set canonical url (u-url)
-		if ( self::check_mf_attr( 'url', $properties ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $properties['url'][0] );
+		if ( isset( $properties['url'] ) ) {
+			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = $properties['url'];
 		} else {
 			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $source );
 		}
 
 		// check rsvp property
-		if ( self::check_mf_attr( 'rsvp', $properties ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . $properties['rsvp'][0] );
+		if ( isset( $properties['rsvp'] ) ) {
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . $properties['rsvp'] );
 		} else {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
@@ -198,6 +198,78 @@ class Linkbacks_MF2_Handler {
 
 		return $commentdata;
 	}
+
+	public static function get_property( $key, $properties ) {
+		if ( isset( $properties[ $key ] ) && isset( $properties[ $key ][0] ) ) {
+			if ( is_array( $properties[ $key ] ) ) {
+					$properties[ $key ] = array_unique( $properties[ $key ] );
+			}
+			if ( 1 === count( $properties[ $key ] ) ) {
+						return $properties[ $key ][0];
+			}
+			return $properties[ $key ];
+		}
+		return null;
+	}
+	
+	/**
+	 * Is string a URL.
+	 *
+	 * @param array $string
+	 * @return bool
+	*/
+	public static function is_url( $string ) {
+		if ( ! is_string( $string ) ) {
+			return false;
+		}
+		return preg_match( '/^https?:\/\/.+\..+$/', $string );
+	}
+
+	// Accepted h types
+	public static function is_h( $string ) {
+		return in_array( $string, array( 'h-cite', 'h-entry', 'h-feed', 'h-product', 'h-event', 'h-review', 'h-recipe' ) );
+	}
+
+	public static function flatten_microformats( $item ) {
+		$flat = array();
+		if ( 1 === count( $item ) ) {
+			$item = $item[0];
+		}
+		if ( array_key_exists( 'type', $item ) ) {
+			// If there are multiple types strip out everything but the standard one.
+			if ( 1 < count( $item['type'] ) ) {
+				$item['type'] = array_filter( $item['type'], array( 'Linkbacks_MF2_Handler', 'is_h' ) );
+			}
+			$flat['type'] = $item['type'][0];
+		}
+		if ( array_key_exists( 'properties', $item ) ) {
+			$properties = $item['properties'];
+			foreach ( $properties as $key => $value ) {
+				$flat[ $key ] = self::get_property( $key, $properties );
+				if ( 1 < count( $flat[ $key ] ) ) {
+					$flat[ $key ] = self::flatten_microformats( $flat[ $key ] );
+				}
+			}
+		} else {
+			$flat = $item;
+		}
+		foreach ( $flat as $key => $value ) {
+			// Sanitize all URL properties
+			if ( self::is_url( $value ) ) {
+				$flat[ $key ] = esc_url_raw( $value );
+			}
+		}
+
+		// If name and URL are the same, remove name.
+		if ( array_key_exists( 'name', $flat ) && array_key_exists( 'url', $flat ) ) {
+			if ( $flat['name'] === $flat['url'] ) {
+				unset( $flat['name'] );
+			}
+		}
+		$flat = array_filter( $flat );
+		return $flat;
+	}
+
 
 	/**
 	 * get all h-entry items
@@ -380,22 +452,6 @@ class Linkbacks_MF2_Handler {
 		}
 
 		return 'mention';
-	}
-
-	/**
-	 * checks if $node has $key
-	 *
-	 * @param string $key the array key to check
-	 * @param array $node the array to be checked
-	 *
-	 * @return boolean
-	 */
-	public static function check_mf_attr( $key, $node ) {
-		if ( isset( $node[ $key ] ) && isset( $node[ $key ][0] ) ) {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
