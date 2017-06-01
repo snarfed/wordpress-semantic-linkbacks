@@ -474,7 +474,7 @@ class Linkbacks_MF2_Handler {
 	 * @return boolean
 	 */
 	public static function compare_urls( $needle, $haystack, $schemeless = true ) {
-		if ( ! is_string( $needle ) || ! is_array( $haystack ) ) {
+		if ( ! self::is_url( $needle ) ) {
 			return false;
 		}
 		if ( true === $schemeless ) {
