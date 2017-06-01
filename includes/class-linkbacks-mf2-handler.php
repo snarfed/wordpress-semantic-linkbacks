@@ -278,6 +278,8 @@ class Linkbacks_MF2_Handler {
 				unset( $flat['name'] );
 			}
 		}
+
+		// Duplicate url values for a property may be caused by implied urls https://github.com/indieweb/php-mf2/issues/110
 		if ( array_key_exists( 'url', $flat ) && is_array( $flat['url'] ) ) {
 			$flat['url'] = $flat['url'][0];
 		}
