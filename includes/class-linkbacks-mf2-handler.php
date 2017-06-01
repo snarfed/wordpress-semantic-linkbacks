@@ -186,6 +186,11 @@ class Linkbacks_MF2_Handler {
 			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $source );
 		}
 
+		// If u-syndication is not set use rel syndication
+		if ( array_key_exists( 'syndication', $rels ) && ! array_key_exists( 'syndication', $properties ) ) {
+			$properties['syndication'] = $rels['syndication'];
+		}
+
 		// check rsvp property
 		if ( isset( $properties['rsvp'] ) ) {
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . $properties['rsvp'] );
