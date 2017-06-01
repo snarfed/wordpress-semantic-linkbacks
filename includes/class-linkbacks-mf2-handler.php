@@ -162,20 +162,35 @@ class Linkbacks_MF2_Handler {
 
 		// if author is present use the informations for the comment
 		if ( $author ) {
-			if ( isset( $properties['name'] ) ) {
-				$commentdata['comment_author'] = wp_slash( $author['name'] );
+			if ( ! is_array( $author ) ) {
+				if ( self::is_url( $author ) ) {
+					$response = Linkbacks_Handler::retrieve( $author );
+					if ( ! is_wp_error( $response ) ) {
+						$parser = new Parser( wp_remote_retrieve_body( $response ), $author );
+						$author_array = $parser->parse( true );
+						$properties['author'] = $author = self::get_representative_author( $author_array, $author );
+					}
+				} else {
+					$comment_data['comment_author'] = wp_slash( $author );
+				}
 			}
 
-			if ( isset( $author['email'] ) ) {
-				$commentdata['comment_author_email'] = wp_slash( $author['email'] );
-			}
+			if ( is_array( $author ) ) {
+				if ( isset( $properties['name'] ) ) {
+					$commentdata['comment_author'] = wp_slash( $author['name'] );
+				}
 
-			if ( isset( $author['url'] ) ) {
-				$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
-			}
+				if ( isset( $author['email'] ) ) {
+					$commentdata['comment_author_email'] = wp_slash( $author['email'] );
+				}
 
-			if ( isset( $properties['photo'] ) ) {
-				$commentdata['comment_meta']['semantic_linkbacks_avatar'] = $author['photo'];
+				if ( isset( $author['url'] ) ) {
+					$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
+				}
+
+				if ( isset( $properties['photo'] ) ) {
+					$commentdata['comment_meta']['semantic_linkbacks_avatar'] = $author['photo'];
+				}
 			}
 		}
 
@@ -380,8 +395,8 @@ class Linkbacks_MF2_Handler {
 					// check domain
 					if ( isset( $mf['properties'] ) && isset( $mf['properties']['url'] ) ) {
 						foreach ( $mf['properties']['url'] as $url ) {
-							if ( parse_url( $url, PHP_URL_HOST ) == parse_url( $source, PHP_URL_HOST ) ) {
-								return $mf['properties'];
+							if ( wp_parse_url( $url, PHP_URL_HOST ) == wp_parse_url( $source, PHP_URL_HOST ) ) {
+								return self::flatten_microformats( $mf );
 								break;
 							}
 						}
