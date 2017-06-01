@@ -104,10 +104,13 @@ class Linkbacks_MF2_Handler {
 	 * @return array
 	 */
 	public static function generate_commentdata( $commentdata ) {
-		global $wpdb;
-
-		// add source
-		$source = $commentdata['comment_author_url'];
+		// Use new webmention source meta key.
+		if ( array_key_exists( 'webmention_source_url', $commentdata['comment_meta'] ) ) {
+			$source = $commentdata['comment_meta']['webmention_source_url'];
+		} // Fallback to comment author url.
+		else {
+			$source = $commentdata['comment_author_url'];
+		}
 
 		// parse source html
 		$parser = new Parser( $commentdata['remote_source_original'], $source );
