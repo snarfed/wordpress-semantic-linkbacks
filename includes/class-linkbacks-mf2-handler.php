@@ -146,11 +146,9 @@ class Linkbacks_MF2_Handler {
 
 		// set the right date
 		if ( isset( $properties['published'] ) ) {
-			$time = strtotime( $properties['published'] );
-			$commentdata['comment_date'] = get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
-		} elseif ( self::check_mf_attr( 'updated', $properties ) ) {
-			$time = strtotime( $properties['updated'] );
-			$commentdata['comment_date'] = get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
+			$commentdata['comment_date'] = self::convert_time( $properties['published'] );
+		} elseif ( isset( $properties['updated'] ) ) {
+			$commentdata['comment_date'] = self::convert_time( $properties['updated'] );
 		}
 
 		$author = null;
@@ -197,6 +195,15 @@ class Linkbacks_MF2_Handler {
 		}
 
 		return $commentdata;
+	}
+
+	public static function convert_time( $time ) {
+		$time = strtotime( $time );
+		// If it can't read the time it will return null which will mean the comment time will be set to now.
+		if ( $time ) {
+			return get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
+		}
+		return null;
 	}
 
 	public static function get_property( $key, $properties ) {
@@ -265,6 +272,9 @@ class Linkbacks_MF2_Handler {
 			if ( $flat['name'] === $flat['url'] ) {
 				unset( $flat['name'] );
 			}
+		}
+		if ( array_key_exists( 'url', $flat ) && is_array( $flat['url'] ) ) {
+			$flat['url'] = $flat['url'][0];
 		}
 		$flat = array_filter( $flat );
 		return $flat;
