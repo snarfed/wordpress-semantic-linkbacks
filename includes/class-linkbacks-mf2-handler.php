@@ -191,6 +191,32 @@ class Linkbacks_MF2_Handler {
 			$properties['syndication'] = $rels['syndication'];
 		}
 
+		// Check and parse for location property
+		if ( array_key_exists( 'location', $properties ) ) {
+			$location = $properties['location'];
+			if ( is_array( $location ) ) {
+				if ( array_key_exists( 'latitude', $location ) ) {
+					$commentdata['comment_meta']['geo_latitude'] = $location['latitude'];
+				}
+				if ( array_key_exists( 'longitude', $location ) ) {
+					$commentdata['comment_meta']['geo_longitude'] = $location['longitude'];
+				}
+				if ( array_key_exists( 'name', $location ) ) {
+					$commentdata['comment_meta']['geo_address'] = $location['name'];
+				}
+			} else {
+				if ( substr( $location, 0, 4 ) == 'geo:' ) {
+					$geo = explode( ':', substr( urldecode( $location ), 4 ) );
+					$geo = explode( ';', $geo[0] );
+					$coords = explode( ',', $geo[0] );
+					$commentdata['comment_meta']['geo_latitude'] = trim( $coords[0] );
+					$commentdata['comment_meta']['geo_longitude'] = trim( $coords[1] );
+				} else {
+					$commentdata['comment_meta']['geo_address'] = $location;
+				}
+			}
+		}
+
 		// check rsvp property
 		if ( isset( $properties['rsvp'] ) ) {
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . $properties['rsvp'] );
@@ -223,7 +249,7 @@ class Linkbacks_MF2_Handler {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Is string a URL.
 	 *
