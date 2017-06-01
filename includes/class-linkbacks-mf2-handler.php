@@ -224,6 +224,14 @@ class Linkbacks_MF2_Handler {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
 		}
+		$blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url', 'comment', 'bridgy-omit-link' );
+		$blacklist = apply_filters( 'semantic_linkbacks_mf2_props_blacklist', $blacklist );
+		foreach ( $properties as $key => $value ) {
+			if ( ! in_array( $key, $blacklist ) ) {
+				$commentdata['comment_meta'][ 'mf2_' . $key ] = $value;
+			}
+		}
+		$commentdata['comment_meta'] = array_filter( $commentdata['comment_meta'] );
 
 		return $commentdata;
 	}
