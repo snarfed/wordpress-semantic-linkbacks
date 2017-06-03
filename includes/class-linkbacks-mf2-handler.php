@@ -104,10 +104,13 @@ class Linkbacks_MF2_Handler {
 	 * @return array
 	 */
 	public static function generate_commentdata( $commentdata ) {
-		global $wpdb;
-
-		// add source
-		$source = $commentdata['comment_author_url'];
+		// Use new webmention source meta key.
+		if ( array_key_exists( 'webmention_source_url', $commentdata['comment_meta'] ) ) {
+			$source = $commentdata['comment_meta']['webmention_source_url'];
+		} // Fallback to comment author url.
+		else {
+			$source = $commentdata['comment_author_url'];
+		}
 
 		// parse source html
 		$parser = new Parser( $commentdata['remote_source_original'], $source );
@@ -127,74 +130,222 @@ class Linkbacks_MF2_Handler {
 			return array();
 		}
 
-		// the entry properties
-		$properties = $entry['properties'];
+		$commentdata['remote_source_properties'] = $properties = array_filter( self::flatten_microformats( $entry ) );
+		$commentdata['remote_source_rels'] = $rels = $mf_array['rels'];
 
 		// try to find some content
 		// @link http://indiewebcamp.com/comments-presentation
-		if ( self::check_mf_attr( 'summary', $properties ) ) {
-			$commentdata['comment_content'] = wp_slash( $properties['summary'][0] );
-		} elseif ( self::check_mf_attr( 'content', $properties ) ) {
-			$commentdata['comment_content'] = wp_filter_kses( $properties['content'][0]['html'] );
-		} elseif ( self::check_mf_attr( 'name', $properties ) ) {
-			$commentdata['comment_content'] = wp_slash( $properties['name'][0] );
+		if ( isset( $properties['summary'] ) ) {
+			$commentdata['comment_content'] = wp_slash( $properties['summary'] );
+		} elseif ( isset( $properties['content'] ) ) {
+			$commentdata['comment_content'] = wp_filter_kses( $properties['content']['html'] );
+		} elseif ( isset( $properties['name'] ) ) {
+			$commentdata['comment_content'] = wp_slash( $properties['name'] );
 		}
 		$commentdata['comment_content'] = trim( $commentdata['comment_content'] );
 
 		// set the right date
-		if ( self::check_mf_attr( 'published', $properties ) ) {
-			$time = strtotime( $properties['published'][0] );
-			$commentdata['comment_date'] = get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
-		} elseif ( self::check_mf_attr( 'updated', $properties ) ) {
-			$time = strtotime( $properties['updated'][0] );
-			$commentdata['comment_date'] = get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
+		if ( isset( $properties['published'] ) ) {
+			$commentdata['comment_date'] = self::convert_time( $properties['published'] );
+		} elseif ( isset( $properties['updated'] ) ) {
+			$commentdata['comment_date'] = self::convert_time( $properties['updated'] );
 		}
 
 		$author = null;
 
 		// check if h-card has an author
-		if ( isset( $properties['author'] ) && isset( $properties['author'][0]['properties'] ) ) {
-			$author = $properties['author'][0]['properties'];
+		if ( isset( $properties['author'] ) ) {
+			$author = $properties['author'];
 		} else {
 			$author = self::get_representative_author( $mf_array, $source );
 		}
 
 		// if author is present use the informations for the comment
 		if ( $author ) {
-			if ( self::check_mf_attr( 'name', $author ) ) {
-				$commentdata['comment_author'] = wp_slash( $author['name'][0] );
+			if ( ! is_array( $author ) ) {
+				if ( self::is_url( $author ) ) {
+					$response = Linkbacks_Handler::retrieve( $author );
+					if ( ! is_wp_error( $response ) ) {
+						$parser = new Parser( wp_remote_retrieve_body( $response ), $author );
+						$author_array = $parser->parse( true );
+						$properties['author'] = $author = self::get_representative_author( $author_array, $author );
+					}
+				} else {
+					$comment_data['comment_author'] = wp_slash( $author );
+				}
 			}
 
-			if ( self::check_mf_attr( 'email', $author ) ) {
-				$commentdata['comment_author_email'] = wp_slash( $author['email'][0] );
-			}
+			if ( is_array( $author ) ) {
+				if ( ! isset( $author['me'] ) ) {
+					if ( isset( $mf_array['rels']['me'] ) ) {
+						$properties['author']['me'] = $author['me'] = $mf_array['rels']['me'];
+					}
+				}
+				if ( isset( $properties['name'] ) ) {
+					$commentdata['comment_author'] = wp_slash( $author['name'] );
+				}
 
-			if ( self::check_mf_attr( 'url', $author ) ) {
-				$commentdata['comment_meta']['semantic_linkbacks_author_url'] = esc_url_raw( $author['url'][0] );
-			}
+				if ( isset( $author['email'] ) ) {
+					$commentdata['comment_author_email'] = wp_slash( $author['email'] );
+				}
 
-			if ( self::check_mf_attr( 'photo', $author ) ) {
-				$commentdata['comment_meta']['semantic_linkbacks_avatar'] = esc_url_raw( $author['photo'][0] );
+				if ( isset( $author['url'] ) ) {
+					$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
+				}
+
+				if ( isset( $properties['photo'] ) ) {
+					$commentdata['comment_meta']['semantic_linkbacks_avatar'] = $author['photo'];
+				}
 			}
 		}
 
 		// set canonical url (u-url)
-		if ( self::check_mf_attr( 'url', $properties ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $properties['url'][0] );
+		if ( isset( $properties['url'] ) ) {
+			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = $properties['url'];
 		} else {
 			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $source );
 		}
 
+		// If u-syndication is not set use rel syndication
+		if ( array_key_exists( 'syndication', $rels ) && ! array_key_exists( 'syndication', $properties ) ) {
+			$properties['syndication'] = $rels['syndication'];
+		}
+
+		// Check and parse for location property
+		if ( array_key_exists( 'location', $properties ) ) {
+			$location = $properties['location'];
+			if ( is_array( $location ) ) {
+				if ( array_key_exists( 'latitude', $location ) ) {
+					$commentdata['comment_meta']['geo_latitude'] = $location['latitude'];
+				}
+				if ( array_key_exists( 'longitude', $location ) ) {
+					$commentdata['comment_meta']['geo_longitude'] = $location['longitude'];
+				}
+				if ( array_key_exists( 'name', $location ) ) {
+					$commentdata['comment_meta']['geo_address'] = $location['name'];
+				}
+			} else {
+				if ( substr( $location, 0, 4 ) == 'geo:' ) {
+					$geo = explode( ':', substr( urldecode( $location ), 4 ) );
+					$geo = explode( ';', $geo[0] );
+					$coords = explode( ',', $geo[0] );
+					$commentdata['comment_meta']['geo_latitude'] = trim( $coords[0] );
+					$commentdata['comment_meta']['geo_longitude'] = trim( $coords[1] );
+				} else {
+					$commentdata['comment_meta']['geo_address'] = $location;
+				}
+			}
+		}
+
 		// check rsvp property
-		if ( self::check_mf_attr( 'rsvp', $properties ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . $properties['rsvp'][0] );
+		if ( isset( $properties['rsvp'] ) ) {
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . $properties['rsvp'] );
 		} else {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
 		}
+		$blacklist = array( 'name', 'content', 'summary', 'published', 'updated', 'type', 'url', 'comment', 'bridgy-omit-link' );
+		$blacklist = apply_filters( 'semantic_linkbacks_mf2_props_blacklist', $blacklist );
+		foreach ( $properties as $key => $value ) {
+			if ( ! in_array( $key, $blacklist ) ) {
+				$commentdata['comment_meta'][ 'mf2_' . $key ] = $value;
+			}
+		}
+		$commentdata['comment_meta'] = array_filter( $commentdata['comment_meta'] );
 
 		return $commentdata;
 	}
+
+	public static function convert_time( $time ) {
+		$time = strtotime( $time );
+		// If it can't read the time it will return null which will mean the comment time will be set to now.
+		if ( $time ) {
+			return get_date_from_gmt( date( 'Y-m-d H:i:s', $time ), 'Y-m-d H:i:s' );
+		}
+		return null;
+	}
+
+	public static function get_property( $key, $properties ) {
+		if ( isset( $properties[ $key ] ) && isset( $properties[ $key ][0] ) ) {
+			if ( is_array( $properties[ $key ] ) ) {
+					$properties[ $key ] = array_unique( $properties[ $key ] );
+			}
+			if ( 1 === count( $properties[ $key ] ) ) {
+						return $properties[ $key ][0];
+			}
+			return $properties[ $key ];
+		}
+		return null;
+	}
+
+	/**
+	 * Is string a URL.
+	 *
+	 * @param array $string
+	 * @return bool
+	*/
+	public static function is_url( $string ) {
+		if ( ! is_string( $string ) ) {
+			return false;
+		}
+		// If debugging is on just validate that URL is validly formatted
+		if ( WP_DEBUG ) {
+			return filter_var( $string, FILTER_VALIDATE_URL ) !== false;
+		}
+		// If debugging is off limit based on WordPress parameters
+		return wp_http_validate_url( $string );
+	}
+
+	// Accepted h types
+	public static function is_h( $string ) {
+		return in_array( $string, array( 'h-cite', 'h-entry', 'h-feed', 'h-product', 'h-event', 'h-review', 'h-recipe' ) );
+	}
+
+	public static function flatten_microformats( $item ) {
+		$flat = array();
+		if ( 1 === count( $item ) ) {
+			$item = $item[0];
+		}
+		if ( array_key_exists( 'type', $item ) ) {
+			// If there are multiple types strip out everything but the standard one.
+			if ( 1 < count( $item['type'] ) ) {
+				$item['type'] = array_filter( $item['type'], array( 'Linkbacks_MF2_Handler', 'is_h' ) );
+			}
+			$flat['type'] = $item['type'][0];
+		}
+		if ( array_key_exists( 'properties', $item ) ) {
+			$properties = $item['properties'];
+			foreach ( $properties as $key => $value ) {
+				$flat[ $key ] = self::get_property( $key, $properties );
+				if ( 1 < count( $flat[ $key ] ) ) {
+					$flat[ $key ] = self::flatten_microformats( $flat[ $key ] );
+				}
+			}
+		} else {
+			$flat = $item;
+		}
+		foreach ( $flat as $key => $value ) {
+			// Sanitize all URL properties
+			if ( self::is_url( $value ) ) {
+				$flat[ $key ] = esc_url_raw( $value );
+			}
+		}
+
+		// If name and URL are the same, remove name.
+		if ( array_key_exists( 'name', $flat ) && array_key_exists( 'url', $flat ) ) {
+			if ( $flat['name'] === $flat['url'] ) {
+				unset( $flat['name'] );
+			}
+		}
+
+		// Duplicate url values for a property may be caused by implied urls https://github.com/indieweb/php-mf2/issues/110
+		if ( array_key_exists( 'url', $flat ) && is_array( $flat['url'] ) ) {
+			$flat['url'] = $flat['url'][0];
+		}
+		$flat = array_filter( $flat );
+		return $flat;
+	}
+
 
 	/**
 	 * get all h-entry items
@@ -254,14 +405,23 @@ class Linkbacks_MF2_Handler {
 					// check domain
 					if ( isset( $mf['properties'] ) && isset( $mf['properties']['url'] ) ) {
 						foreach ( $mf['properties']['url'] as $url ) {
-							if ( parse_url( $url, PHP_URL_HOST ) == parse_url( $source, PHP_URL_HOST ) ) {
-								return $mf['properties'];
+							if ( wp_parse_url( $url, PHP_URL_HOST ) == wp_parse_url( $source, PHP_URL_HOST ) ) {
+								$flat = self::flatten_microformats( $mf );
+								if ( isset( $mf_array['rels']['me'] ) ) {
+									$flat['me'] = $mf_array['rels']['me'];
+								}
+								return $flat;
 								break;
 							}
 						}
 					}
 				}
 			}
+		}
+
+		// If there is no h-card then return rel=author and see what can be done with it
+		if ( isset( $mf_array['rels']['author'] ) ) {
+			return $mf_array['rels']['author'];
 		}
 
 		return null;
@@ -380,22 +540,6 @@ class Linkbacks_MF2_Handler {
 	}
 
 	/**
-	 * checks if $node has $key
-	 *
-	 * @param string $key the array key to check
-	 * @param array $node the array to be checked
-	 *
-	 * @return boolean
-	 */
-	public static function check_mf_attr( $key, $node ) {
-		if ( isset( $node[ $key ] ) && isset( $node[ $key ][0] ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * compare an url with a list of urls
 	 *
 	 * @param string $needle the target url
@@ -405,7 +549,7 @@ class Linkbacks_MF2_Handler {
 	 * @return boolean
 	 */
 	public static function compare_urls( $needle, $haystack, $schemeless = true ) {
-		if ( ! is_string( $needle ) || ! is_array( $haystack ) ) {
+		if ( ! self::is_url( $needle ) ) {
 			return false;
 		}
 		if ( true === $schemeless ) {
