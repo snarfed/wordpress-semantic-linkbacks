@@ -168,7 +168,7 @@ class Linkbacks_MF2_Handler {
 					if ( ! is_wp_error( $response ) ) {
 						$parser = new Parser( wp_remote_retrieve_body( $response ), $author );
 						$author_array = $parser->parse( true );
-						$properties['author'] = $author = self::get_representative_author( $author_array, $author );
+						$properties['author'] = $author = self::flatten_microformats( self::get_representative_author( $author_array, $author ) );
 					}
 				} else {
 					$comment_data['comment_author'] = wp_slash( $author );
@@ -406,11 +406,10 @@ class Linkbacks_MF2_Handler {
 					if ( isset( $mf['properties'] ) && isset( $mf['properties']['url'] ) ) {
 						foreach ( $mf['properties']['url'] as $url ) {
 							if ( wp_parse_url( $url, PHP_URL_HOST ) == wp_parse_url( $source, PHP_URL_HOST ) ) {
-								$flat = self::flatten_microformats( $mf );
 								if ( isset( $mf_array['rels']['me'] ) ) {
-									$flat['me'] = $mf_array['rels']['me'];
+									$mf['properties']['me'] = $mf_array['rels']['me'];
 								}
-								return $flat;
+								return $mf;
 								break;
 							}
 						}
