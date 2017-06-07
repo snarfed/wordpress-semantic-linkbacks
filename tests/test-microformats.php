@@ -7,7 +7,7 @@ class MicroformatsTest extends WP_UnitTestCase {
 		$comment = Linkbacks_MF2_Handler::generate_commentdata(
 			array(
 				'remote_source_original' => file_get_contents( dirname( __FILE__ ) . '/templates/' . $file_name . '.html' ),
-				'comment_author_url' => 'http://example.com/webmention/source/placeholder',
+				'comment_author_url' => 'http://example.com/webmention/target/placeholder',
 				'target' => 'http://example.com/webmention/target/placeholder',
 				'comment_type' => 'webmention',
 				'comment_author' => $file_name,
