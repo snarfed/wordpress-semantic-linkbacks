@@ -130,6 +130,7 @@ class Linkbacks_MF2_Handler {
 			return array();
 		}
 
+		$commentdata['remote_source_mf2'] = $entry;
 		$commentdata['remote_source_properties'] = $properties = array_filter( self::flatten_microformats( $entry ) );
 		$commentdata['remote_source_rels'] = $rels = $mf_array['rels'];
 
@@ -158,6 +159,7 @@ class Linkbacks_MF2_Handler {
 			$author = $properties['author'];
 		} else {
 			$author = self::get_representative_author( $mf_array, $source );
+			$author = self::flatten_microformats( $author );
 		}
 
 		// if author is present use the informations for the comment
@@ -181,7 +183,7 @@ class Linkbacks_MF2_Handler {
 						$properties['author']['me'] = $author['me'] = $mf_array['rels']['me'];
 					}
 				}
-				if ( isset( $properties['name'] ) ) {
+				if ( isset( $author['name'] ) ) {
 					$commentdata['comment_author'] = wp_slash( $author['name'] );
 				}
 
@@ -193,7 +195,7 @@ class Linkbacks_MF2_Handler {
 					$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
 				}
 
-				if ( isset( $properties['photo'] ) ) {
+				if ( isset( $author['photo'] ) ) {
 					$commentdata['comment_meta']['semantic_linkbacks_avatar'] = $author['photo'];
 				}
 			}
