@@ -2,4 +2,6 @@
 <ruleset name="WordPress">
 	<description>WordPress Coding Standard.</description>
 	<rule ref="WordPress-Core"/>
+	<exclude-pattern>includes/Mf2/*</exclude-pattern>
+	<exclude-pattern>tests/*</exclude-pattern>
 </ruleset>
