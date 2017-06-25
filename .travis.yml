@@ -12,8 +12,9 @@ php:
 after_success: curl -L https://raw.githubusercontent.com/miya0001/travis2wpplugin/master/deploy.sh | bash
 
 env:
-  - WP_VERSION=latest WP_MULTISITE=0
-  - WP_VERSION=nightly WP_MULTISITE=0
+  matrix:
+    - WP_VERSION=latest WP_MULTISITE=0
+    - WP_VERSION=nightly WP_MULTISITE=0
 
   global:
     - SVN_REPO: https://plugins.svn.wordpress.org/semantic-linkbacks/
