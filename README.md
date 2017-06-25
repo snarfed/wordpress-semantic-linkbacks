@@ -3,7 +3,7 @@
 **Donate link:** http://14101978.de  
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.7  
-**Tested up to:** 4.7.2  
+**Tested up to:** 4.8  
 **Stable tag:** 3.3.0  
 
 Richer Comments and Linkbacks for WordPress!
