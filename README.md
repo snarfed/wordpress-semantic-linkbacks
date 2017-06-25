@@ -4,7 +4,7 @@
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.7  
 **Tested up to:** 4.8  
-**Stable tag:** 3.3.0  
+**Stable tag:** 3.4.0  
 
 Richer Comments and Linkbacks for WordPress!
 
@@ -50,6 +50,17 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.4.0 ###
+
+* Fix Tests and Error in Authorship
+* Update Parser
+* Switch to looser restrictions if WP_DEBUG is enabled and stricter ones otherwise
+* Enhance Author Properties to allow for retrieving remote h-card
+* Store mf2 properties
+* Store location in WordPress Geodata
+* Use rel-syndication if not u-syndication
+* Support new webmention source meta key
 
 ### 3.3.1 ###
 
