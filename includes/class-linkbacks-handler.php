@@ -423,7 +423,7 @@ class Linkbacks_Handler {
 	 * @return string the replaced/parsed author url or the original comment link
 	 */
 	public static function get_comment_author_url( $url, $id, $comment ) {
-		if ( $author_url = get_comment_meta( $id, 'semantic_linkbacks_author_url', true ) ) {
+		if ( $author_url = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_author_url', true ) ) {
 			return $author_url;
 		}
 
