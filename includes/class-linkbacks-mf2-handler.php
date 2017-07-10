@@ -151,6 +151,7 @@ class Linkbacks_MF2_Handler {
 		} elseif ( isset( $properties['updated'] ) ) {
 			$commentdata['comment_date'] = self::convert_time( $properties['updated'] );
 		}
+		$commentdata['comment_date_gmt'] = get_gmt_from_date( $commentdata['comment_date'] );
 
 		$author = null;
 
