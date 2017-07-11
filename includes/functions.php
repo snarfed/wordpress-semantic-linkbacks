@@ -34,13 +34,15 @@ function get_linkbacks_number( $type = null, $post_id = 0 ) {
  *
  * @param string $type the comment type
  * @param int $post_id the id of the post
+ * @param string $order the order of the retrieved comments, ASC or DESC (default)
  *
  * @return the matching linkback "comments"
  */
-function get_linkbacks( $type = null, $post_id = 0 ) {
+function get_linkbacks( $type = null, $post_id = 0, $order = 'DESC' ) {
 	$args = array(
 		'post_id'	=> $post_id,
 		'status'	=> 'approve',
+		'order'		=> $order,
 	);
 
 	if ( $type ) { // use type if set
