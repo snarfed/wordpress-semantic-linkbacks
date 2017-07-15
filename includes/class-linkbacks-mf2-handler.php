@@ -259,7 +259,7 @@ class Linkbacks_MF2_Handler {
 		);
 
 		// Add in supported properties
-		$whitelist = array_merge( $whitelist, array_keys( MF2_Handler::get_class_mapper() ) );
+		$whitelist = array_merge( $whitelist, array_keys( self::get_class_mapper() ) );
 		$whitelist = apply_filters( 'semantic_linkbacks_mf2_props_whitelist', $whitelist );
 		foreach ( $properties as $key => $value ) {
 			if ( in_array( $key, $whitelist ) ) {
