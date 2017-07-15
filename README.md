@@ -2,9 +2,9 @@
 **Contributors:** pfefferle, dshanske  
 **Donate link:** http://14101978.de  
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
-**Requires at least:** 4.7  
+**Requires at least:** 4.7.1  
 **Tested up to:** 4.8  
-**Stable tag:** 3.4.0  
+**Stable tag:** 3.4.1  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -52,6 +52,13 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.4.1 ###
+* Abstract out linkback retrieval functions to allow for easier changes in future
+* Fix retrieval issue
+* Remove merge and compatibility function creating double slashing due update in 4.7.1
+* Replace blacklist for properties with whitelist for select properties
+* Update avatar function to not override if user_id is set on assumption local overrides remote
 
 ### 3.4.0 ###
 

@@ -81,11 +81,6 @@ class Linkbacks_Handler {
 	 * Update an Enhanced Comment
 	 */
 	public static function enhance( $commentdata, $comment = array(), $commentarr = array() ) {
-		if ( ! empty( $commentarr ) ) {
-			// add pre-processed data from, for example the Webmention plugin
-			$commentdata = array_merge( $commentdata, $commentarr );
-		}
-
 		// check if comment is a linkback
 		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ) ) ) {
 			return $commentdata;
@@ -239,11 +234,14 @@ class Linkbacks_Handler {
 	/**
 	 * Return correct URL
 	 *
-	 * @param WP_Comment $comment the comment object
+	 * @param WP_Comment|int $comment the comment object or comment ID
 	 *
 	 * @return string the URL
 	 */
-	public static function get_url( $comment = null ) {
+	public static function get_url( $comment ) {
+		if ( is_numeric( $comment ) ) {
+			$comment = get_comment( $comment );
+		}
 		// get canonical url...
 		$semantic_linkbacks_canonical = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_canonical', true );
 		// ...or fall back to source
@@ -256,6 +254,52 @@ class Linkbacks_Handler {
 		}
 
 		return $semantic_linkbacks_canonical;
+	}
+
+	/**
+	 * Return canonical URL
+	 *
+	 * @param int|WP_Comment $comment Comment
+	 *
+	 * @return string the URL
+	 */
+	public static function get_canonical_url( $comment ) {
+		if ( is_numeric( $comment ) ) {
+			$comment = get_comment( $comment );
+		}
+		// get canonical url...
+		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_canonical', true );
+	}
+
+	/**
+	 * Return type
+	 *
+	 * @param int|WP_Comment $comment Comment
+	 *
+	 * @return string the type
+	 */
+	public static function get_type( $comment ) {
+		if ( is_numeric( $comment ) ) {
+			$comment = get_comment( $comment );
+		}
+		// get type...
+		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_type', true );
+	}
+
+
+	/**
+	 * Return author URL
+	 *
+	 * @param int|WP_Comment $comment Comment
+	 *
+	 * @return string the URL
+	 */
+	public static function get_author_url( $comment ) {
+		if ( is_numeric( $comment ) ) {
+			$comment = get_comment( $comment );
+		}
+		// get author URL...
+		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_author_url', true );
 	}
 
 	/**
@@ -314,7 +358,7 @@ class Linkbacks_Handler {
 			return $text;
 		}
 
-		$semantic_linkbacks_type = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_type', true );
+		$semantic_linkbacks_type = self::get_type( $comment );
 
 		// only change text for pingbacks/trackbacks/webmentions
 		if ( '' == $comment->comment_type ||
@@ -350,7 +394,7 @@ class Linkbacks_Handler {
 		$url = self::get_url( $comment );
 
 		// parse host
-		$host = parse_url( $url, PHP_URL_HOST );
+		$host = wp_parse_url( $url, PHP_URL_HOST );
 		// strip leading www, if any
 		$host = preg_replace( '/^www\./', '', $host );
 
@@ -363,6 +407,21 @@ class Linkbacks_Handler {
 	}
 
 	/**
+	 * Function to retrieve Avatar URL if stored in meta
+	 *
+	 *
+	 * @param int|WP_Comment $comment
+	 *
+	 * @return string $url
+	 */
+	public static function get_avatar_url( $comment ) {
+		if ( is_numeric( $comment ) ) {
+			$comment = get_comment( $comment );
+		}
+		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
+	}
+
+	/**
 	 * Replaces the default avatar with the WebMention uf2 photo
 	 *
 	 * @param array             $args Arguments passed to get_avatar_data(), after processing.
@@ -371,26 +430,25 @@ class Linkbacks_Handler {
 	 * @return array $args
 	 */
 	public static function pre_get_avatar_data( $args, $id_or_email ) {
-		if ( ! isset( $args['class'] ) ) {
-			$args['class'] = array( 'u-photo' );
-		} else {
-			$args['class'][] = 'u-photo';
-		}
-
-		if ( ! is_object( $id_or_email ) ||
+		if ( ! $id_or_email instanceof WP_Comment ||
 			! isset( $id_or_email->comment_type ) ||
-			! get_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', true ) ) {
-			return $args;
+			$id_or_email->user_id ) {
+				return $args;
 		}
 
 		// check if comment has an avatar
-		$avatar = get_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', true );
+		$avatar = self::get_avatar_url( $id_or_email->comment_ID );
 
 		if ( $avatar ) {
+			if ( ! isset( $args['class'] ) ) {
+					$args['class'] = array( 'u-photo' );
+			} else {
+				$args['class'][] = 'u-photo';
+				$args['class'] = array_unique( $args['class'] );
+			}
 			$args['url'] = $avatar;
 			$args['class'][] = 'avatar-semantic-linkbacks';
 		}
-
 		return $args;
 	}
 
@@ -404,7 +462,7 @@ class Linkbacks_Handler {
 	 * @return string the linkback source or the original comment link
 	 */
 	public static function get_comment_link( $link, $comment, $args ) {
-		$semantic_linkbacks_canonical = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_canonical', true );
+		$semantic_linkbacks_canonical = self::get_canonical_url( $comment );
 
 		if ( is_singular() && $semantic_linkbacks_canonical ) {
 			return $semantic_linkbacks_canonical;
@@ -423,7 +481,9 @@ class Linkbacks_Handler {
 	 * @return string the replaced/parsed author url or the original comment link
 	 */
 	public static function get_comment_author_url( $url, $id, $comment ) {
-		if ( $author_url = get_comment_meta( $id, 'semantic_linkbacks_author_url', true ) ) {
+		$author_url = self::get_author_url( $comment );
+
+		if ( $author_url ) {
 			return $author_url;
 		}
 
@@ -456,7 +516,7 @@ class Linkbacks_Handler {
 			'rsvp:tracking'	=> array( 'h-as-rsvp' ),
 		);
 
-		$semantic_linkbacks_type = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_type', true );
+		$semantic_linkbacks_type = self::get_type( $comment );
 
 		// check the comment type
 		if ( $semantic_linkbacks_type && isset( $class_mapping[ $semantic_linkbacks_type ] ) ) {
