@@ -81,11 +81,6 @@ class Linkbacks_Handler {
 	 * Update an Enhanced Comment
 	 */
 	public static function enhance( $commentdata, $comment = array(), $commentarr = array() ) {
-		if ( ! empty( $commentarr ) ) {
-			// add pre-processed data from, for example the Webmention plugin
-			$commentdata = array_merge( $commentdata, $commentarr );
-		}
-
 		// check if comment is a linkback
 		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ) ) ) {
 			return $commentdata;
@@ -261,7 +256,7 @@ class Linkbacks_Handler {
 		return $semantic_linkbacks_canonical;
 	}
 
-	/** 
+	/**
 	 * Return canonical URL
 	 *
 	 * @param int|WP_Comment $comment Comment
@@ -276,7 +271,7 @@ class Linkbacks_Handler {
 		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_canonical', true );
 	}
 
-	/** 
+	/**
 	 * Return type
 	 *
 	 * @param int|WP_Comment $comment Comment
@@ -292,7 +287,7 @@ class Linkbacks_Handler {
 	}
 
 
-	/** 
+	/**
 	 * Return author URL
 	 *
 	 * @param int|WP_Comment $comment Comment
