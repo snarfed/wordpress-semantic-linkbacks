@@ -482,7 +482,7 @@ class Linkbacks_Handler {
 	 */
 	public static function get_comment_author_url( $url, $id, $comment ) {
 		$author_url = self::get_author_url( $comment );
-		
+
 		if ( $author_url ) {
 			return $author_url;
 		}
