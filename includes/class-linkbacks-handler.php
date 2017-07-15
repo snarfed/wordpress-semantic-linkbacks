@@ -481,7 +481,9 @@ class Linkbacks_Handler {
 	 * @return string the replaced/parsed author url or the original comment link
 	 */
 	public static function get_comment_author_url( $url, $id, $comment ) {
-		if ( $author_url = self::get_author_url( $comment ) ) {
+		$author_url = self::get_author_url( $comment );
+		
+		if ( $author_url ) {
 			return $author_url;
 		}
 
