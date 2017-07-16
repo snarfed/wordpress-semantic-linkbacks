@@ -128,11 +128,12 @@ function list_linkbacks( $args, $comments ) {
 	foreach ( $comments as $comment ) {
 		$return .= sprintf( '<li class="%1$s">
 			<a class="u-url" href="%2$s">
-			<span class="p-author h-card">%3$s</span>
+			<span class="p-author h-card">%3$s
 			<a class="hide-name p-name u-url" href="%4$s">%5$s</a>
-			</span></a>
+			</span>
+			</a>
 			</li>', 
-			$classes, get_comment_link( $comment ), get_avatar( $comment, $r['avatar_size'] ), get_comment_author_url( $comment ), get_comment_author( $comment ) );
+			$classes, Linkbacks_Handler::get_canonical_url( $comment ), get_avatar( $comment, $r['avatar_size'] ), get_comment_author_url( $comment ), get_comment_author( $comment ) );
 	}
 	$return .= sprintf( '</%1$s>', $r['style'] );
 	if ( $r['echo'] ) {
