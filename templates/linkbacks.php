@@ -1,12 +1,12 @@
-<?php 
+<?php
 
-if ( has_linkbacks( 'like' ) ) {
+if ( has_linkbacks( 'like' ) ) { 
 	echo '<div class="likes">';
 	echo '<h3>' . __( 'Likes', 'semantic-linkbacks' ) . '</h3>';
 	list_linkbacks( array(
-		'li-class' => array( 'single-mention', 'p-like' )
-	), 
-	get_linkbacks( 'like' ) ); ?>
+		'li-class' => array( 'single-mention', 'p-like' ),
+		),
+	get_linkbacks( 'like' ) );
 	echo '</div>';
 }
 
@@ -16,7 +16,7 @@ if ( has_linkbacks( 'favorite' ) ) {
 	list_linkbacks( array(
 		'li-class' => array( 'single-mention', 'p-favorite' )
 	), 
-	get_linkbacks( 'favorite' ) ); ?>
+	get_linkbacks( 'favorite' ) );
 	echo '</div>';
 }
 
@@ -26,7 +26,7 @@ if ( has_linkbacks( 'bookmark' ) ) {
 	list_linkbacks( array(
 		'li-class' => array( 'single-mention', 'p-bookmark' )
 	), 
-	get_linkbacks( 'bookmark' ) ); ?>
+	get_linkbacks( 'bookmark' ) );
 	echo '</div>';
 }
 
@@ -36,7 +36,7 @@ if ( has_linkbacks( 'repost' ) ) {
 	list_linkbacks( array(
 		'li-class' => array( 'single-mention', 'p-repost' )
 	), 
-	get_linkbacks( 'repost' ) ); ?>
+	get_linkbacks( 'repost' ) );
 	echo '</div>';
 }
 
@@ -47,8 +47,6 @@ if ( has_linkbacks( 'mention' ) ) {
 	list_linkbacks( array(
 		'li-class' => array( 'single-mention', 'p-comment' )
 	), 
-	get_linkbacks( 'mention' ) ); ?>
+	get_linkbacks( 'mention' ) );
 	echo '</div>';
 }
-
-
