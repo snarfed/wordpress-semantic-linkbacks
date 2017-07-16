@@ -1,0 +1,16 @@
+.mention-list ul {
+	border-style: solid;
+  }
+
+ .mention-list li {
+	 display: inline-block;
+	 list-style: none;
+	 vertical-align: top;
+	 text-align: center;
+}
+
+.mention-list li img {
+	text-align: left;
+	border-radius: 20px;
+	display: block;
+}

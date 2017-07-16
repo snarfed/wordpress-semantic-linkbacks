@@ -8,7 +8,10 @@
  *
  * @return the number of matching linkbacks
  */
-function get_linkbacks_number( $type = null, $post_id = 0 ) {
+function get_linkbacks_number( $type = null, $post_id = null ) {
+	if ( null === $post_id ) {
+		$post_id = get_the_ID();
+	}
 	$args = array(
 		'post_id'	=> $post_id,
 		'count'	 	=> true,
@@ -50,7 +53,10 @@ function get_linkbacks_number( $type = null, $post_id = 0 ) {
  *
  * @return the matching linkback "comments"
  */
-function get_linkbacks( $type = null, $post_id = 0, $order = 'DESC' ) {
+function get_linkbacks( $type = null, $post_id = null, $order = 'DESC' ) {
+	if ( null === $post_id ) {
+		$post_id = get_the_ID();
+	}
 	$args = array(
 		'post_id'	=> $post_id,
 		'status'	=> 'approve',
@@ -58,7 +64,19 @@ function get_linkbacks( $type = null, $post_id = 0, $order = 'DESC' ) {
 	);
 
 	if ( $type ) { // use type if set
-		$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => $type ) );
+		if ( 'mention' == $type ) {
+ 			$args['type__not_in'] = 'comment';
+			$args['meta_query'] = array(
+ 				'relation' => 'OR',
+				array( 'key' => 'semantic_linkbacks_type', 'value' => '' ),
+				array( 'key' => 'semantic_linkbacks_type', 'compare' => 'NOT EXISTS' ),
+				array( 'key' => 'semantic_linkbacks_type', 'value' => 'mention' ),
+			);
+		} elseif ( 'rsvp' == $type ) {
+			$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => 'rsvp', 'compare' => 'LIKE' ) );
+		} else {
+			$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => $type ) );
+		}
 	} else { // check only if type exists
 		$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'compare' => 'EXISTS' ) );
 	}
@@ -67,9 +85,10 @@ function get_linkbacks( $type = null, $post_id = 0, $order = 'DESC' ) {
 }
 
 
-function has_linkbacks( $type = null, $post_ID = 0 ) {
+function has_linkbacks( $type = null, $post_ID = null ) {
 	if ( get_linkbacks( $type, $post_ID ) ) {
 		return true;
 	}
 	return false;
 }
+

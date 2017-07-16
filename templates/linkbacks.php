@@ -2,7 +2,7 @@
 <div class="likes">
 	<h3>Likes</li>
 
-	<ul>
+	<ul class="mention-list">
 	<?php foreach ( get_linkbacks( 'like' ) as $like ) : ?>
 		<li><?php echo get_avatar( $like, 50 ); ?></li>
 	<?php endforeach; ?>
