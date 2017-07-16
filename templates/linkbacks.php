@@ -2,11 +2,11 @@
 <div class="likes">
 	<h3>Likes</li>
 
-	<ul class="mention-list">
-	<?php foreach ( get_linkbacks( 'like' ) as $like ) : ?>
-		<li><?php echo get_avatar( $like, 50 ); ?></li>
-	<?php endforeach; ?>
-	</ul>
+<?php 
+	list_linkbacks( array(
+		'li-class' => array( 'single-mention', 'p-like' )
+	), 
+	get_linkbacks( 'like' ) ); ?>
 </div>
 <?php endif; ?>
 

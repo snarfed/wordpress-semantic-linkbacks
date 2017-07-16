@@ -92,3 +92,51 @@ function has_linkbacks( $type = null, $post_ID = null ) {
 	return false;
 }
 
+/**
+ * Return marked up linkbacks
+ * Based on wp_list_comments()
+ */
+function list_linkbacks( $args, $comments ) {
+	$defaults = array(
+		'avatar_size' => 64,
+		'style' => 'ul', // What HTML type to wrap it in. Accepts 'ul', 'ol'.
+		'style-class' => 'mention-list', // What class to assign to the wrapper
+		'li-class' => 'single-mention', // What class to assign to the list elements
+		'echo' => true // Whether to echo the output or return
+	);
+
+	$r = wp_parse_args( $args, $defaults );
+	/**
+	 * Filters the arguments used in retrieving the linkbacks list
+	 *
+	 *
+	 * @param array $r An array of arguments for displaying linkbacks
+	 */
+	$r = apply_filters( 'list_linkbacks_args', $r );
+	if ( ! is_array( $comments ) ) {
+		return;
+	}
+	if ( is_string( $r['li-class'] ) ) {
+		$classes = explode( ' ', $r['li-class'] );
+	}
+	else {
+		$classes = $r['li-class'];
+	}
+	$classes[] = 'h-cite';
+	$classes = join( ' ', $classes );
+	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] ); 
+	foreach ( $comments as $comment ) {
+		$return .= sprintf( '<li class="%1$s">
+			<a class="u-url" href="%2$s">
+			<span class="p-author h-card">%3$s</span>
+			<a class="hide-name p-name u-url" href="%4$s">%5$s</a>
+			</span></a>
+			</li>', 
+			$classes, get_comment_link( $comment ), get_avatar( $comment, $r['avatar_size'] ), get_comment_author_url( $comment ), get_comment_author( $comment ) );
+	}
+	$return .= sprintf( '</%1$s>', $r['style'] );
+	if ( $r['echo'] ) {
+		echo $return;
+	}
+	return $return;
+}

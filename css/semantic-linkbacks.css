@@ -9,8 +9,12 @@
 	 text-align: center;
 }
 
+.mention-list .hide-name {
+	display: none;
+}
+
 .mention-list li img {
 	text-align: left;
-	border-radius: 20px;
+	border-radius: 50%;
 	display: block;
 }
