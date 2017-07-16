@@ -6,7 +6,7 @@
 	 display: inline-block;
 	 list-style: none;
 	 vertical-align: top;
-	 text-align: center;
+	 margin-left: 3px;
 }
 
 .mention-list .hide-name {
@@ -14,7 +14,6 @@
 }
 
 .mention-list li img {
-	text-align: left;
-	border-radius: 50%;
+	border-radius: 4px;
 	display: block;
 }
