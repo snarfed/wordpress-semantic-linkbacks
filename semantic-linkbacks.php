@@ -30,6 +30,7 @@ add_action( 'plugins_loaded', array( 'Semantic_Linkbacks_Plugin', 'init' ) );
  * @author Matthias Pfefferle
  */
 class Semantic_Linkbacks_Plugin {
+	public static $version = '3.4.1';
 	/**
 	 * Initialize the plugin, registering WordPress hooks.
 	 */
@@ -49,6 +50,8 @@ class Semantic_Linkbacks_Plugin {
 			require_once( dirname( __FILE__ ) . '/includes/compatibility.php' );
 		}
 
+		add_action( 'wp_enqueue_scripts', array( 'Semantic_Linkbacks_Plugin', 'style_load' ) );
+
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_title_filter' ), 21 );
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_content_filter' ), 22 );
 
@@ -61,5 +64,9 @@ class Semantic_Linkbacks_Plugin {
 	public static function plugin_textdomain() {
 		// Note to self, the third argument must not be hardcoded, to account for relocated folders.
 		load_plugin_textdomain( 'semantic-linkbacks', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	}
+
+	public static function style_load() {
+		wp_enqueue_style( 'semantic-linkbacks-css', plugin_dir_url( __FILE__ ) . 'css/semantic-linkbacks.css', array(), self::$version );
 	}
 }
