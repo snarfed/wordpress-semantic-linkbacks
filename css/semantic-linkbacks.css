@@ -1,12 +1,12 @@
 .mention-list ul {
 	border-style: solid;
-  }
+}
 
- .mention-list li {
-	 display: inline-block;
-	 list-style: none;
-	 vertical-align: top;
-	 margin-left: 3px;
+.mention-list li {
+	display: inline-block;
+	list-style: none;
+	vertical-align: top;
+	margin-left: 3px;
 }
 
 .mention-list .hide-name {
@@ -14,7 +14,6 @@
 }
 
 .mention-list li img {
-	border-radius: 4px;
 	height: 64px;
 	width: 64px;
 	display: block;
