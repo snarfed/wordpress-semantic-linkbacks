@@ -15,5 +15,8 @@
 
 .mention-list li img {
 	border-radius: 4px;
+	height: 64px;
+	width: 64px;
 	display: block;
+	object-fit: fill;
 }
