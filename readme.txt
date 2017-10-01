@@ -3,8 +3,9 @@ Contributors: pfefferle, dshanske
 Donate link: http://14101978.de
 Tags: webmention, pingback, trackback, linkback, microformats, comments, indieweb
 Requires at least: 4.7.1
-Tested up to: 4.8
-Stable tag: 3.4.1
+Requires PHP: 5.3
+Tested up to: 4.8.2
+Stable tag: 3.5.0
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
@@ -52,6 +53,12 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 == Changelog ==
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+= 3,5.0 =
+* Add Facepile code
+* Add setting to disable automatic facepile include
+* Add filter to allow themes to disable the setting and the feature if they facepile themselves
+* Add PHP requirement to readme file
 
 = 3.4.1 =
 * Abstract out linkback retrieval functions to allow for easier changes in future
