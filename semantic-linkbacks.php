@@ -63,12 +63,11 @@ class Semantic_Linkbacks_Plugin {
 			'default' => 1,
 		) );
 
-
 		// initialize admin settings
 		add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
 
 	}
-	
+
 	public static function admin_init() {
 		add_settings_field( 'semantic_linkbacks_discussion_settings', __( 'Semantic Linkbacks Settings', 'webmention' ), array( 'Semantic_Linkbacks_Plugin', 'discussion_settings' ), 'discussion', 'default' );
 	}
@@ -81,7 +80,7 @@ class Semantic_Linkbacks_Plugin {
 		load_plugin_textdomain( 'semantic-linkbacks', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
-        /**
+		/**
 	 * Add Semantic Linkbacks options to the WordPress discussion settings page.
 	 */
 	public static function discussion_settings() {
