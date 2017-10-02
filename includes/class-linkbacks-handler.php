@@ -33,8 +33,10 @@ class Linkbacks_Handler {
 		add_filter( 'get_avatar_comment_types', array( 'Linkbacks_Handler', 'get_avatar_comment_types' ) );
 		add_filter( 'comment_class', array( 'Linkbacks_Handler', 'comment_class' ), 10, 4 );
 
-		add_filter( 'wp_list_comments_args', array( 'Linkbacks_Handler', 'filter_comment_args' ) );
-		add_action( 'comment_form_before', array( 'Linkbacks_Handler', 'show_mentions' ) );
+		if ( 1 == get_option( 'semantic_linkbacks_facepiles' ) ) {
+			add_filter( 'wp_list_comments_args', array( 'Linkbacks_Handler', 'filter_comment_args' ) );
+			add_action( 'comment_form_before', array( 'Linkbacks_Handler', 'show_mentions' ) );
+		}
 
 		// Register Meta Keys
 		self::register_meta();
@@ -58,7 +60,10 @@ class Linkbacks_Handler {
 	  *
 	  */
 	public static function show_mentions() {
-		load_template( plugin_dir_path( dirname( __FILE__ ) ) . 'templates/linkbacks.php' );
+		// If this filter is set to false then hide the template and hide the option. This should be used by themes
+		if ( apply_filters( 'semantic_linkbacks_facepile', true ) ) {
+			load_template( plugin_dir_path( dirname( __FILE__ ) ) . 'templates/linkbacks.php' );
+		}
 	}
 
 	/**
