@@ -290,10 +290,10 @@ class Linkbacks_MF2_Handler {
 	public static function get_property( $key, $properties ) {
 		if ( isset( $properties[ $key ] ) && isset( $properties[ $key ][0] ) ) {
 			if ( is_array( $properties[ $key ] ) ) {
-					$properties[ $key ] = array_unique( $properties[ $key ] );
+				$properties[ $key ] = array_unique( $properties[ $key ] );
 			}
 			if ( 1 === count( $properties[ $key ] ) ) {
-						return $properties[ $key ][0];
+				return $properties[ $key ][0];
 			}
 			return $properties[ $key ];
 		}

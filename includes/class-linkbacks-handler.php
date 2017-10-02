@@ -71,37 +71,37 @@ class Linkbacks_Handler {
 	 */
 	public static function register_meta() {
 		$args = array(
-		'sanitize_callback' => 'esc_url_raw',
-		'type' => 'string',
-		'description' => 'Author URL',
-		'single' => true,
-		'show_in_rest' => true,
+			'sanitize_callback' => 'esc_url_raw',
+			'type' => 'string',
+			'description' => 'Author URL',
+			'single' => true,
+			'show_in_rest' => true,
 		);
 		register_meta( 'comment', 'semantic_linkbacks_author_url', $args );
 
 		$args = array(
-		'sanitize_callback' => 'esc_url_raw',
-		'type' => 'string',
-		'description' => 'Avatar URL',
-		'single' => true,
-		'show_in_rest' => true,
+			'sanitize_callback' => 'esc_url_raw',
+			'type' => 'string',
+			'description' => 'Avatar URL',
+			'single' => true,
+			'show_in_rest' => true,
 		);
 		register_meta( 'comment', 'semantic_linkbacks_avatar', $args );
 
 		$args = array(
-		'sanitize_callback' => 'esc_url_raw',
-		'type' => 'string',
-		'description' => 'Canonical URL',
-		'single' => true,
-		'show_in_rest' => true,
+			'sanitize_callback' => 'esc_url_raw',
+			'type' => 'string',
+			'description' => 'Canonical URL',
+			'single' => true,
+			'show_in_rest' => true,
 		);
 		register_meta( 'comment', 'semantic_linkbacks_canonical', $args );
 
 		$args = array(
-		'type' => 'string',
-		'description' => 'Linkbacks Type',
-		'single' => true,
-		'show_in_rest' => true,
+			'type' => 'string',
+			'description' => 'Linkbacks Type',
+			'single' => true,
+			'show_in_rest' => true,
 		);
 		register_meta( 'comment', 'semantic_linkbacks_type', $args );
 	}
@@ -160,10 +160,10 @@ class Linkbacks_Handler {
 		global $wp_version;
 		$user_agent = apply_filters( 'http_headers_useragent', 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ) );
 		$args = array(
-		'timeout' => 100,
-		'limit_response_size' => 1048576,
-		'redirection' => 20,
-		'user-agent' => "$user_agent; verifying linkback",
+			'timeout' => 100,
+			'limit_response_size' => 1048576,
+			'redirection' => 20,
+			'user-agent' => "$user_agent; verifying linkback",
 		);
 		return wp_safe_remote_get( $url, $args );
 	}
@@ -191,20 +191,20 @@ class Linkbacks_Handler {
 	 */
 	public static function get_comment_type_excerpts() {
 		$strings = array(
-		// special case. any value that evals to false will be considered standard
-		'mention'		=> __( '%1$s mentioned %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
+			// special case. any value that evals to false will be considered standard
+			'mention'		=> __( '%1$s mentioned %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
 
-		'reply'			=> __( '%1$s replied to %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
-		'repost'		=> __( '%1$s reposted %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
-		'like'			=> __( '%1$s liked %2$s on <a href="%3$s">%4$s</a>.',		'semantic-linkbacks' ),
-		'favorite'		=> __( '%1$s favorited %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
-		'tag'			=> __( '%1$s tagged %2$s on <a href="%3$s">%4$s</a>.',		'semantic-linkbacks' ),
-		'bookmark'		=> __( '%1$s bookmarked %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
-		'rsvp:yes'		=> __( '%1$s is <strong>attending</strong>.',				'semantic-linkbacks' ),
-		'rsvp:no'		=> __( '%1$s is <strong>not attending</strong>.',			'semantic-linkbacks' ),
-		'rsvp:maybe'	=> __( 'Maybe %1$s will be <strong>attending</strong>.',	'semantic-linkbacks' ),
-		'rsvp:invited'	=> __( '%1$s is <strong>invited</strong>.',					'semantic-linkbacks' ),
-		'rsvp:tracking'	=> __( '%1$s <strong>tracks</strong> this event.',			'semantic-linkbacks' ),
+			'reply'			=> __( '%1$s replied to %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
+			'repost'		=> __( '%1$s reposted %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
+			'like'			=> __( '%1$s liked %2$s on <a href="%3$s">%4$s</a>.',		'semantic-linkbacks' ),
+			'favorite'		=> __( '%1$s favorited %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
+			'tag'			=> __( '%1$s tagged %2$s on <a href="%3$s">%4$s</a>.',		'semantic-linkbacks' ),
+			'bookmark'		=> __( '%1$s bookmarked %2$s on <a href="%3$s">%4$s</a>.',	'semantic-linkbacks' ),
+			'rsvp:yes'		=> __( '%1$s is <strong>attending</strong>.',				'semantic-linkbacks' ),
+			'rsvp:no'		=> __( '%1$s is <strong>not attending</strong>.',			'semantic-linkbacks' ),
+			'rsvp:maybe'	=> __( 'Maybe %1$s will be <strong>attending</strong>.',	'semantic-linkbacks' ),
+			'rsvp:invited'	=> __( '%1$s is <strong>invited</strong>.',					'semantic-linkbacks' ),
+			'rsvp:tracking'	=> __( '%1$s <strong>tracks</strong> this event.',			'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -217,20 +217,20 @@ class Linkbacks_Handler {
 	*/
 	public static function get_comment_type_strings() {
 		$strings = array(
-		// Special case. any value that evals to false will be considered standard
-		'mention'		=> __( 'Mention',	'semantic-linkbacks' ),
+			// Special case. any value that evals to false will be considered standard
+			'mention'		=> __( 'Mention',	'semantic-linkbacks' ),
 
-		'reply'			=> __( 'Reply',		'semantic-linkbacks' ),
-		'repost'		=> __( 'Repost',	'semantic-linkbacks' ),
-		'like'			=> __( 'Like',		'semantic-linkbacks' ),
-		'favorite'		=> __( 'Favorite',	'semantic-linkbacks' ),
-		'tag'			=> __( 'Tag',		'semantic-linkbacks' ),
-		'bookmark'		=> __( 'Bookmark',	'semantic-linkbacks' ),
-		'rsvp:yes'		=> __( 'RSVP',		'semantic-linkbacks' ),
-		'rsvp:no'		=> __( 'RSVP',		'semantic-linkbacks' ),
-		'rsvp:invited'	=> __( 'RSVP',		'semantic-linkbacks' ),
-		'rsvp:maybe'	=> __( 'RSVP',		'semantic-linkbacks' ),
-		'rsvp:tracking'	=> __( 'RSVP',		'semantic-linkbacks' ),
+			'reply'			=> __( 'Reply',		'semantic-linkbacks' ),
+			'repost'		=> __( 'Repost',	'semantic-linkbacks' ),
+			'like'			=> __( 'Like',		'semantic-linkbacks' ),
+			'favorite'		=> __( 'Favorite',	'semantic-linkbacks' ),
+			'tag'			=> __( 'Tag',		'semantic-linkbacks' ),
+			'bookmark'		=> __( 'Bookmark',	'semantic-linkbacks' ),
+			'rsvp:yes'		=> __( 'RSVP',		'semantic-linkbacks' ),
+			'rsvp:no'		=> __( 'RSVP',		'semantic-linkbacks' ),
+			'rsvp:invited'	=> __( 'RSVP',		'semantic-linkbacks' ),
+			'rsvp:maybe'	=> __( 'RSVP',		'semantic-linkbacks' ),
+			'rsvp:tracking'	=> __( 'RSVP',		'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -243,18 +243,18 @@ class Linkbacks_Handler {
 	*/
 	public static function get_post_format_strings() {
 		$strings = array(
-		// Special case. any value that evals to false will be considered standard
-		'standard'	=> __( 'this Article',	'semantic-linkbacks' ),
+			// Special case. any value that evals to false will be considered standard
+			'standard'	=> __( 'this Article',	'semantic-linkbacks' ),
 
-		'aside'		=> __( 'this Aside',	'semantic-linkbacks' ),
-		'chat'		=> __( 'this Chat',		'semantic-linkbacks' ),
-		'gallery'	=> __( 'this Gallery',	'semantic-linkbacks' ),
-		'link'		=> __( 'this Link',		'semantic-linkbacks' ),
-		'image'		=> __( 'this Image',	'semantic-linkbacks' ),
-		'quote'		=> __( 'this Quote',	'semantic-linkbacks' ),
-		'status'	=> __( 'this Status',	'semantic-linkbacks' ),
-		'video'		=> __( 'this Video',	'semantic-linkbacks' ),
-		'audio'		=> __( 'this Audio',	'semantic-linkbacks' ),
+			'aside'		=> __( 'this Aside',	'semantic-linkbacks' ),
+			'chat'		=> __( 'this Chat',		'semantic-linkbacks' ),
+			'gallery'	=> __( 'this Gallery',	'semantic-linkbacks' ),
+			'link'		=> __( 'this Link',		'semantic-linkbacks' ),
+			'image'		=> __( 'this Image',	'semantic-linkbacks' ),
+			'quote'		=> __( 'this Quote',	'semantic-linkbacks' ),
+			'status'	=> __( 'this Status',	'semantic-linkbacks' ),
+			'video'		=> __( 'this Video',	'semantic-linkbacks' ),
+			'audio'		=> __( 'this Audio',	'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -351,8 +351,8 @@ class Linkbacks_Handler {
 
 		// only change text for "real" comments (replys)
 		if ( ! $semantic_linkbacks_type ||
-		'' != $comment->comment_type ||
-		'reply' != $semantic_linkbacks_type ) {
+			'' != $comment->comment_type ||
+			'reply' != $semantic_linkbacks_type ) {
 			return $text;
 		}
 
@@ -391,8 +391,8 @@ class Linkbacks_Handler {
 
 		// only change text for pingbacks/trackbacks/webmentions
 		if ( '' == $comment->comment_type ||
-		! $semantic_linkbacks_type ||
-		'reply' == $semantic_linkbacks_type ) {
+			! $semantic_linkbacks_type ||
+			'reply' == $semantic_linkbacks_type ) {
 			return $text;
 		}
 
@@ -411,28 +411,28 @@ class Linkbacks_Handler {
 			}
 		}
 
-			// get post type
-			$post_formatstrings = self::get_post_format_strings();
-			$post_type = $post_formatstrings[ $post_format ];
+		// get post type
+		$post_formatstrings = self::get_post_format_strings();
+		$post_type = $post_formatstrings[ $post_format ];
 
-			$post_type = apply_filters( 'semantic_linkbacks_post_type', $post_type, $comment->comment_post_ID );
+		$post_type = apply_filters( 'semantic_linkbacks_post_type', $post_type, $comment->comment_post_ID );
 
-			// get all the excerpts
-			$comment_type_excerpts = self::get_comment_type_excerpts();
+		// get all the excerpts
+		$comment_type_excerpts = self::get_comment_type_excerpts();
 
-			$url = self::get_url( $comment );
+		$url = self::get_url( $comment );
 
-			// parse host
-			$host = wp_parse_url( $url, PHP_URL_HOST );
-			// strip leading www, if any
-			$host = preg_replace( '/^www\./', '', $host );
+		// parse host
+		$host = wp_parse_url( $url, PHP_URL_HOST );
+		// strip leading www, if any
+		$host = preg_replace( '/^www\./', '', $host );
 
-			// generate output. use full content if it's small enough, otherwise use excerpt.
+		// generate output. use full content if it's small enough, otherwise use excerpt.
 		if ( ! ( 'mention' == $semantic_linkbacks_type && strlen( wp_strip_all_tags( $text ) ) <= MAX_INLINE_MENTION_LENGTH ) ) {
 			$text = sprintf( $comment_type_excerpts[ $semantic_linkbacks_type ], get_comment_author_link( $comment->comment_ID ), $post_type, $url, $host );
 		}
 
-			return apply_filters( 'semantic_linkbacks_excerpt', $text );
+		return apply_filters( 'semantic_linkbacks_excerpt', $text );
 	}
 
 	/**
@@ -460,8 +460,8 @@ class Linkbacks_Handler {
 	 */
 	public static function pre_get_avatar_data( $args, $id_or_email ) {
 		if ( ! $id_or_email instanceof WP_Comment ||
-		! isset( $id_or_email->comment_type ) ||
-		$id_or_email->user_id ) {
+			! isset( $id_or_email->comment_type ) ||
+			$id_or_email->user_id ) {
 			return $args;
 		}
 
@@ -530,19 +530,19 @@ class Linkbacks_Handler {
 
 		// "comment type to class" mapper
 		$class_mapping = array(
-		'mention'		=> array( 'h-as-mention' ),
+			'mention'		=> array( 'h-as-mention' ),
 
-		'reply'			=> array( 'h-as-reply' ),
-		'repost'		=> array( 'h-as-repost', 'p-repost' ),
-		'like'			=> array( 'h-as-like', 'p-like' ),
-		'favorite'		=> array( 'h-as-favorite', 'p-favorite' ),
-		'tag'			=> array( 'h-as-tag', 'p-tag' ),
-		'bookmark'		=> array( 'h-as-bookmark', 'p-bookmark' ),
-		'rsvp:yes'		=> array( 'h-as-rsvp' ),
-		'rsvp:no'		=> array( 'h-as-rsvp' ),
-		'rsvp:maybe'	=> array( 'h-as-rsvp' ),
-		'rsvp:invited'	=> array( 'h-as-rsvp' ),
-		'rsvp:tracking'	=> array( 'h-as-rsvp' ),
+			'reply'			=> array( 'h-as-reply' ),
+			'repost'		=> array( 'h-as-repost', 'p-repost' ),
+			'like'			=> array( 'h-as-like', 'p-like' ),
+			'favorite'		=> array( 'h-as-favorite', 'p-favorite' ),
+			'tag'			=> array( 'h-as-tag', 'p-tag' ),
+			'bookmark'		=> array( 'h-as-bookmark', 'p-bookmark' ),
+			'rsvp:yes'		=> array( 'h-as-rsvp' ),
+			'rsvp:no'		=> array( 'h-as-rsvp' ),
+			'rsvp:maybe'	=> array( 'h-as-rsvp' ),
+			'rsvp:invited'	=> array( 'h-as-rsvp' ),
+			'rsvp:tracking'	=> array( 'h-as-rsvp' ),
 		);
 
 		$semantic_linkbacks_type = self::get_type( $comment );
