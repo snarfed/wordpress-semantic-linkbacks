@@ -2,12 +2,13 @@
 Contributors: pfefferle, dshanske
 Donate link: http://14101978.de
 Tags: webmention, pingback, trackback, linkback, microformats, comments, indieweb
-Requires at least: 4.7.1
+Requires at least: 4.8.2
 Requires PHP: 5.3
 Tested up to: 4.8.2
 Stable tag: 3.5.0
 License: MIT
 License URI: http://opensource.org/licenses/MIT
+Requires PHP: 5.3
 
 Richer Comments and Linkbacks for WordPress!
 

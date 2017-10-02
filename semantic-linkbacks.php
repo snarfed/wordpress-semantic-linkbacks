@@ -9,18 +9,8 @@
  * License: MIT
  * License URI: http://opensource.org/licenses/MIT
  * Text Domain: semantic-linkbacks
+ * Requires PHP: 5.3
  */
-
-// check if php version is >= 5.3
-// version is required by the mf2 parser
-// FIXME: Technically it can run just not without the MF2 functionality
-// But what does it do if not MF2 parsing?
-function semantic_linkbacks_activation() {
-	if ( version_compare( phpversion(), 5.3, '<' ) ) {
-		die( 'The minimum PHP version required for this plugin is 5.3' );
-	}
-}
-register_activation_hook( __FILE__, 'semantic_linkbacks_activation' );
 
 add_action( 'plugins_loaded', array( 'Semantic_Linkbacks_Plugin', 'init' ) );
 
@@ -40,15 +30,8 @@ class Semantic_Linkbacks_Plugin {
 		require_once( dirname( __FILE__ ) . '/includes/class-linkbacks-handler.php' );
 		add_action( 'init', array( 'Linkbacks_Handler', 'init' ) );
 
-		// run plugin only if php version is >= 5.3
-		if ( version_compare( phpversion(), 5.3, '>=' ) ) {
-			require_once( dirname( __FILE__ ) . '/includes/class-linkbacks-mf2-handler.php' );
-			add_action( 'init', array( 'Linkbacks_MF2_Handler', 'init' ) );
-		}
-
-		if ( version_compare( get_bloginfo( 'version' ), '4.7.1', '<' ) ) {
-			require_once( dirname( __FILE__ ) . '/includes/compatibility.php' );
-		}
+		require_once( dirname( __FILE__ ) . '/includes/class-linkbacks-mf2-handler.php' );
+		add_action( 'init', array( 'Linkbacks_MF2_Handler', 'init' ) );
 
 		add_action( 'wp_enqueue_scripts', array( 'Semantic_Linkbacks_Plugin', 'style_load' ) );
 
@@ -80,7 +63,7 @@ class Semantic_Linkbacks_Plugin {
 		load_plugin_textdomain( 'semantic-linkbacks', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
-		/**
+	/**
 	 * Add Semantic Linkbacks options to the WordPress discussion settings page.
 	 */
 	public static function discussion_settings() {
