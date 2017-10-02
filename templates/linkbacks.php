@@ -1,109 +1,164 @@
-<?php
-
-if ( has_linkbacks( 'like' ) ) { 
-	echo '<div class="likes">';
-	echo '<h3>' . __( 'Likes', 'semantic-linkbacks' ) . '</h3>';
-	list_linkbacks( array(
-		'li-class' => array( 'single-mention', 'p-like' ),
+<?php if ( has_linkbacks( 'like' ) ) : ?>
+<div class="likes">
+	<h3><?php echo __( 'Likes', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array( 'single-mention', 'p-like' ),
 		),
-	get_linkbacks( 'like' ) );
-	echo '</div>';
-}
+		get_linkbacks( 'like' )
+	);
+	?>
+</div>
+<?php endif; ?>
 
-if ( has_linkbacks( 'favorite' ) ) {
-	echo '<div class="favorite">';
-	echo '<h3>' . __( 'Favorites', 'semantic-linkbacks' ) . '</h3>';
-	list_linkbacks( array(
-		'li-class' => array( 'single-mention', 'p-favorite' )
-	), 
-	get_linkbacks( 'favorite' ) );
-	echo '</div>';
-}
+<?php if ( has_linkbacks( 'favorite' ) ) : ?>
+<div class="favorites">
+	<h3><?php echo __( 'Favourites', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array( 'single-mention', 'p-favorite' ),
+		),
+		get_linkbacks( 'favorite' )
+	);
+	?>
+</div>
+<?php endif; ?>
 
-if ( has_linkbacks( 'bookmark' ) ) {
-	echo '<div class="bookmarks">';
-	echo '<h3>' . __( 'Bookmarks', 'semantic-linkbacks' ) . '</h3>';
-	list_linkbacks( array(
-		'li-class' => array( 'single-mention', 'p-bookmark' )
-	), 
-	get_linkbacks( 'bookmark' ) );
-	echo '</div>';
-}
+<?php if ( has_linkbacks( 'bookmark' ) ) : ?>
+<div class="bookmarks">
+	<h3><?php echo __( 'Bookmarks', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array( 'single-mention', 'p-bookmark' ),
+		),
+		get_linkbacks( 'bookmark' )
+	);
+	?>
+</div>
+<?php endif; ?>
 
-if ( has_linkbacks( 'repost' ) ) {
-	echo '<div class="reposts">';
-	echo '<h3>' . __( 'Reposts', 'semantic-linkbacks' ) . '</h3>';
-	list_linkbacks( array(
-		'li-class' => array( 'single-mention', 'p-repost' )
-	), 
-	get_linkbacks( 'repost' ) );
-	echo '</div>';
-}
+<?php if ( has_linkbacks( 'repost' ) ) : ?>
+<div class="reposts">
+	<h3><?php echo __( 'Reposts', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array( 'single-mention', 'p-repost' ),
+		),
+		get_linkbacks( 'repost' )
+	);
+	?>
+</div>
+<?php endif; ?>
 
-if ( has_linkbacks( 'tag' ) ) {
-	echo '<div class="tags">';
-	echo '<h3>' . __( 'Tags', 'semantic-linkbacks' ) . '</h3>';
-	list_linkbacks( array(
-		'li-class' => array( 'single-mention', 'p-tag' )
-	), 
-	get_linkbacks( 'tags' ) );
-	echo '</div>';
-}
+<?php if ( has_linkbacks( 'tag' ) ) : ?>
+<div class="tags">
+	<h3><?php echo __( 'Tags', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array( 'single-mention', 'p-tag' ),
+		),
+		get_linkbacks( 'tag' )
+	);
+	?>
+</div>
+<?php endif; ?>
 
-if ( has_linkbacks( 'rsvp:yes' ) || has_linkbacks( 'rsvp:no' ) || has_linkbacks( 'rsvp:maybe' ) || has_linkbacks( 'rsvp:invited' ) || has_linkbacks( 'rsvp:tracking' ) ) {
-	echo '<div class="rsvps">';
-	echo '<h3>' . __( 'RSVPs', 'semantic-linkbacks' ) . '</h3>';
-	if ( has_linkbacks( 'rsvp:yes' ) ) {
-		echo '<h4>' . __( 'Yes', 'semantic-linkbacks' ) . '</h4>';
-		list_linkbacks( array(
-			'li-class' => array( 'single-mention', 'p-rsvp' )
-		), 
-		get_linkbacks( 'rsvp:yes' ) );
-		echo '</div>';
-	}
-	if ( has_linkbacks( 'rsvp:no' ) ) {
-		echo '<h4>' . __( 'No', 'semantic-linkbacks' ) . '</h4>';
-		list_linkbacks( array(
-			'li-class' => array( 'single-mention', 'p-rsvp' )
-		), 
-		get_linkbacks( 'rsvp:no' ) );
-		echo '</div>';
-	}
-	if ( has_linkbacks( 'rsvp:maybe' ) ) {
-		echo '<h4>' . __( 'Maybe', 'semantic-linkbacks' ) . '</h4>';
-		list_linkbacks( array(
-			'li-class' => array( 'single-mention', 'p-rsvp' )
-		), 
-		get_linkbacks( 'rsvp:maybe' ) );
-		echo '</div>';
-	}
-	if ( has_linkbacks( 'rsvp:invited' ) ) {
-		echo '<h4>' . __( 'Invited', 'semantic-linkbacks' ) . '</h4>';
-		list_linkbacks( array(
-			'li-class' => array( 'single-mention', 'p-rsvp' )
-		), 
-		get_linkbacks( 'rsvp:invited' ) );
-		echo '</div>';
-	}
-	if ( has_linkbacks( 'rsvp:tracking' ) ) {
-		echo '<h4>' . __( 'Tracking', 'semantic-linkbacks' ) . '</h4>';
-		list_linkbacks( array(
-			'li-class' => array( 'single-mention', 'p-rsvp' )
-		), 
-		get_linkbacks( 'rsvp:tracking' ) );
-		echo '</div>';
-	}
+<?php if ( has_linkbacks( 'rsvp' ) ) : ?>
+<div class="rsvps">
+	<h3><?php _e( 'RSVPs', 'semantic-linkbacks' ); ?></h3>
 
-	echo '</div>';
-}
+	<?php if ( has_linkbacks( 'rsvp:yes' ) ) : ?>
+	<h4><?php _e( 'Yes', 'semantic-linkbacks' ); ?></h4>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array(
+				'single-mention',
+				'p-rsvp',
+			)
+		),
+		get_linkbacks( 'rsvp:yes' )
+	);
+	?>
+	<?php endif; ?>
 
+	<?php if ( has_linkbacks( 'rsvp:invited' ) ) : ?>
+	<h4><?php _e( 'Invited', 'semantic-linkbacks' ); ?></h4>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array(
+				'single-mention',
+				'p-rsvp',
+			)
+		),
+		get_linkbacks( 'rsvp:invited' )
+	);
+	?>
+	<?php endif; ?>
 
-if ( has_linkbacks( 'mention' ) ) {
-	echo '<div class="mentions">';
-	echo '<h3>' . __( 'Mentions', 'semantic-linkbacks' ) . '</h3>';
-	list_linkbacks( array(
-		'li-class' => array( 'single-mention', 'p-comment' )
-	), 
-	get_linkbacks( 'mention' ) );
-	echo '</div>';
-}
+	<?php if ( has_linkbacks( 'rsvp:maybe' ) ) : ?>
+	<h4><?php _e( 'Maybe', 'semantic-linkbacks' ); ?></h4>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array(
+				'single-mention',
+				'p-rsvp',
+			)
+		),
+		get_linkbacks( 'rsvp:maybe' )
+	);
+	?>
+	<?php endif; ?>
+
+	<?php if ( has_linkbacks( 'rsvp:no' ) ) : ?>
+	<h4><?php _e( 'No', 'semantic-linkbacks' ); ?></h4>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array(
+				'single-mention',
+				'p-rsvp',
+			)
+		),
+		get_linkbacks( 'rsvp:no' )
+	);
+	?>
+	<?php endif; ?>
+
+	<?php if ( has_linkbacks( 'rsvp:tracking' ) ) : ?>
+	<h4><?php _e( 'Tracking', 'semantic-linkbacks' ); ?></h4>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array(
+				'single-mention',
+				'p-rsvp',
+			)
+		),
+		get_linkbacks( 'rsvp:tracking' )
+	);
+	?>
+	<?php endif; ?>
+<?php endif; ?>
+</div>
+
+<?php if ( has_linkbacks( 'mention' ) ) : ?>
+<div class="mentions">
+	<h3><?php echo __( 'Mentions', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array( 'single-mention', 'p-mention' ),
+		),
+		get_linkbacks( 'mention' )
+	);
+	?>
+</div>
+<?php endif; ?>
