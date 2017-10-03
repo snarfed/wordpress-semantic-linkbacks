@@ -8,7 +8,6 @@
 **Stable tag:** 3.5.0  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
-**Requires PHP:** 5.3  
 
 Richer Comments and Linkbacks for WordPress!
 
