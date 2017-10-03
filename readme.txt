@@ -47,7 +47,7 @@ The IndieWeb community defines several types of feedback:
 
 See [Extensions](https://indieweb.org/Semantic_Linkbacks#Extensions)
 
-= How do I add this into my plugin? = 
+= How do I add this into my plugin? =
 
 The plugin will automatically enhance webmentions, trackbacks, and pingbacks with an avatar and additional context. It will also automatically add a facepile instead of individual
 comments, but this feature can either be turned off by an aware theme or under Discussion in your Settings.
@@ -60,7 +60,7 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
-= 3,5.0 =
+= 3.5.0 =
 * Add Facepile code
 * Add setting to disable automatic facepile include
 * Add filter to allow themes to disable the setting and the feature if they facepile themselves

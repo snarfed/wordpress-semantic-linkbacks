@@ -60,7 +60,7 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
-### 3,5.0 ###
+### 3.5.0 ###
 * Add Facepile code
 * Add setting to disable automatic facepile include
 * Add filter to allow themes to disable the setting and the feature if they facepile themselves
