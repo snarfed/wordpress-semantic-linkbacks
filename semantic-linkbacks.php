@@ -67,7 +67,7 @@ class Semantic_Linkbacks_Plugin {
 	 * Add Semantic Linkbacks options to the WordPress discussion settings page.
 	 */
 	public static function discussion_settings() {
-		load_template( plugin_dir_path( __FILE__ ) . 'templates/semantic-linkbacks-discussion-settings.php' );
+		load_template( plugin_dir_path( __FILE__ ) . 'templates/discussion-settings.php' );
 	}
 
 
