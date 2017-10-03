@@ -5,7 +5,7 @@
 **Requires at least:** 4.8.2  
 **Requires PHP:** 5.3  
 **Tested up to:** 4.8.2  
-**Stable tag:** 3.5.0  
+**Stable tag:** 3.5.1  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -59,13 +59,19 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
+### 3.5.1 ###
+
+* Bugfix release
+
 ### 3.5.0 ###
+
 * Add Facepile code
 * Add setting to disable automatic facepile include
 * Add filter to allow themes to disable the setting and the feature if they facepile themselves
 * Add PHP requirement to readme file
 
 ### 3.4.1 ###
+
 * Abstract out linkback retrieval functions to allow for easier changes in future
 * Fix retrieval issue
 * Remove merge and compatibility function creating double slashing due update in 4.7.1

@@ -146,8 +146,8 @@
 	);
 	?>
 	<?php endif; ?>
-<?php endif; ?>
 </div>
+<?php endif; ?>
 
 <?php if ( has_linkbacks( 'mention' ) ) : ?>
 <div class="mentions">
