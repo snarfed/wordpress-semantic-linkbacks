@@ -47,6 +47,11 @@ The IndieWeb community defines several types of feedback:
 
 See [Extensions](https://indieweb.org/Semantic_Linkbacks#Extensions)
 
+### How do I add this into my plugin? ###
+
+The plugin will automatically enhance webmentions, trackbacks, and pingbacks with an avatar and additional context. It will also automatically add a facepile instead of individual
+comments, but this feature can either be turned off by an aware theme or under Discussion in your Settings.
+
 ### Who made the logos? ###
 
 The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronparecki.com) and the Microformats logo is made by [Dan Cederholm](http://simplebits.com/work/microformats/)
