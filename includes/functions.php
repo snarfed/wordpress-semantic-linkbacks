@@ -124,16 +124,22 @@ function list_linkbacks( $args, $comments ) {
 	}
 	$classes[] = 'h-cite';
 	$classes = join( ' ', $classes );
-	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] ); 
+	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
 	foreach ( $comments as $comment ) {
-		$return .= sprintf( '<li class="%1$s">
-			<a class="u-url" href="%2$s">
-			<span class="p-author h-card">%3$s
-			<a class="hide-name p-name u-url" href="%4$s">%5$s</a>
-			</span>
+		$return .= sprintf( '<li class="%1$s" id="%2$s">
+			<data class="p-name p-summary" value="%7$s" />
+			<data class="u-url" value="%3$s" />
+			<a class="p-author h-card" href="%5$s">
+				<img class="u-photo" src="%4$s" alt="%6$s" />
 			</a>
-			</li>', 
-			$classes, Linkbacks_Handler::get_canonical_url( $comment ), get_avatar( $comment, $r['avatar_size'] ), get_comment_author_url( $comment ), get_comment_author( $comment ) );
+			</li>',
+			esc_attr( $classes ),
+			esc_attr( 'comment-' . $comment->ID ),
+			esc_url_raw( Linkbacks_Handler::get_canonical_url( $comment ) ),
+			esc_url_raw( get_avatar( $comment, $r['avatar_size'] ) ),
+			esc_url_raw( get_comment_author_url( $comment ) ),
+			esc_attr( get_comment_author( $comment ) ),
+			esc_attr( Linkbacks_Handler::comment_text_excerpt( '', $comment ) ) );
 	}
 	$return .= sprintf( '</%1$s>', $r['style'] );
 	if ( $r['echo'] ) {
