@@ -124,16 +124,16 @@ function list_linkbacks( $args, $comments ) {
 	}
 	$classes[] = 'h-cite';
 	$classes = join( ' ', $classes );
-	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] ); 
+	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
 	foreach ( $comments as $comment ) {
 		$return .= sprintf( '<li class="%1$s">
-			<a class="u-url" href="%2$s">
-			<span class="p-author h-card">%3$s
-			<a class="hide-name p-name u-url" href="%4$s">%5$s</a>
+			<a class="u-url" title="%4$s" href="%3$s">
+			<span class="p-author h-card">%2$s
+			<span class="hide-name p-name">%4$s</span>
 			</span>
 			</a>
-			</li>', 
-			$classes, Linkbacks_Handler::get_canonical_url( $comment ), get_avatar( $comment, $r['avatar_size'] ), get_comment_author_url( $comment ), get_comment_author( $comment ) );
+			</li>',
+			$classes, get_avatar( $comment, $r['avatar_size'] ), get_comment_author_url( $comment ), get_comment_author( $comment ) );
 	}
 	$return .= sprintf( '</%1$s>', $r['style'] );
 	if ( $r['echo'] ) {
