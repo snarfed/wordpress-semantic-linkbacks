@@ -17,5 +17,5 @@
 	height: 64px;
 	width: 64px;
 	display: block;
-	object-fit: fill;
+	object-fit: cover;
 }
