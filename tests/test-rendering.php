@@ -19,4 +19,31 @@ class RenderingTest extends WP_UnitTestCase {
 			</a>
 			</li></ul>', list_linkbacks( array( 'echo' => false ), array( $comment ) ) );
 	}
+
+	public function test_facepile_ellipsis() {
+		add_filter( 'comment_flood_filter', function() { return FALSE; } );
+
+		// Note that FACEPILE_FOLD_LIMIT is overridden and set to 2 in bootstrap.php.
+		$comments = [];
+		for ( $i = 0; $i < 3; $i++ ) {
+			$id = wp_new_comment( array(
+				'comment_author_url' => 'http://example.com/person' . $i,
+				'comment_author' => 'Person ' . $i,
+				'comment_type' => 'webmention',
+			) );
+			add_comment_meta( $id, 'semantic_linkbacks_type', 'like' );
+			add_comment_meta( $id, 'semantic_linkbacks_avatar', 'http://example.com/photo' );
+			$comments[]= get_comment( $id );
+		}
+
+		$html = list_linkbacks( array( 'echo' => false ), $comments );
+		$person_0 = strpos( $html, '<a class="u-url" title="Person 0"' );
+		$person_1 = strpos( $html, '<a class="u-url" title="Person 1"' );
+		$ellipsis = strpos( $html, '<li class="single-mention mention-ellipsis">' );
+		$person_2 = strpos( $html, '<a class="u-url" title="Person 2"' );
+		$this->assertGreaterThan( 0, $person_0 );
+		$this->assertGreaterThan( $person_0, $person_1 );
+		$this->assertGreaterThan( $person_1, $ellipsis );
+		$this->assertGreaterThan( $ellipsis, $person_2 );
+	}
 }
