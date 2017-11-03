@@ -174,7 +174,7 @@ class Linkbacks_MF2_Handler {
 						$properties['author'] = $author = self::flatten_microformats( self::get_representative_author( $author_array, $author ) );
 					}
 				} else {
-					$comment_data['comment_author'] = wp_slash( $author );
+					$commentdata['comment_author'] = wp_slash( $author );
 				}
 			}
 
@@ -185,26 +185,26 @@ class Linkbacks_MF2_Handler {
 					}
 				}
 				if ( isset( $author['name'] ) ) {
-					$commentdata['comment_author'] = wp_slash( $author['name'] );
+					$commentdata['comment_author'] = wp_slash( self::first( $author['name'] ) );
 				}
 
 				if ( isset( $author['email'] ) ) {
-					$commentdata['comment_author_email'] = wp_slash( $author['email'] );
+					$commentdata['comment_author_email'] = wp_slash( self::first( $author['email'] ) );
 				}
 
 				if ( isset( $author['url'] ) ) {
-					$commentdata['comment_meta']['semantic_linkbacks_author_url'] = $author['url'];
+					$commentdata['comment_meta']['semantic_linkbacks_author_url'] = self::first( $author['url'] );
 				}
 
 				if ( isset( $author['photo'] ) ) {
-					$commentdata['comment_meta']['semantic_linkbacks_avatar'] = $author['photo'];
+					$commentdata['comment_meta']['semantic_linkbacks_avatar'] = self::first( $author['photo'] );
 				}
 			}
 		}
 
 		// set canonical url (u-url)
 		if ( isset( $properties['url'] ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = $properties['url'];
+			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = self::first( $properties['url'] );
 		} else {
 			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $source );
 		}
@@ -219,13 +219,13 @@ class Linkbacks_MF2_Handler {
 			$location = $properties['location'];
 			if ( is_array( $location ) ) {
 				if ( array_key_exists( 'latitude', $location ) ) {
-					$commentdata['comment_meta']['geo_latitude'] = $location['latitude'];
+					$commentdata['comment_meta']['geo_latitude'] = self::first( $location['latitude'] );
 				}
 				if ( array_key_exists( 'longitude', $location ) ) {
-					$commentdata['comment_meta']['geo_longitude'] = $location['longitude'];
+					$commentdata['comment_meta']['geo_longitude'] = self::first( $location['longitude'] );
 				}
 				if ( array_key_exists( 'name', $location ) ) {
-					$commentdata['comment_meta']['geo_address'] = $location['name'];
+					$commentdata['comment_meta']['geo_address'] = self::first( $location['name'] );
 				}
 			} else {
 				if ( substr( $location, 0, 4 ) == 'geo:' ) {
@@ -242,7 +242,7 @@ class Linkbacks_MF2_Handler {
 
 		// check rsvp property
 		if ( isset( $properties['rsvp'] ) ) {
-			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . $properties['rsvp'] );
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'rsvp:' . self::first( $properties['rsvp'] ) );
 		} else {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
@@ -292,12 +292,22 @@ class Linkbacks_MF2_Handler {
 			if ( is_array( $properties[ $key ] ) ) {
 				$properties[ $key ] = array_unique( $properties[ $key ] );
 			}
-			if ( 1 === count( $properties[ $key ] ) ) {
+			if ( 1 == count( $properties[ $key ] ) ) {
 				return $properties[ $key ][0];
 			}
 			return $properties[ $key ];
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the first item in $val if it's a non-empty array, otherwise $val itself.
+	 */
+	public static function first( $val ) {
+		if ( $val && is_array( $val ) ) {
+			return $val[0];
+		}
+		return $val;
 	}
 
 	/**
