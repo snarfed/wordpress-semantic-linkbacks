@@ -7,5 +7,13 @@
 	</label>
 
 	<br />
+
+	<label for="semantic_linkbacks_facepiles_fold_limit">
+		<input type="number" min="0" step="1" name="semantic_linkbacks_facepiles_fold_limit" id="semantic_linkbacks_facepiles_fold_limit" class="small-text" value="<?php
+			echo get_option( 'semantic_linkbacks_facepiles_fold_limit' ); ?>" />
+		<?php _e( 'Initial number of faces to show in facepiles <small>(0 for all)</small>', 'semantic-linkbacks' ) ?>
+	</label>
+
+	<br />
 	<?php } ?>
 </fieldset>

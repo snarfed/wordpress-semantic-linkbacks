@@ -1,9 +1,5 @@
 <?php
 
-if ( ! defined( 'FACEPILE_FOLD_LIMIT' ) ) {
-	define( 'FACEPILE_FOLD_LIMIT', 8 );
-}
-
 /**
  * Get a Count of Linkbacks by Type
  *
@@ -129,8 +125,9 @@ function list_linkbacks( $args, $comments ) {
 	$classes[] = 'h-cite';
 	$classes = join( ' ', $classes );
 	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
+	$fold_at = get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
 	foreach ( $comments as $i => $comment ) {
-		if ( $i == FACEPILE_FOLD_LIMIT ) {
+		if ( $fold_at && $i == $fold_at ) {
 			$return .= '<li class="single-mention mention-ellipsis">
 			<h3 id="mentions-ellipsis"> &nbsp;
 			<a href="" onclick="document.getElementById(\'mentions-below-fold\').style.display = \'inline\';
@@ -151,7 +148,7 @@ function list_linkbacks( $args, $comments ) {
 			$classes, get_avatar( $comment, $r['avatar_size'] ), get_comment_author_url( $comment ), get_comment_author( $comment ) );
 	}
 
-	if ( count( $comments ) > FACEPILE_FOLD_LIMIT ) {
+	if ( $fold_at && count( $comments ) > $fold_at ) {
 		$return .= '</span>';
 	}
 

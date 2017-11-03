@@ -4,9 +4,6 @@ error_reporting( E_ALL & ~E_NOTICE & ~E_STRICT & ~E_WARNING );
 
 define( 'WP_DEBUG', false );
 
-// Override some constants for testing.
-define( 'FACEPILE_FOLD_LIMIT', 2 );
-
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) {
 	$_tests_dir = '/tmp/wordpress-tests-lib';

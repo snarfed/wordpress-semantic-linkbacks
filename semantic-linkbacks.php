@@ -39,20 +39,24 @@ class Semantic_Linkbacks_Plugin {
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_content_filter' ), 22 );
 		self::plugin_textdomain();
 
+		// initialize admin settings
+		add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
+	}
+
+	public static function admin_init() {
+		add_settings_field( 'semantic_linkbacks_discussion_settings', __( 'Semantic Linkbacks Settings', 'webmention' ), array( 'Semantic_Linkbacks_Plugin', 'discussion_settings' ), 'discussion', 'default' );
 		register_setting( 'discussion', 'semantic_linkbacks_facepiles', array(
 			'type' => 'boolean',
 			'description' => __( 'Automatically Create Facepiles', 'semantic-linkbacks' ),
 			'show_in_rest' => true,
 			'default' => 1,
 		) );
-
-		// initialize admin settings
-		add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
-
-	}
-
-	public static function admin_init() {
-		add_settings_field( 'semantic_linkbacks_discussion_settings', __( 'Semantic Linkbacks Settings', 'webmention' ), array( 'Semantic_Linkbacks_Plugin', 'discussion_settings' ), 'discussion', 'default' );
+		register_setting( 'discussion', 'semantic_linkbacks_facepiles_fold_limit', array(
+			'type' => 'integer',
+			'description' => __( 'Initial number of faces to show in facepiles', 'semantic-linkbacks' ),
+			'show_in_rest' => true,
+			'default' => 8,
+		) );
 	}
 
 	/**
