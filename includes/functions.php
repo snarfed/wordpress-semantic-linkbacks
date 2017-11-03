@@ -125,7 +125,19 @@ function list_linkbacks( $args, $comments ) {
 	$classes[] = 'h-cite';
 	$classes = join( ' ', $classes );
 	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
-	foreach ( $comments as $comment ) {
+	$fold_at = get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
+	foreach ( $comments as $i => $comment ) {
+		if ( $fold_at && $i == $fold_at ) {
+			$return .= '<li class="single-mention mention-ellipsis">
+			<h3 id="mentions-ellipsis"> &nbsp;
+			<a href="" onclick="document.getElementById(\'mentions-below-fold\').style.display = \'inline\';
+				document.getElementById(\'mentions-ellipsis\').style.display = \'none\';
+				return false;">...</a>
+			</h3>
+			</li>
+			<span id="mentions-below-fold" style="display: none">';
+		}
+
 		$return .= sprintf( '<li class="%1$s">
 			<a class="u-url" title="%4$s" href="%3$s">
 			<span class="p-author h-card">%2$s
@@ -135,6 +147,11 @@ function list_linkbacks( $args, $comments ) {
 			</li>',
 			$classes, get_avatar( $comment, $r['avatar_size'] ), get_comment_author_url( $comment ), get_comment_author( $comment ) );
 	}
+
+	if ( $fold_at && count( $comments ) > $fold_at ) {
+		$return .= '</span>';
+	}
+
 	$return .= sprintf( '</%1$s>', $r['style'] );
 	if ( $r['echo'] ) {
 		echo $return;
