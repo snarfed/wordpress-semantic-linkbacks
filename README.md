@@ -4,8 +4,8 @@
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.8.2  
 **Requires PHP:** 5.3  
-**Tested up to:** 4.8.2  
-**Stable tag:** 3.5.1  
+**Tested up to:** 4.8.3  
+**Stable tag:** 3.6.0  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -59,11 +59,11 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
-### 3.6.0 (unreleased) ###
-* Only show the first 8 avatars in a facepile by default. If there are more, include a clickable ellipsis to show the rest. Customizable on the discussion settings admin page.
+### 3.6.0 ###
+
+* Only show the first 8 avatars in a facepile by default. If there are more, include a clickable ellipsis to show the rest. Customizable via the `FACEPILE_FOLD_LIMIT` constant.
 * Link facepile avatars to user profile/home page, not response post
 * Always show avatar images with correct aspect ratio
-* Fix a bug with authors with multiple `u-photo`s in incoming webmentions
 
 ### 3.5.1 ###
 
