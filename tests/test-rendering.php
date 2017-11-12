@@ -72,4 +72,30 @@ class RenderingTest extends WP_UnitTestCase {
 		$this->assertContains( '<a class="u-url" title="Person 2', $html );
 		$this->assertEquals( false, strpos( '<li class="single-mention mention-ellipsis">', $html ) );
 	}
+
+	public function test_reactions() {
+		$id = wp_new_comment( array(
+			'comment_author_url' => 'http://example.com/person',
+			'comment_author' => 'Person',
+			'comment_type' => '',
+			'comment_comment' => '😢',  // 'crying face' emoji
+		) );
+		add_comment_meta( $id, 'semantic_linkbacks_avatar', 'http://example.com/photo' );
+		Semantic_Linkbacks_Walker_Comment::$reactions['😢'] = array( get_comment( $id ) );
+
+		ob_start();
+		load_template( dirname( __FILE__ ) . '/../templates/linkbacks.php', false );
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertEquals( '<div class="reactions">
+	<h3>😢</h3>
+	<ul class="mention-list"><li class="single-mention p-reply h-cite" id="comment-' . $id . '">
+				<span class="p-author h-card">
+					<a class="u-url" title="" href="http://example.com/person"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /></a>
+					<span class="hide-name p-name">Person</span>
+				</span>
+				<a class="u-url" href=""></a>
+			</li></ul></div>', trim( $html ) );
+	}
 }

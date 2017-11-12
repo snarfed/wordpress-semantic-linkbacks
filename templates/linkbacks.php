@@ -26,6 +26,20 @@
 </div>
 <?php endif; ?>
 
+<?php foreach ( Semantic_Linkbacks_Walker_Comment::$reactions as $emoji => $comments ) : ?>
+<div class="reactions">
+	<h3><?php echo $emoji; ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array( 'single-mention', 'p-reply' ),
+		),
+		$comments
+	);
+	?>
+</div>
+<?php endforeach; ?>
+
 <?php if ( get_option( 'semantic_linkbacks_facepile_bookmark', true ) && has_linkbacks( 'bookmark' ) ) : ?>
 <div class="bookmarks">
 	<h3><?php echo __( 'Bookmarks', 'semantic-linkbacks' ); ?></h3>
