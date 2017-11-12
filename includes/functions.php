@@ -138,14 +138,21 @@ function list_linkbacks( $args, $comments ) {
 			<span id="mentions-below-fold" style="display: none">';
 		}
 
-		$return .= sprintf( '<li class="%1$s">
-			<a class="u-url" title="%4$s" href="%3$s">
-			<span class="p-author h-card">%2$s
-			<span class="hide-name p-name">%4$s</span>
-			</span>
-			</a>
+		$return .= sprintf( '<li class="%1$s" id="%5$s">
+				<span class="p-author h-card">
+					<a class="u-url" title="%6$s" href="%3$s">%2$s</a>
+					<span class="hide-name p-name">%4$s</span>
+				</span>
+				<a class="u-url" href="%7$s"></a>
 			</li>',
-			$classes, get_avatar( $comment, $r['avatar_size'] ), get_comment_author_url( $comment ), get_comment_author( $comment ) );
+			$classes,
+			get_avatar( $comment, $r['avatar_size'] ),
+			get_comment_author_url( $comment ),
+			get_comment_author( $comment ),
+			esc_attr( 'comment-' . $comment->ID ),
+			esc_attr( Linkbacks_Handler::comment_text_excerpt( '', $comment ) ),
+			esc_url_raw( Linkbacks_Handler::get_canonical_url( $comment ) )
+		);
 	}
 
 	if ( $fold_at && count( $comments ) > $fold_at ) {
