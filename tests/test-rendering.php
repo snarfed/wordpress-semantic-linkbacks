@@ -23,22 +23,22 @@ class RenderingTest extends WP_UnitTestCase {
 
 	public function test_facepile_markup() {
 		$comments = $this->make_comments(1);
-		$this->assertEquals( '<ul class="mention-list"><li class="single-mention h-cite">
-			<a class="u-url" title="Person 0" href="http://example.com/person0">
-			<span class="p-author h-card"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' />
-			<span class="hide-name p-name">Person 0</span>
-			</span>
-			</a>
-			</li></ul>', list_linkbacks( array( 'echo' => false ), $comments ) );
+		$this->assertEquals( '<ul class="mention-list"><li class="single-mention h-cite" id="comment-6">
+				<span class="p-author h-card">
+					<a class="u-url" title="Person 0 liked this Article on example.com." href="http://example.com/person0"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /></a>
+					<span class="hide-name p-name">Person 0</span>
+				</span>
+				<a class="u-url" href=""></a>
+			</li>', list_linkbacks( array( 'echo' => false ), $comments ) );
 	}
 
 	public function test_facepile_fold() {
 		$comments = $this->make_comments(3);
 		$html = list_linkbacks( array( 'echo' => false ), $comments );
-		$person_0 = strpos( $html, '<a class="u-url" title="Person 0"' );
-		$person_1 = strpos( $html, '<a class="u-url" title="Person 1"' );
+		$person_0 = strpos( $html, '<a class="u-url" title="Person 0 liked this Article on example.com."' );
+		$person_1 = strpos( $html, '<a class="u-url" title="Person 1 liked this Article on example.com."' );
 		$ellipsis = strpos( $html, '<li class="single-mention mention-ellipsis">' );
-		$person_2 = strpos( $html, '<a class="u-url" title="Person 2"' );
+		$person_2 = strpos( $html, '<a class="u-url" title="Person 2 liked this Article on example.com."' );
 		$this->assertGreaterThan( 0, $person_0 );
 		$this->assertGreaterThan( $person_0, $person_1 );
 		$this->assertGreaterThan( $person_1, $ellipsis );
@@ -49,9 +49,9 @@ class RenderingTest extends WP_UnitTestCase {
 		$comments = $this->make_comments(3);
 		update_option( 'semantic_linkbacks_facepiles_fold_limit', 0 );
 		$html = list_linkbacks( array( 'echo' => false ), $comments );
-		$this->assertContains( '<a class="u-url" title="Person 0"', $html );
-		$this->assertContains( '<a class="u-url" title="Person 1"', $html );
-		$this->assertContains( '<a class="u-url" title="Person 2"', $html );
+		$this->assertContains( '<a class="u-url" title="Person 0', $html );
+		$this->assertContains( '<a class="u-url" title="Person 1', $html );
+		$this->assertContains( '<a class="u-url" title="Person 2', $html );
 		$this->assertEquals( FALSE, strpos( '<li class="single-mention mention-ellipsis">', $html ) );
 	}
 }
