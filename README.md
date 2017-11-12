@@ -163,6 +163,7 @@ rather than rerequesting this information.
 
 ## Thanks to ##
 
+* Aaron Parecki ([@aaronpk](https://github.com/aaronpk)) for the [emoji-detector-php](https://github.com/aaronpk/emoji-detector-php) library
 * Pelle Wessman ([@voxpelli](https://github.com/voxpelli)) for his awesome [WebMention test-pinger](https://github.com/voxpelli/node-webmention-testpinger)
 * Ryan Barrett ([@snarfed](https://github.com/snarfed)) for his feedback
 * Barnaby Walters ([@barnabywalters](https://github.com/barnabywalters)) for his awesome [mf2 parser](https://github.com/indieweb/php-mf2)
