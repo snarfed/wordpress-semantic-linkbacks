@@ -149,8 +149,8 @@ function list_linkbacks( $args, $comments ) {
 			get_avatar( $comment, $r['avatar_size'] ),
 			get_comment_author_url( $comment ),
 			get_comment_author( $comment ),
-			esc_attr( 'comment-' . $comment->ID ),
-			esc_attr( Linkbacks_Handler::comment_text_excerpt( '', $comment ) ),
+			esc_attr( 'comment-' . $comment->comment_ID ),
+			esc_attr( wp_strip_all_tags( Linkbacks_Handler::comment_text_excerpt( '', $comment ) ) ),
 			esc_url_raw( Linkbacks_Handler::get_canonical_url( $comment ) )
 		);
 	}
