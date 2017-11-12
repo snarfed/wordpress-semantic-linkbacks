@@ -4,6 +4,25 @@
 define( 'MAX_INLINE_MENTION_LENGTH', 300 );
 
 /**
+ * Comment walker subclass that skips facepile webmention comments.
+ *
+ * Based on https://codex.wordpress.org/Function_Reference/Walker_Comment
+ */
+class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
+	function start_el( &$output, $comment, $depth = 0, $args = array(), $id = 0 ) {
+		if ( $comment->type != 'webmention' || Linkbacks_Handler::get_type ( $comment ) == 'mention' ) {
+			return parent::start_el ( $output, $comment, $depth, $args, $id );
+		}
+	}
+
+	function end_el( &$output, $comment, $depth = 0, $args = array() ) {
+		if ( $comment->type != 'webmention' || Linkbacks_Handler::get_type ( $comment ) == 'mention' ) {
+			return parent::end_el ( $output, $comment, $depth, $args, $id );
+		}
+	}
+}
+
+/**
  * Semantic linkbacks class
  *
  * @author Matthias Pfefferle
@@ -43,15 +62,14 @@ class Linkbacks_Handler {
 	}
 
 	/**
-	  * Filter the comments and ignore every comment other than 'comment'
+	  * Filter the comments and ignore every comment other than 'comment' and 'mention'
 	  *
 	  * @param array $args an array of arguments for displaying comments
 	  *
 	  * @return array the filtered array
 	  */
 	public static function filter_comment_args( $args ) {
-		$args['type'] = 'comment';
-
+		$args['walker'] = new Semantic_Linkbacks_Walker_Comment;
 		return $args;
 	}
 

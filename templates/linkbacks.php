@@ -148,17 +148,3 @@
 	<?php endif; ?>
 </div>
 <?php endif; ?>
-
-<?php if ( has_linkbacks( 'mention' ) ) : ?>
-<div class="mentions">
-	<h3><?php echo __( 'Mentions', 'semantic-linkbacks' ); ?></h3>
-	<?php
-	list_linkbacks(
-		array(
-			'li-class' => array( 'single-mention', 'p-mention' ),
-		),
-		get_linkbacks( 'mention' )
-	);
-	?>
-</div>
-<?php endif; ?>
