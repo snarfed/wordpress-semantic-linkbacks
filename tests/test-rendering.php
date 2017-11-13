@@ -25,7 +25,7 @@ class RenderingTest extends WP_UnitTestCase {
 		$comments = $this->make_comments( 1 );
 		$this->assertStringMatchesFormat( '<ul class="mention-list"><li class="single-mention h-cite" id="comment-2">
 				<span class="p-author h-card">
-					<a class="u-url" title="Person 0 liked this Article on example.com." href="http://example.com/person0"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /></a>
+					<a class="u-url" title="Person 0 liked this Article on example.com." href="http://example.com/person0"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /> </a>
 					<span class="hide-name p-name">Person 0</span>
 				</span>
 				<a class="u-url" href=""></a>
@@ -55,7 +55,7 @@ class RenderingTest extends WP_UnitTestCase {
 		$html = list_linkbacks( array( 'echo' => false ), $comments );
 		$person_0 = strpos( $html, '<a class="u-url" title="Person 0 liked this Article on example.com."' );
 		$person_1 = strpos( $html, '<a class="u-url" title="Person 1 liked this Article on example.com."' );
-		$ellipsis = strpos( $html, '<li class="single-mention mention-ellipsis">' );
+		$ellipsis = strpos( $html, '<li id="mention-ellipsis-single-mention" class="single-mention mention-ellipsis">' );
 		$person_2 = strpos( $html, '<a class="u-url" title="Person 2 liked this Article on example.com."' );
 		$this->assertGreaterThan( 0, $person_0 );
 		$this->assertGreaterThan( $person_0, $person_1 );
@@ -78,10 +78,10 @@ class RenderingTest extends WP_UnitTestCase {
 			'comment_author_url' => 'http://example.com/person',
 			'comment_author' => 'Person',
 			'comment_type' => '',
-			'comment_comment' => '😢',  // 'crying face' emoji
+			'comment_content' => '😢',  // 'crying face' emoji
 		) );
 		add_comment_meta( $id, 'semantic_linkbacks_avatar', 'http://example.com/photo' );
-		Semantic_Linkbacks_Walker_Comment::$reactions['😢'] = array( get_comment( $id ) );
+		Semantic_Linkbacks_Walker_Comment::$reactions = array( get_comment( $id ) );
 
 		ob_start();
 		load_template( dirname( __FILE__ ) . '/../templates/linkbacks.php', false );
@@ -89,10 +89,9 @@ class RenderingTest extends WP_UnitTestCase {
 		ob_end_clean();
 
 		$this->assertEquals( '<div class="reactions">
-	<h3>😢</h3>
-	<ul class="mention-list"><li class="single-mention p-reply h-cite" id="comment-' . $id . '">
+	<ul class="mention-list"><li class="single-mention p-reply emoji-reaction h-cite" id="comment-9">
 				<span class="p-author h-card">
-					<a class="u-url" title="" href="http://example.com/person"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /></a>
+					<a class="u-url" title="Person 😢 on example.com." href="http://example.com/person"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /> <span class="emoji-overlay">😢</span></a>
 					<span class="hide-name p-name">Person</span>
 				</span>
 				<a class="u-url" href=""></a>

@@ -125,10 +125,11 @@ function list_linkbacks( $args, $comments ) {
 		$classes = $r['li-class'];
 	}
 	// All of the list_linkbacks() calls right now are in linkbacks.php, and
-	// they pass the mf2 class as the second li-class element, which is unique,
+	// they pass the mf2 class as the last li-class element, which is unique,
 	// so use that.
-	$ellipsis_id = 'mention-ellipsis-' . $r['li-class'][1];
-	$fold_id = 'mentions-below-fold-' . $r['li-class'][1];
+	$id_class = $classes[count($classes) - 1];
+	$ellipsis_id = 'mention-ellipsis-' . $id_class;
+	$fold_id = 'mentions-below-fold-' . $id_class;
 
 	$classes[] = 'h-cite';
 	$classes = join( ' ', $classes );
