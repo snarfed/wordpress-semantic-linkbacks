@@ -16,10 +16,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 		if ( $comment->type == '' ) {
 			$emoji = Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) );
 			if ( $emoji ) {
-				if ( ! array_key_exists( $emoji['emoji'], self::$reactions ) ) {
-					self::$reactions[$emoji['emoji']] = array();
-				}
-				self::$reactions[$emoji['emoji']][] = $comment;
+				self::$reactions[] = $comment;
 				return;
 			}
 		}

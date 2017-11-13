@@ -19,3 +19,13 @@
 	display: block;
 	object-fit: cover;
 }
+
+li.emoji-reaction {
+	position: relative;
+}
+
+.emoji-overlay {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}

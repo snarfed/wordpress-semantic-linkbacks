@@ -1,5 +1,7 @@
 <?php
 
+require_once 'emoji-detector-php/Emoji.php';
+
 /**
  * Get a Count of Linkbacks by Type
  *
@@ -146,9 +148,23 @@ function list_linkbacks( $args, $comments ) {
             $fold_id, $ellipsis_id );
 		}
 
+		// If it's an emoji reaction, overlay the emoji.
+		$overlay = '';
+		$content = trim( wp_strip_all_tags( $comment->comment_content ) );
+		$title = Linkbacks_Handler::comment_text_excerpt( '', $comment );
+		if ( Emoji\is_single_emoji( $content ) ) {
+			$overlay = '<span class="emoji-overlay">' . $content . '</span>';
+			$url = wp_parse_url( Linkbacks_Handler::get_url( $comment ), PHP_URL_HOST );
+			$title = sprintf( '%1$s %2$s on %3$s.',
+				$comment->comment_author,
+				$content,
+				preg_replace( '/^www\./', '', $url )
+			);
+		}
+
 		$return .= sprintf( '<li class="%1$s" id="%5$s">
 				<span class="p-author h-card">
-					<a class="u-url" title="%6$s" href="%3$s">%2$s</a>
+					<a class="u-url" title="%6$s" href="%3$s">%2$s %8$s</a>
 					<span class="hide-name p-name">%4$s</span>
 				</span>
 				<a class="u-url" href="%7$s"></a>
@@ -158,8 +174,9 @@ function list_linkbacks( $args, $comments ) {
 			get_comment_author_url( $comment ),
 			get_comment_author( $comment ),
 			esc_attr( 'comment-' . $comment->comment_ID ),
-			esc_attr( wp_strip_all_tags( Linkbacks_Handler::comment_text_excerpt( '', $comment ) ) ),
-			esc_url_raw( Linkbacks_Handler::get_canonical_url( $comment ) )
+			esc_attr( wp_strip_all_tags( $title ) ),
+			esc_url_raw( Linkbacks_Handler::get_canonical_url( $comment ) ),
+			$overlay
 		);
 	}
 
