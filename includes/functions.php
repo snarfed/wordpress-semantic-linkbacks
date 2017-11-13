@@ -122,6 +122,12 @@ function list_linkbacks( $args, $comments ) {
 	else {
 		$classes = $r['li-class'];
 	}
+	// All of the list_linkbacks() calls right now are in linkbacks.php, and
+	// they pass the mf2 class as the second li-class element, which is unique,
+	// so use that.
+	$ellipsis_id = 'mention-ellipsis-' . $r['li-class'][1];
+	$fold_id = 'mentions-below-fold-' . $r['li-class'][1];
+
 	$classes[] = 'h-cite';
 	$classes = join( ' ', $classes );
 	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
@@ -129,14 +135,15 @@ function list_linkbacks( $args, $comments ) {
 
 	foreach ( $comments as $i => $comment ) {
 		if ( $fold_at && $i == $fold_at ) {
-			$return .= '<li class="single-mention mention-ellipsis">
-			<h3 id="mentions-ellipsis"> &nbsp;
-			<a href="" onclick="document.getElementById(\'mentions-below-fold\').style.display = \'inline\';
-				document.getElementById(\'mentions-ellipsis\').style.display = \'none\';
+			$return .= sprintf('<li id="%2$s" class="single-mention mention-ellipsis">
+			<h3> &nbsp;
+			<a href="" onclick="document.getElementById(\'%1$s\').style.display = \'inline\';
+				document.getElementById(\'%2$s\').style.display = \'none\';
 				return false;">...</a>
 			</h3>
 			</li>
-			<span id="mentions-below-fold" style="display: none">';
+			<span id="%1$s" style="display: none">',
+            $fold_id, $ellipsis_id );
 		}
 
 		$return .= sprintf( '<li class="%1$s" id="%5$s">
