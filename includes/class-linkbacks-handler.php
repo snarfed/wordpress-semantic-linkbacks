@@ -4,36 +4,6 @@
 define( 'MAX_INLINE_MENTION_LENGTH', 300 );
 
 /**
- * Comment walker subclass that skips facepile webmention comments.
- *
- * Based on https://codex.wordpress.org/Function_Reference/Walker_Comment
- */
-class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
-	static function should_facepile( $comment ) {
-		if ( $comment->type && $comment_type != 'comment' ) {
-			$type = 'mention';
-		} else {
-			$type = Linkbacks_Handler::get_type ( $comment );
-		}
-		$option = 'semantic_linkbacks_facepile_' . explode( ':', $type )[0];
-
-		return $type && $type != 'reply' && get_option( $option, true );
-	}
-
-	function start_el( &$output, $comment, $depth = 0, $args = array(), $id = 0 ) {
-		if ( ! self::should_facepile( $comment ) ) {
-			return parent::start_el( $output, $comment, $depth, $args, $id );
-		}
-	}
-
-	function end_el( &$output, $comment, $depth = 0, $args = array() ) {
-		if ( ! self::should_facepile( $comment ) ) {
-			return parent::end_el( $output, $comment, $depth, $args );
-		}
-	}
-}
-
-/**
  * Semantic linkbacks class
  *
  * @author Matthias Pfefferle
@@ -51,7 +21,7 @@ class Linkbacks_Handler {
 		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'update_meta' ), 10, 2 );
 
 		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 5 );
-		add_filter( 'get_facepile_avatar' , array( 'Linkbacks_Handler', 'get_facepile_avatar' ), 10, 1 );
+
 		// To extend or to override the default behavior, just use the `comment_text` filter with a lower
 		// priority (so that it's called after this one) or remove the filters completely in
 		// your code: `remove_filter('comment_text', array('Linkbacks_Handler', 'comment_text_add_cite'), 11);`
@@ -71,21 +41,23 @@ class Linkbacks_Handler {
 	}
 
 	/**
-	  * Filter the comments and ignore every comment other than 'comment' and 'mention'
-	  *
-	  * @param array $args an array of arguments for displaying comments
-	  *
-	  * @return array the filtered array
-	  */
+	 * Filter the comments and ignore every comment other than 'comment' and 'mention'
+	 *
+	 * @param array $args an array of arguments for displaying comments
+	 *
+	 * @return array the filtered array
+	 */
 	public static function filter_comment_args( $args ) {
+		require_once( dirname( __FILE__ ) . '/class-linkbacks-walker-comment.php' );
+
 		$args['walker'] = new Semantic_Linkbacks_Walker_Comment;
 		return $args;
 	}
 
-	 /**
-	  *
-	  *
-	  */
+	/**
+	 *
+	 *
+	 */
 	public static function show_mentions() {
 		// If this filter is set to false then hide the template and hide the option. This should be used by themes
 		if ( apply_filters( 'semantic_linkbacks_facepile', true ) ) {
@@ -492,11 +464,24 @@ class Linkbacks_Handler {
 			return $args;
 		}
 
+		$type = get_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_type', true );
+		$type = explode( ':', $type );
+
+		if ( is_array( $type ) ) {
+			$type = $type[0];
+		}
+
+		$option = 'semantic_linkbacks_facepile_' . $type;
+
+		if ( get_option( $option, false ) ) {
+			$args['default'] = 'mm';
+		}
+
 		// check if comment has an avatar
 		$avatar = self::get_avatar_url( $id_or_email->comment_ID );
 
 		if ( $avatar ) {
-			if ( ! isset( $args['class'] ) ) {
+			if ( ! isset( $args['class'] ) || ! is_array( $args['class'] ) ) {
 				$args['class'] = array( 'u-photo' );
 			} else {
 				$args['class'][] = 'u-photo';
@@ -505,31 +490,8 @@ class Linkbacks_Handler {
 			$args['url'] = $avatar;
 			$args['class'][] = 'avatar-semantic-linkbacks';
 		}
+
 		return $args;
-	}
-
-	/**
-	 * Ensure facepile avatar images are visible.
-	 *
-	 * Also inject a JS fallback to a visible placeholder image, since
-	 * webmention author images are usually remote, and can disappear over time.
-	 *
-	 * @param string $avatar <img> tag for avatar
-	 *
-	 * @return string $avatar
-	 */
-	public static function get_facepile_avatar( $avatar ) {
-		if ( strpos( $avatar, 'gravatar.com/' ) != false ) {
-			$avatar = str_replace( 'd=blank', 'd=mm', $avatar );
-		}
-
-		$def = get_option( 'avatar_default' );
-		$mystery = get_avatar_url( NULL, array(
-			'default' => ( $def == 'blank' ? 'mystery' : $def )
-		) );
-		$avatar = str_replace('<img ', '<img onerror="this.src=\'' . $mystery . '\'; this.srcset = \'\'; this.onerror = null" ', $avatar);
-
-		return $avatar;
 	}
 
 	/**
