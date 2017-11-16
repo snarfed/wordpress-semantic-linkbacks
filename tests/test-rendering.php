@@ -25,7 +25,7 @@ class RenderingTest extends WP_UnitTestCase {
 		$comments = $this->make_comments(1);
 		$this->assertStringMatchesFormat( '<ul class="mention-list"><li class="single-mention h-cite" id="comment-2">
 				<span class="p-author h-card">
-					<a class="u-url" title="Person 0 liked this Article on example.com." href="http://example.com/person0"><img onerror="this.src=\'http://%c.gravatar.com/avatar/?s=96&d=mm&r=g\'; this.srcset = \'\'" alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /></a>
+					<a class="u-url" title="Person 0 liked this Article on example.com." href="http://example.com/person0"><img onerror="this.src=\'http://%c.gravatar.com/avatar/?s=96&d=mm&r=g\'; this.srcset = \'\'; this.onerror = null" alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /></a>
 					<span class="hide-name p-name">Person 0</span>
 				</span>
 				<a class="u-url" href=""></a>

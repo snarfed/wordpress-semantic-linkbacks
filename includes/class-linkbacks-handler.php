@@ -527,7 +527,7 @@ class Linkbacks_Handler {
 		$mystery = get_avatar_url( NULL, array(
 			'default' => ( $def == 'blank' ? 'mystery' : $def )
 		) );
-		$avatar = str_replace('<img ', '<img onerror="this.src=\'' . $mystery . '\'; this.srcset = \'\'" ', $avatar);
+		$avatar = str_replace('<img ', '<img onerror="this.src=\'' . $mystery . '\'; this.srcset = \'\'; this.onerror = null" ', $avatar);
 
 		return $avatar;
 	}
