@@ -51,7 +51,7 @@ class Linkbacks_Handler {
 		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'update_meta' ), 10, 2 );
 
 		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 5 );
-		add_filter( 'get_avatar' , array( 'Linkbacks_Handler', 'get_avatar' ), 1, 5 );
+		add_filter( 'get_facepile_avatar' , array( 'Linkbacks_Handler', 'get_facepile_avatar' ), 10, 1 );
 		// To extend or to override the default behavior, just use the `comment_text` filter with a lower
 		// priority (so that it's called after this one) or remove the filters completely in
 		// your code: `remove_filter('comment_text', array('Linkbacks_Handler', 'comment_text_add_cite'), 11);`
@@ -509,27 +509,23 @@ class Linkbacks_Handler {
 	}
 
 	/**
-	 * Ensures avatar images are visible.
-	 *
-	 * If the default avatar setting is 'blank', switch to a visible
-	 * placeholder, TODO since this is a facepile.
+	 * Ensure facepile avatar images are visible.
 	 *
 	 * Also inject a JS fallback to a visible placeholder image, since
 	 * webmention author images are usually remote, and can disappear over time.
 	 *
-	 * @param array             $args Arguments passed to get_avatar_data(), after processing.
-	 * @param int|string|object $id_or_email A user ID, email address, or comment object
+	 * @param string $avatar <img> tag for avatar
 	 *
-	 * @return array $args
+	 * @return string $avatar
 	 */
-	public static function get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
-		if ( strpos( $avatar, 'gravatar.com/' ) != FALSE ) {
+	public static function get_facepile_avatar( $avatar ) {
+		if ( strpos( $avatar, 'gravatar.com/' ) != false ) {
 			$avatar = str_replace( 'd=blank', 'd=mm', $avatar );
 		}
 
-		$default = get_option( 'avatar_default' );
+		$def = get_option( 'avatar_default' );
 		$mystery = get_avatar_url( NULL, array(
-			'default' => ( $default == 'blank' ? 'mystery' : $default )
+			'default' => ( $def == 'blank' ? 'mystery' : $def )
 		) );
 		$avatar = str_replace('<img ', '<img onerror="this.src=\'' . $mystery . '\'; this.srcset = \'\'" ', $avatar);
 
