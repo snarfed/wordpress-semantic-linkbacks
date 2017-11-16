@@ -28,7 +28,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 
 	function end_el( &$output, $comment, $depth = 0, $args = array() ) {
 		if ( ! self::should_facepile( $comment ) ) {
-			return parent::end_el( $output, $comment, $depth, $args, $id );
+			return parent::end_el( $output, $comment, $depth, $args );
 		}
 	}
 }
@@ -51,6 +51,7 @@ class Linkbacks_Handler {
 		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'update_meta' ), 10, 2 );
 
 		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 5 );
+		add_filter( 'get_facepile_avatar' , array( 'Linkbacks_Handler', 'get_facepile_avatar' ), 10, 1 );
 		// To extend or to override the default behavior, just use the `comment_text` filter with a lower
 		// priority (so that it's called after this one) or remove the filters completely in
 		// your code: `remove_filter('comment_text', array('Linkbacks_Handler', 'comment_text_add_cite'), 11);`
@@ -505,6 +506,30 @@ class Linkbacks_Handler {
 			$args['class'][] = 'avatar-semantic-linkbacks';
 		}
 		return $args;
+	}
+
+	/**
+	 * Ensure facepile avatar images are visible.
+	 *
+	 * Also inject a JS fallback to a visible placeholder image, since
+	 * webmention author images are usually remote, and can disappear over time.
+	 *
+	 * @param string $avatar <img> tag for avatar
+	 *
+	 * @return string $avatar
+	 */
+	public static function get_facepile_avatar( $avatar ) {
+		if ( strpos( $avatar, 'gravatar.com/' ) != false ) {
+			$avatar = str_replace( 'd=blank', 'd=mm', $avatar );
+		}
+
+		$def = get_option( 'avatar_default' );
+		$mystery = get_avatar_url( NULL, array(
+			'default' => ( $def == 'blank' ? 'mystery' : $def )
+		) );
+		$avatar = str_replace('<img ', '<img onerror="this.src=\'' . $mystery . '\'; this.srcset = \'\'; this.onerror = null" ', $avatar);
+
+		return $avatar;
 	}
 
 	/**

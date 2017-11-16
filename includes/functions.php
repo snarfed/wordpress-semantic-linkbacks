@@ -126,6 +126,7 @@ function list_linkbacks( $args, $comments ) {
 	$classes = join( ' ', $classes );
 	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
 	$fold_at = get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
+
 	foreach ( $comments as $i => $comment ) {
 		if ( $fold_at && $i == $fold_at ) {
 			$return .= '<li class="single-mention mention-ellipsis">
@@ -138,6 +139,13 @@ function list_linkbacks( $args, $comments ) {
 			<span id="mentions-below-fold" style="display: none">';
 		}
 
+		/**
+		 * Filters the avatar <img> tag displayed in a facepile.
+		 *
+		 * @param string $avatar HTML string with <img> tag
+		 */
+		$avatar = apply_filters( 'get_facepile_avatar', get_avatar( $comment, $r['avatar_size']) );
+
 		$return .= sprintf( '<li class="%1$s" id="%5$s">
 				<span class="p-author h-card">
 					<a class="u-url" title="%6$s" href="%3$s">%2$s</a>
@@ -146,7 +154,7 @@ function list_linkbacks( $args, $comments ) {
 				<a class="u-url" href="%7$s"></a>
 			</li>',
 			$classes,
-			get_avatar( $comment, $r['avatar_size'] ),
+			$avatar,
 			get_comment_author_url( $comment ),
 			get_comment_author( $comment ),
 			esc_attr( 'comment-' . $comment->comment_ID ),
