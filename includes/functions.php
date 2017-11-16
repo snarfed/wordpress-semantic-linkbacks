@@ -139,22 +139,6 @@ function list_linkbacks( $args, $comments ) {
 			<span id="mentions-below-fold" style="display: none">';
 		}
 
-		// Avatar image for comment author.
-		//
-		// If the default avatar setting is 'blank', switch it to a visible
-		// placeholder, since this is a facepile. Also inject a JS fallback to a
-		// visible placeholder image, since webmention author images are usually
-		// remote, and can disappear over time.
-		$avatar = get_avatar( $comment, $r['avatar_size'] );
-		if ( strpos( $avatar, 'gravatar.com/' ) != FALSE ) {
-			$avatar = str_replace( 'd=blank', 'd=mm', $avatar );
-		}
-		$default = get_option( 'avatar_default' );
-		$mystery = get_avatar_url( NULL, array(
-			'default' => ( $default == 'blank' ? 'mystery' : $default )
-		) );
-		$avatar = str_replace('<img ', '<img onerror="this.src=\'' . $mystery . '\'; this.srcset = \'\'" ', $avatar);
-
 		$return .= sprintf( '<li class="%1$s" id="%5$s">
 				<span class="p-author h-card">
 					<a class="u-url" title="%6$s" href="%3$s">%2$s</a>
@@ -163,7 +147,7 @@ function list_linkbacks( $args, $comments ) {
 				<a class="u-url" href="%7$s"></a>
 			</li>',
 			$classes,
-			$avatar,
+			get_avatar( $comment, $r['avatar_size'] ),
 			get_comment_author_url( $comment ),
 			get_comment_author( $comment ),
 			esc_attr( 'comment-' . $comment->comment_ID ),
