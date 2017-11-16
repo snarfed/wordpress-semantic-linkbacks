@@ -4,6 +4,36 @@
 define( 'MAX_INLINE_MENTION_LENGTH', 300 );
 
 /**
+ * Comment walker subclass that skips facepile webmention comments.
+ *
+ * Based on https://codex.wordpress.org/Function_Reference/Walker_Comment
+ */
+class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
+	static function should_facepile( $comment ) {
+		if ( $comment->type && $comment_type != 'comment' ) {
+			$type = 'mention';
+		} else {
+			$type = Linkbacks_Handler::get_type ( $comment );
+		}
+		$option = 'semantic_linkbacks_facepile_' . explode( ':', $type )[0];
+
+		return $type && $type != 'reply' && get_option( $option, true );
+	}
+
+	function start_el( &$output, $comment, $depth = 0, $args = array(), $id = 0 ) {
+		if ( ! self::should_facepile( $comment ) ) {
+			return parent::start_el( $output, $comment, $depth, $args, $id );
+		}
+	}
+
+	function end_el( &$output, $comment, $depth = 0, $args = array() ) {
+		if ( ! self::should_facepile( $comment ) ) {
+			return parent::end_el( $output, $comment, $depth, $args, $id );
+		}
+	}
+}
+
+/**
  * Semantic linkbacks class
  *
  * @author Matthias Pfefferle
@@ -32,26 +62,22 @@ class Linkbacks_Handler {
 		add_filter( 'get_comment_author_url', array( 'Linkbacks_Handler', 'get_comment_author_url' ), 99, 3 );
 		add_filter( 'get_avatar_comment_types', array( 'Linkbacks_Handler', 'get_avatar_comment_types' ) );
 		add_filter( 'comment_class', array( 'Linkbacks_Handler', 'comment_class' ), 10, 4 );
-
-		if ( 1 == get_option( 'semantic_linkbacks_facepiles' ) ) {
-			add_filter( 'wp_list_comments_args', array( 'Linkbacks_Handler', 'filter_comment_args' ) );
-			add_action( 'comment_form_before', array( 'Linkbacks_Handler', 'show_mentions' ) );
-		}
+		add_filter( 'wp_list_comments_args', array( 'Linkbacks_Handler', 'filter_comment_args' ) );
+		add_action( 'comment_form_before', array( 'Linkbacks_Handler', 'show_mentions' ) );
 
 		// Register Meta Keys
 		self::register_meta();
 	}
 
 	/**
-	  * Filter the comments and ignore every comment other than 'comment'
+	  * Filter the comments and ignore every comment other than 'comment' and 'mention'
 	  *
 	  * @param array $args an array of arguments for displaying comments
 	  *
 	  * @return array the filtered array
 	  */
 	public static function filter_comment_args( $args ) {
-		$args['type'] = 'comment';
-
+		$args['walker'] = new Semantic_Linkbacks_Walker_Comment;
 		return $args;
 	}
 

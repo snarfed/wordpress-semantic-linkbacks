@@ -45,9 +45,45 @@ class Semantic_Linkbacks_Plugin {
 
 	public static function admin_init() {
 		add_settings_field( 'semantic_linkbacks_discussion_settings', __( 'Semantic Linkbacks Settings', 'webmention' ), array( 'Semantic_Linkbacks_Plugin', 'discussion_settings' ), 'discussion', 'default' );
-		register_setting( 'discussion', 'semantic_linkbacks_facepiles', array(
+		register_setting( 'discussion', 'semantic_linkbacks_facepile_mention', array(
 			'type' => 'boolean',
-			'description' => __( 'Automatically Create Facepiles', 'semantic-linkbacks' ),
+			'description' => __( 'Facepile Mentions', 'semantic-linkbacks' ),
+			'show_in_rest' => true,
+			'default' => 1,
+		) );
+		register_setting( 'discussion', 'semantic_linkbacks_facepile_repost', array(
+			'type' => 'boolean',
+			'description' => __( 'Facepile Reposts', 'semantic-linkbacks' ),
+			'show_in_rest' => true,
+			'default' => 1,
+		) );
+		register_setting( 'discussion', 'semantic_linkbacks_facepile_like', array(
+			'type' => 'boolean',
+			'description' => __( 'Facepile Likes', 'semantic-linkbacks' ),
+			'show_in_rest' => true,
+			'default' => 1,
+		) );
+		register_setting( 'discussion', 'semantic_linkbacks_facepile_favorite', array(
+			'type' => 'boolean',
+			'description' => __( 'Facepile Favorite', 'semantic-linkbacks' ),
+			'show_in_rest' => true,
+			'default' => 1,
+		) );
+		register_setting( 'discussion', 'semantic_linkbacks_facepile_tag', array(
+			'type' => 'boolean',
+			'description' => __( 'Facepile Tags', 'semantic-linkbacks' ),
+			'show_in_rest' => true,
+			'default' => 1,
+		) );
+		register_setting( 'discussion', 'semantic_linkbacks_facepile_bookmark', array(
+			'type' => 'boolean',
+			'description' => __( 'Facepile Bookmarks', 'semantic-linkbacks' ),
+			'show_in_rest' => true,
+			'default' => 1,
+		) );
+		register_setting( 'discussion', 'semantic_linkbacks_facepile_rsvp', array(
+			'type' => 'boolean',
+			'description' => __( 'Facepile RSVPs', 'semantic-linkbacks' ),
 			'show_in_rest' => true,
 			'default' => 1,
 		) );
