@@ -74,6 +74,8 @@ class RenderingTest extends WP_UnitTestCase {
 	}
 
 	public function test_reactions() {
+		require_once( dirname( __FILE__ ) . '/../includes/class-linkbacks-walker-comment.php' );
+
 		$id = wp_new_comment( array(
 			'comment_author_url' => 'http://example.com/person',
 			'comment_author' => 'Person',
@@ -88,8 +90,8 @@ class RenderingTest extends WP_UnitTestCase {
 		$html = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertEquals( '<div class="reactions">
-	<ul class="mention-list"><li class="single-mention p-reply emoji-reaction h-cite" id="comment-9">
+		$this->assertStringMatchesFormat( '<div class="reactions">
+	<ul class="mention-list"><li class="single-mention p-reply emoji-reaction h-cite" id="comment-%d">
 				<span class="p-author h-card">
 					<a class="u-url" title="Person 😢 on example.com." href="http://example.com/person"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /> <span class="emoji-overlay">😢</span></a>
 					<span class="hide-name p-name">Person</span>
