@@ -12,13 +12,8 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	public static $reactions = array();
 
 	static function should_facepile( $comment ) {
-		// Detect single-emoji reactions
-		if ( $comment->type == '' ) {
-			$emoji = Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) );
-			if ( $emoji ) {
-				self::$reactions[] = $comment;
-				return;
-			}
+		if ( self::is_reaction( $comment ) && get_option( 'semantic_linkbacks_facepile_reaction', true ) ) {
+			return true;
 		}
 
 		if ( $comment->type && 'comment' != $comment_type ) {
@@ -38,7 +33,16 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 		return $type && 'reply' != $type && get_option( $option, true );
 	}
 
+	static function is_reaction( $comment ) {
+		return ( $comment->type == '' &&
+				 Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) ) );
+	}
+
 	function start_el( &$output, $comment, $depth = 0, $args = array(), $id = 0 ) {
+		if ( self::is_reaction( $comment ) ) {
+			self::$reactions[] = $comment;
+		}
+
 		if ( ! self::should_facepile( $comment ) ) {
 			return parent::start_el( $output, $comment, $depth, $args, $id );
 		}
