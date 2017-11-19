@@ -63,6 +63,12 @@ class Semantic_Linkbacks_Plugin {
 			'show_in_rest' => true,
 			'default' => 1,
 		) );
+		register_setting( 'discussion', 'semantic_linkbacks_facepile_reaction', array(
+			'type' => 'boolean',
+			'description' => __( 'Facepile Reactions (emoji)', 'semantic-linkbacks' ),
+			'show_in_rest' => true,
+			'default' => 1,
+		) );
 		register_setting( 'discussion', 'semantic_linkbacks_facepile_favorite', array(
 			'type' => 'boolean',
 			'description' => __( 'Facepile Favorite', 'semantic-linkbacks' ),

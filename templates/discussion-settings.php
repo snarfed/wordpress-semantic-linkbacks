@@ -14,6 +14,10 @@
 			<input type="checkbox" name="semantic_linkbacks_facepile_like" id="semantic_linkbacks_facepile_like" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_like', true ) ); ?> />
 			<?php _e( 'Likes', 'semantic-linkbacks' ) ?>
 		</label></li>
+		<li><label for="semantic_linkbacks_facepile_reaction">
+			<input type="checkbox" name="semantic_linkbacks_facepile_reaction" id="semantic_linkbacks_facepile_reaction" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_reaction', true ) ); ?> />
+			<?php _e( 'Reactions (emoji)', 'semantic-linkbacks' ) ?>
+		</label></li>
 		<li><label for="semantic_linkbacks_facepile_favorite">
 			<input type="checkbox" name="semantic_linkbacks_facepile_favorite" id="semantic_linkbacks_facepile_favorite" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_favorite', true ) ); ?> />
 			<?php _e( 'Favorites', 'semantic-linkbacks' ) ?>

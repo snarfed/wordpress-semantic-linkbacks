@@ -1,4 +1,4 @@
-<?php if ( Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
+<?php if ( get_option( 'semantic_linkbacks_facepile_reaction', true ) && Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
 <div class="reactions">
 	<?php
 	list_linkbacks(
