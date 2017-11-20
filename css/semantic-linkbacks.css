@@ -29,3 +29,7 @@ li.emoji-reaction {
 	bottom: 0;
 	right: 0;
 }
+
+.reactions {
+    clear: both;
+}
