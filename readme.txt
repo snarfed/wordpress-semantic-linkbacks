@@ -51,6 +51,15 @@ See [Extensions](https://indieweb.org/Semantic_Linkbacks#Extensions)
 The plugin will automatically enhance webmentions, trackbacks, and pingbacks with an avatar and additional context. It will also automatically add a facepile instead of individual
 comments, but this feature can either be turned off by an aware theme or under Discussion in your Settings.
 
+= Why do some [emoji reactions](https://indieweb.org/reacji) not show up? =
+
+Some emoji characters in webmentions you might receive, e.g. Facebook reactions from [Bridgy](https://brid.gy/), take more than two bytes to encode. (In technical terms, these Unicode characters are [above the Basic Multilingual Plane](https://en.wikipedia.org/wiki/Plane_(Unicode)).) To handle them, you need MySQL 5.5.3 or higher, and your database and tables need to use the [`utf8mb4` charset](https://dev.mysql.com/doc/refman/5.7/en/charset-mysql.html). [Usually WordPress does this automatically](https://make.wordpress.org/core/2015/04/02/the-utf8mb4-upgrade/), but not always.
+
+First, [follow these instructions](https://wordpress.stackexchange.com/questions/195046/relaunch-4-2-utf8mb4-databse-upgrade/244992#244992) to switch your MySQL database to `utf8mb4`. Then, make sure `DB_CHARSET` and `DB_COLLATE` in your `wp-config.php` are either unset, set to the blank string, or set to these values:
+
+    define('DB_CHARSET', 'utf8mb4');
+    define('DB_COLLATE', 'utf8mb4_general_ci');
+
 = Who made the logos? =
 
 The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronparecki.com) and the Microformats logo is made by [Dan Cederholm](http://simplebits.com/work/microformats/)
