@@ -1,3 +1,18 @@
+<?php require_once( dirname( __FILE__ ) . '/../includes/class-linkbacks-walker-comment.php' ); ?>
+
+<?php if ( get_option( 'semantic_linkbacks_facepile_reaction', true ) && Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
+<div class="reactions">
+	<?php
+	list_linkbacks(
+		array(
+			'li-class' => array( 'single-mention', 'p-reply', 'emoji-reaction' ),
+		),
+		Semantic_Linkbacks_Walker_Comment::$reactions
+	);
+	?>
+</div>
+<?php endif; ?>
+
 <?php if ( get_option( 'semantic_linkbacks_facepile_like', true ) && has_linkbacks( 'like' ) ) : ?>
 <div class="likes">
 	<h3><?php echo __( 'Likes', 'semantic-linkbacks' ); ?></h3>

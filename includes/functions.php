@@ -1,5 +1,7 @@
 <?php
 
+require_once 'emoji-detector-php/Emoji.php';
+
 /**
  * Get a Count of Linkbacks by Type
  *
@@ -122,6 +124,13 @@ function list_linkbacks( $args, $comments ) {
 	else {
 		$classes = $r['li-class'];
 	}
+	// All of the list_linkbacks() calls right now are in linkbacks.php, and
+	// they pass the mf2 class as the last li-class element, which is unique,
+	// so use that.
+	$id_class = $classes[count($classes) - 1];
+	$ellipsis_id = 'mention-ellipsis-' . $id_class;
+	$fold_id = 'mentions-below-fold-' . $id_class;
+
 	$classes[] = 'h-cite';
 	$classes = join( ' ', $classes );
 	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
@@ -129,19 +138,34 @@ function list_linkbacks( $args, $comments ) {
 
 	foreach ( $comments as $i => $comment ) {
 		if ( $fold_at && $i == $fold_at ) {
-			$return .= '<li class="single-mention mention-ellipsis">
-			<h3 id="mentions-ellipsis"> &nbsp;
-			<a href="" onclick="document.getElementById(\'mentions-below-fold\').style.display = \'inline\';
-				document.getElementById(\'mentions-ellipsis\').style.display = \'none\';
+			$return .= sprintf('<li id="%2$s" class="single-mention mention-ellipsis">
+			<h3> &nbsp;
+			<a href="" onclick="document.getElementById(\'%1$s\').style.display = \'inline\';
+				document.getElementById(\'%2$s\').style.display = \'none\';
 				return false;">...</a>
 			</h3>
 			</li>
-			<span id="mentions-below-fold" style="display: none">';
+			<span id="%1$s" style="display: none">',
+            $fold_id, $ellipsis_id );
+		}
+
+		// If it's an emoji reaction, overlay the emoji.
+		$overlay = '';
+		$content = trim( wp_strip_all_tags( $comment->comment_content ) );
+		$title = Linkbacks_Handler::comment_text_excerpt( '', $comment );
+		if ( Emoji\is_single_emoji( $content ) ) {
+			$overlay = '<span class="emoji-overlay">' . $content . '</span>';
+			$url = wp_parse_url( Linkbacks_Handler::get_url( $comment ), PHP_URL_HOST );
+			$title = sprintf( '%1$s %2$s on %3$s.',
+				$comment->comment_author,
+				$content,
+				preg_replace( '/^www\./', '', $url )
+			);
 		}
 
 		$return .= sprintf( '<li class="%1$s" id="%5$s">
 				<span class="p-author h-card">
-					<a class="u-url" title="%6$s" href="%3$s">%2$s</a>
+					<a class="u-url" title="%6$s" href="%3$s">%2$s %8$s</a>
 					<span class="hide-name p-name">%4$s</span>
 				</span>
 				<a class="u-url" href="%7$s"></a>
@@ -151,8 +175,9 @@ function list_linkbacks( $args, $comments ) {
 			get_comment_author_url( $comment ),
 			get_comment_author( $comment ),
 			esc_attr( 'comment-' . $comment->comment_ID ),
-			esc_attr( wp_strip_all_tags( Linkbacks_Handler::comment_text_excerpt( '', $comment ) ) ),
-			esc_url_raw( Linkbacks_Handler::get_canonical_url( $comment ) )
+			esc_attr( wp_strip_all_tags( $title ) ),
+			esc_url_raw( Linkbacks_Handler::get_canonical_url( $comment ) ),
+			$overlay
 		);
 	}
 
