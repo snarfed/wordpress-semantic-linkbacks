@@ -50,7 +50,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 
 	function end_el( &$output, $comment, $depth = 0, $args = array() ) {
 		if ( ! self::should_facepile( $comment ) ) {
-			return parent::end_el( $output, $comment, $depth, $args, $id );
+			return parent::end_el( $output, $comment, $depth, $args );
 		}
 	}
 }
