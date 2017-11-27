@@ -27,4 +27,3 @@ phpunit.xml
 phpunit.xml.dist
 tests
 node_modules
-vendor

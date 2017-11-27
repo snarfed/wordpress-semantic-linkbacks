@@ -1,7 +1,4 @@
 <?php
-
-require_once 'emoji-detector-php/Emoji.php';
-
 /**
  * Get a Count of Linkbacks by Type
  *

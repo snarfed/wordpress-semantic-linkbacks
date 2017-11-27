@@ -1,7 +1,4 @@
 <?php
-
-require_once 'emoji-detector-php/Emoji.php';
-
 /**
  * Comment walker subclass that skips facepile webmention comments and stores
  * emoji reactions (https://indieweb.org/reacj).

@@ -1,8 +1,6 @@
 <?php
 namespace Emoji;
 
-define('LONGEST_EMOJI', 8);
-
 function detect_emoji($string) {
   // Find all the emoji in the input string
 
@@ -12,9 +10,9 @@ function detect_emoji($string) {
   if(!isset($map))
     $map = _load_map();
 
-  static $regexp;
-  if(!isset($regexp))
-    $regexp = _load_regexp();
+  // From Emojione\Client
+  // https://github.com/Ranks/emojione/blob/fd4bb7a26a39e93d0cb4ed90934e9e3f73ebca4b/lib/php/src/Client.php
+  $regexp = '([*#0-9](?>\\xEF\\xB8\\x8F)?\\xE2\\x83\\xA3|\\xC2[\\xA9\\xAE]|\\xE2..(\\xF0\\x9F\\x8F[\\xBB-\\xBF])?(?>\\xEF\\xB8\\x8F)?|\\xE3(?>\\x80[\\xB0\\xBD]|\\x8A[\\x97\\x99])(?>\\xEF\\xB8\\x8F)?|\\xF0\\x9F(?>[\\x80-\\x86].(?>\\xEF\\xB8\\x8F)?|\\x87.\\xF0\\x9F\\x87.|..((\\xE2\\x80\\x8D\\xF0\\x9F\\x97\\xA8)|(\\xF0\\x9F\\x8F[\\xBB-\\xBF])|(\\xE2\\x80\\x8D\\xF0\\x9F\\x91[\\xA6-\\xA9]){2,3}|(\\xE2\\x80\\x8D\\xE2\\x9D\\xA4\\xEF\\xB8\\x8F\\xE2\\x80\\x8D\\xF0\\x9F..(\\xE2\\x80\\x8D\\xF0\\x9F\\x91[\\xA6-\\xA9])?))?))';
 
   if(preg_match_all($regexp, $string, $matches)) {
     foreach($matches[0] as $ch) {
@@ -58,9 +56,6 @@ function detect_emoji($string) {
 }
 
 function is_single_emoji($string) {
-  // If the string is longer than the longest emoji, it's not a single emoji
-  if(mb_strlen($string) >= LONGEST_EMOJI) return false;
-
   $all_emoji = detect_emoji($string);
 
   // If there are more than one or none, return false immediately
@@ -82,10 +77,6 @@ function is_single_emoji($string) {
 
 function _load_map() {
   return json_decode(file_get_contents(dirname(__FILE__).'/map.json'), true);
-}
-
-function _load_regexp() {
-  return '/(?:' . json_decode(file_get_contents(dirname(__FILE__).'/regexp.json')) . ')/u';
 }
 
 function uniord($c) {

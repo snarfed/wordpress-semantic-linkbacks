@@ -1,8 +1,4 @@
 <?php
-if ( ! class_exists( 'Mf2\Parser' ) ) {
-	require_once 'Mf2/Parser.php';
-}
-
 use Mf2\Parser;
 
 /**
