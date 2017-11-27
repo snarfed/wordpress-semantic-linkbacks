@@ -48,8 +48,6 @@ class Linkbacks_Handler {
 	 * @return array the filtered array
 	 */
 	public static function filter_comment_args( $args ) {
-		require_once( dirname( __FILE__ ) . '/class-linkbacks-walker-comment.php' );
-
 		$args['walker'] = new Semantic_Linkbacks_Walker_Comment;
 		return $args;
 	}

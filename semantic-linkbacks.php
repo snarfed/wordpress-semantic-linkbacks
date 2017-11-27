@@ -33,6 +33,7 @@ class Semantic_Linkbacks_Plugin {
 			require_once( dirname( __FILE__ ) . '/vendor/p3k/emoji-detector/src/Emoji.php' );
 		}
 
+		require_once( dirname( __FILE__ ) . '/includes/class-linkbacks-walker-comment.php' );
 		require_once( dirname( __FILE__ ) . '/includes/functions.php' );
 
 		require_once( dirname( __FILE__ ) . '/includes/class-linkbacks-handler.php' );

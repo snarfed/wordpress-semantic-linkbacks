@@ -1,5 +1,3 @@
-<?php require_once( dirname( __FILE__ ) . '/../includes/class-linkbacks-walker-comment.php' ); ?>
-
 <?php if ( get_option( 'semantic_linkbacks_facepile_reaction', true ) && Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
 <div class="reactions">
 	<?php

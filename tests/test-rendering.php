@@ -74,8 +74,6 @@ class RenderingTest extends WP_UnitTestCase {
 	}
 
 	public function test_reactions() {
-		require_once( dirname( __FILE__ ) . '/../includes/class-linkbacks-walker-comment.php' );
-
 		$id = wp_new_comment( array(
 			'comment_author_url' => 'http://example.com/person',
 			'comment_author' => 'Person',
