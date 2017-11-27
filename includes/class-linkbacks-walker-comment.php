@@ -34,15 +34,16 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	}
 
 	static function get_comment_author_link( $comment_ID = 0 ) {
-    		$comment = get_comment( $comment_ID );
+		$comment = get_comment( $comment_ID );
 		$url     = get_comment_author_url( $comment );
 		$author  = get_comment_author( $comment );
- 
-		if ( empty( $url ) || 'http://' == $url )
+
+		if ( empty( $url ) || 'http://' == $url ) {
 			$return = "<span class='p-name'>" . $author . "</span>";
-		else
+		} else {
 			$return = "<a href='$url' rel='external nofollow' class='u-url p-name'>$author</a>";
-		
+		}
+
 		/**
 		 * Filters the comment author's link for display.
 		 *
@@ -58,7 +59,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 
 	static function is_reaction( $comment ) {
 		return ( $comment->type == '' &&
-				 Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) ) );
+				Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) ) );
 	}
 
 	function start_el( &$output, $comment, $depth = 0, $args = array(), $id = 0 ) {
@@ -135,5 +136,4 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 			</article><!-- .comment-body -->
 <?php
 	}
-
 }

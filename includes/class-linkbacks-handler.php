@@ -427,10 +427,9 @@ class Linkbacks_Handler {
 		$host = preg_replace( '/^www\./', '', $host );
 
 		// generate output. use full content if it's small enough, otherwise use excerpt.
-		$oldtext = $text;
-      	$text_len = mb_strlen(html_entity_decode($text, ENT_QUOTES));
+		$text_len = mb_strlen(html_entity_decode($text, ENT_QUOTES));
 		if ( ! ( 'mention' == $semantic_linkbacks_type && $text_len <= MAX_INLINE_MENTION_LENGTH ) ) {
-          	$text = sprintf( $comment_type_excerpts[ $semantic_linkbacks_type ], get_comment_author_link( $comment->comment_ID ), $post_type, $url, $host );
+			$text = sprintf( $comment_type_excerpts[ $semantic_linkbacks_type ], get_comment_author_link( $comment->comment_ID ), $post_type, $url, $host );
 		}
 		return apply_filters( 'semantic_linkbacks_excerpt', $text );
 	}
