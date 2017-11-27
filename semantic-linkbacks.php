@@ -26,11 +26,11 @@ class Semantic_Linkbacks_Plugin {
 	 */
 	public static function init() {
 		if ( ! class_exists( 'Mf2\Parser' ) ) {
-			require_once dirname( __FILE__ ) . '/vendor/mf2/mf2/Mf2/Parser.php';
+			require_once( dirname( __FILE__ ) . '/vendor/mf2/mf2/Mf2/Parser.php' );
 		}
 
 		if ( ! function_exists( 'Emoji\detect_emoji' ) ) {
-			require_once dirname( __FILE__ ) . '/vendor/p3k/emoji-detector-php/src/Emoji.php';
+			require_once( dirname( __FILE__ ) . '/vendor/p3k/emoji-detector/src/Emoji.php' );
 		}
 
 		require_once( dirname( __FILE__ ) . '/includes/functions.php' );
