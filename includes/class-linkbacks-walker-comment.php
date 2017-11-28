@@ -75,7 +75,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 		}
 	}
 
-	protected function html5_comment( $comment, $depth, $args ) {
+	protected function _html5_comment( $comment, $depth, $args ) {
 		$tag = ( 'div' === $args['style'] ) ? 'div' : 'li';
 		$type = Linkbacks_Handler::get_type( $comment );
 		$url = Linkbacks_Handler::get_url( $comment );
