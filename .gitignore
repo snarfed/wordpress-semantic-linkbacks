@@ -9,3 +9,4 @@ wordpress
 !/vendor/p3k
 /vendor/p3k/emoji-detector/*
 !/vendor/p3k/emoji-detector/src
+.DS_Store
