@@ -36,9 +36,9 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 		$author  = get_comment_author( $comment );
 
 		if ( empty( $url ) || 'http://' == $url ) {
-			$return = "<span class='p-name'>" . $author . "</span>";
+			$return = sprintf( '<span class="p-name">%s</span>', $author );
 		} else {
-			$return = "<a href='$url' rel='external nofollow' class='u-url p-name'>$author</a>";
+			$return = sprintf( '<a href="%s" rel="external" class="u-url p-name">%s</a>', $url, $author );
 		}
 
 		/**
@@ -95,7 +95,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 								sprintf( '<b>%s</b>', self::get_comment_author_link( $comment ) )
 							);
 							if ( $type ) {
-								echo '<small>&nbsp;@&nbsp;<cite><a href="' . $url . '">' . $host . '</a></cite></small>';
+								printf( '<small>&nbsp;@&nbsp;<cite><a href="%s">%s</a></cite></small>', $url, $host );
 							}
 						?>
 					</div><!-- .comment-author -->
