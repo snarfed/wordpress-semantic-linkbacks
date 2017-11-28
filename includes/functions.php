@@ -135,15 +135,15 @@ function list_linkbacks( $args, $comments ) {
 
 	foreach ( $comments as $i => $comment ) {
 		if ( $fold_at && $i == $fold_at ) {
-			$return .= sprintf('<li id="%2$s" class="single-mention mention-ellipsis">
-			<h3> &nbsp;
-			<a href="" onclick="document.getElementById(\'%1$s\').style.display = \'inline\';
-				document.getElementById(\'%2$s\').style.display = \'none\';
-				return false;">...</a>
-			</h3>
-			</li>
-			<span id="%1$s" style="display: none">',
-            $fold_id, $ellipsis_id );
+			$return .= sprintf( '<li id="%2$s" class="single-mention mention-ellipsis">
+				<h3> &nbsp;
+				<a href="" onclick="document.getElementById(\'%1$s\').style.display = \'inline\';
+					document.getElementById(\'%2$s\').style.display = \'none\';
+					return false;">...</a>
+				</h3>
+				</li>
+				<span id="%1$s" style="display: none">',
+				$fold_id, $ellipsis_id );
 		}
 
 		// If it's an emoji reaction, overlay the emoji.
