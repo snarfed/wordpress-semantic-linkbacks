@@ -76,9 +76,9 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	}
 
 	protected function _html5_comment( $comment, $depth, $args ) {
-		$tag = ( 'div' === $args['style'] ) ? 'div' : 'li';
+		$tag  = ( 'div' === $args['style'] ) ? 'div' : 'li';
 		$type = Linkbacks_Handler::get_type( $comment );
-		$url = Linkbacks_Handler::get_url( $comment );
+		$url  = Linkbacks_Handler::get_url( $comment );
 		$host = wp_parse_url( $url, PHP_URL_HOST );
 		// strip leading www, if any
 		$host = preg_replace( '/^www\./', '', $host );
@@ -88,15 +88,19 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 			<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
 				<footer class="comment-meta">
 					<div class="comment-author vcard h-card u-author">
-						<?php if ( 0 != $args['avatar_size'] ) echo get_avatar( $comment, $args['avatar_size'] ); ?>
+						<?php
+						if ( 0 != $args['avatar_size'] ) {
+							echo get_avatar( $comment, $args['avatar_size'] );}
+?>
 						<?php
 							/* translators: %s: comment author link */
-							printf( __( '%s <span class="says">says:</span>' ),
+							printf(
+								__( '%s <span class="says">says:</span>' ),
 								sprintf( '<b>%s</b>', self::get_comment_author_link( $comment ) )
 							);
-							if ( $type ) {
-								printf( '<small>&nbsp;@&nbsp;<cite><a href="%s">%s</a></cite></small>', $url, $host );
-							}
+						if ( $type ) {
+							printf( '<small>&nbsp;@&nbsp;<cite><a href="%s">%s</a></cite></small>', $url, $host );
+						}
 						?>
 					</div><!-- .comment-author -->
 
@@ -122,13 +126,17 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 				</div><!-- .comment-content -->
 
 				<?php
-				comment_reply_link( array_merge( $args, array(
-					'add_below' => 'div-comment',
-					'depth'     => $depth,
-					'max_depth' => $args['max_depth'],
-					'before'    => '<div class="reply">',
-					'after'     => '</div>'
-				) ) );
+				comment_reply_link(
+					array_merge(
+						$args, array(
+							'add_below' => 'div-comment',
+							'depth'     => $depth,
+							'max_depth' => $args['max_depth'],
+							'before'    => '<div class="reply">',
+							'after'     => '</div>',
+						)
+					)
+				);
 				?>
 			</article><!-- .comment-body -->
 <?php

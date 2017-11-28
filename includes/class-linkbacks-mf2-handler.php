@@ -28,35 +28,35 @@ class Linkbacks_MF2_Handler {
 		 * @link http://indiewebcamp.com/replies
 		 */
 		$class_mapper['in-reply-to'] = 'reply';
-		$class_mapper['reply'] = 'reply';
-		$class_mapper['reply-of'] = 'reply';
+		$class_mapper['reply']       = 'reply';
+		$class_mapper['reply-of']    = 'reply';
 
 		/*
 		 * repost
 		 * @link http://indiewebcamp.com/repost
 		 */
-		$class_mapper['repost'] = 'repost';
+		$class_mapper['repost']    = 'repost';
 		$class_mapper['repost-of'] = 'repost';
 
 		/*
 		 * likes
 		 * @link http://indiewebcamp.com/likes
 		 */
-		$class_mapper['like'] = 'like';
+		$class_mapper['like']    = 'like';
 		$class_mapper['like-of'] = 'like';
 
 		/*
 		 * favorite
 		 * @link http://indiewebcamp.com/favorite
 		 */
-		$class_mapper['favorite'] = 'favorite';
+		$class_mapper['favorite']    = 'favorite';
 		$class_mapper['favorite-of'] = 'favorite';
 
 		/*
 		 * bookmark
 		 * @link http://indiewebcamp.com/bookmark
 		 */
-		$class_mapper['bookmark'] = 'bookmark';
+		$class_mapper['bookmark']    = 'bookmark';
 		$class_mapper['bookmark-of'] = 'bookmark';
 
 		/*
@@ -87,7 +87,7 @@ class Linkbacks_MF2_Handler {
 		 * @link http://indiewebcamp.com/in-reply-to
 		 */
 		$rel_mapper['in-reply-to'] = 'reply';
-		$rel_mapper['reply-of'] = 'reply';
+		$rel_mapper['reply-of']    = 'reply';
 
 		return apply_filters( 'semantic_linkbacks_microformats_rel_mapper', $rel_mapper );
 	}
@@ -109,7 +109,7 @@ class Linkbacks_MF2_Handler {
 		}
 
 		// parse source html
-		$parser = new Parser( $commentdata['remote_source_original'], $source );
+		$parser   = new Parser( $commentdata['remote_source_original'], $source );
 		$mf_array = $parser->parse( true );
 
 		// get all 'relevant' entries
@@ -126,9 +126,9 @@ class Linkbacks_MF2_Handler {
 			return array();
 		}
 
-		$commentdata['remote_source_mf2'] = $entry;
+		$commentdata['remote_source_mf2']        = $entry;
 		$commentdata['remote_source_properties'] = $properties = array_filter( self::flatten_microformats( $entry ) );
-		$commentdata['remote_source_rels'] = $rels = $mf_array['rels'];
+		$commentdata['remote_source_rels']       = $rels = $mf_array['rels'];
 
 		// try to find some content
 		// @link http://indiewebcamp.com/comments-presentation
@@ -165,8 +165,8 @@ class Linkbacks_MF2_Handler {
 				if ( self::is_url( $author ) ) {
 					$response = Linkbacks_Handler::retrieve( $author );
 					if ( ! is_wp_error( $response ) ) {
-						$parser = new Parser( wp_remote_retrieve_body( $response ), $author );
-						$author_array = $parser->parse( true );
+						$parser               = new Parser( wp_remote_retrieve_body( $response ), $author );
+						$author_array         = $parser->parse( true );
 						$properties['author'] = $author = self::flatten_microformats( self::get_representative_author( $author_array, $author ) );
 					}
 				} else {
@@ -225,10 +225,10 @@ class Linkbacks_MF2_Handler {
 				}
 			} else {
 				if ( substr( $location, 0, 4 ) == 'geo:' ) {
-					$geo = explode( ':', substr( urldecode( $location ), 4 ) );
-					$geo = explode( ';', $geo[0] );
+					$geo    = explode( ':', substr( urldecode( $location ), 4 ) );
+					$geo    = explode( ';', $geo[0] );
 					$coords = explode( ',', $geo[0] );
-					$commentdata['comment_meta']['geo_latitude'] = trim( $coords[0] );
+					$commentdata['comment_meta']['geo_latitude']  = trim( $coords[0] );
 					$commentdata['comment_meta']['geo_longitude'] = trim( $coords[1] );
 				} else {
 					$commentdata['comment_meta']['geo_address'] = $location;
@@ -496,7 +496,7 @@ class Linkbacks_MF2_Handler {
 						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i', $values[0]['html'], $context ) ) {
 						return $entry;
 					} elseif ( 'summary' == $key &&
-						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i',  $values[0], $context ) ) {
+						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i', $values[0], $context ) ) {
 						return $entry;
 					}
 				}

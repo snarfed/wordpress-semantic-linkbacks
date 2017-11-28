@@ -26,20 +26,20 @@ class Semantic_Linkbacks_Plugin {
 	 */
 	public static function init() {
 		if ( ! class_exists( 'Mf2\Parser' ) ) {
-			require_once( dirname( __FILE__ ) . '/vendor/mf2/mf2/Mf2/Parser.php' );
+			require_once dirname( __FILE__ ) . '/vendor/mf2/mf2/Mf2/Parser.php';
 		}
 
 		if ( ! function_exists( 'Emoji\detect_emoji' ) ) {
-			require_once( dirname( __FILE__ ) . '/vendor/p3k/emoji-detector/src/Emoji.php' );
+			require_once dirname( __FILE__ ) . '/vendor/p3k/emoji-detector/src/Emoji.php';
 		}
 
-		require_once( dirname( __FILE__ ) . '/includes/class-linkbacks-walker-comment.php' );
-		require_once( dirname( __FILE__ ) . '/includes/functions.php' );
+		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-walker-comment.php';
+		require_once dirname( __FILE__ ) . '/includes/functions.php';
 
-		require_once( dirname( __FILE__ ) . '/includes/class-linkbacks-handler.php' );
+		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-handler.php';
 		add_action( 'init', array( 'Linkbacks_Handler', 'init' ) );
 
-		require_once( dirname( __FILE__ ) . '/includes/class-linkbacks-mf2-handler.php' );
+		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-mf2-handler.php';
 		add_action( 'init', array( 'Linkbacks_MF2_Handler', 'init' ) );
 
 		add_action( 'wp_enqueue_scripts', array( 'Semantic_Linkbacks_Plugin', 'enqueue_scripts' ) );
@@ -54,60 +54,78 @@ class Semantic_Linkbacks_Plugin {
 
 	public static function admin_init() {
 		add_settings_field( 'semantic_linkbacks_discussion_settings', __( 'Semantic Linkbacks Settings', 'webmention' ), array( 'Semantic_Linkbacks_Plugin', 'discussion_settings' ), 'discussion', 'default' );
-		register_setting( 'discussion', 'semantic_linkbacks_facepile_mention', array(
-			'type' => 'boolean',
-			'description' => __( 'Facepile Mentions', 'semantic-linkbacks' ),
-			'show_in_rest' => true,
-			'default' => 1,
-		) );
-		register_setting( 'discussion', 'semantic_linkbacks_facepile_repost', array(
-			'type' => 'boolean',
-			'description' => __( 'Facepile Reposts', 'semantic-linkbacks' ),
-			'show_in_rest' => true,
-			'default' => 1,
-		) );
-		register_setting( 'discussion', 'semantic_linkbacks_facepile_like', array(
-			'type' => 'boolean',
-			'description' => __( 'Facepile Likes', 'semantic-linkbacks' ),
-			'show_in_rest' => true,
-			'default' => 1,
-		) );
-		register_setting( 'discussion', 'semantic_linkbacks_facepile_reaction', array(
-			'type' => 'boolean',
-			'description' => __( 'Facepile Reactions (emoji)', 'semantic-linkbacks' ),
-			'show_in_rest' => true,
-			'default' => 1,
-		) );
-		register_setting( 'discussion', 'semantic_linkbacks_facepile_favorite', array(
-			'type' => 'boolean',
-			'description' => __( 'Facepile Favorite', 'semantic-linkbacks' ),
-			'show_in_rest' => true,
-			'default' => 1,
-		) );
-		register_setting( 'discussion', 'semantic_linkbacks_facepile_tag', array(
-			'type' => 'boolean',
-			'description' => __( 'Facepile Tags', 'semantic-linkbacks' ),
-			'show_in_rest' => true,
-			'default' => 1,
-		) );
-		register_setting( 'discussion', 'semantic_linkbacks_facepile_bookmark', array(
-			'type' => 'boolean',
-			'description' => __( 'Facepile Bookmarks', 'semantic-linkbacks' ),
-			'show_in_rest' => true,
-			'default' => 1,
-		) );
-		register_setting( 'discussion', 'semantic_linkbacks_facepile_rsvp', array(
-			'type' => 'boolean',
-			'description' => __( 'Facepile RSVPs', 'semantic-linkbacks' ),
-			'show_in_rest' => true,
-			'default' => 1,
-		) );
-		register_setting( 'discussion', 'semantic_linkbacks_facepiles_fold_limit', array(
-			'type' => 'integer',
-			'description' => __( 'Initial number of faces to show in facepiles', 'semantic-linkbacks' ),
-			'show_in_rest' => true,
-			'default' => 8,
-		) );
+		register_setting(
+			'discussion', 'semantic_linkbacks_facepile_mention', array(
+				'type'         => 'boolean',
+				'description'  => __( 'Facepile Mentions', 'semantic-linkbacks' ),
+				'show_in_rest' => true,
+				'default'      => 1,
+			)
+		);
+		register_setting(
+			'discussion', 'semantic_linkbacks_facepile_repost', array(
+				'type'         => 'boolean',
+				'description'  => __( 'Facepile Reposts', 'semantic-linkbacks' ),
+				'show_in_rest' => true,
+				'default'      => 1,
+			)
+		);
+		register_setting(
+			'discussion', 'semantic_linkbacks_facepile_like', array(
+				'type'         => 'boolean',
+				'description'  => __( 'Facepile Likes', 'semantic-linkbacks' ),
+				'show_in_rest' => true,
+				'default'      => 1,
+			)
+		);
+		register_setting(
+			'discussion', 'semantic_linkbacks_facepile_reaction', array(
+				'type'         => 'boolean',
+				'description'  => __( 'Facepile Reactions (emoji)', 'semantic-linkbacks' ),
+				'show_in_rest' => true,
+				'default'      => 1,
+			)
+		);
+		register_setting(
+			'discussion', 'semantic_linkbacks_facepile_favorite', array(
+				'type'         => 'boolean',
+				'description'  => __( 'Facepile Favorite', 'semantic-linkbacks' ),
+				'show_in_rest' => true,
+				'default'      => 1,
+			)
+		);
+		register_setting(
+			'discussion', 'semantic_linkbacks_facepile_tag', array(
+				'type'         => 'boolean',
+				'description'  => __( 'Facepile Tags', 'semantic-linkbacks' ),
+				'show_in_rest' => true,
+				'default'      => 1,
+			)
+		);
+		register_setting(
+			'discussion', 'semantic_linkbacks_facepile_bookmark', array(
+				'type'         => 'boolean',
+				'description'  => __( 'Facepile Bookmarks', 'semantic-linkbacks' ),
+				'show_in_rest' => true,
+				'default'      => 1,
+			)
+		);
+		register_setting(
+			'discussion', 'semantic_linkbacks_facepile_rsvp', array(
+				'type'         => 'boolean',
+				'description'  => __( 'Facepile RSVPs', 'semantic-linkbacks' ),
+				'show_in_rest' => true,
+				'default'      => 1,
+			)
+		);
+		register_setting(
+			'discussion', 'semantic_linkbacks_facepiles_fold_limit', array(
+				'type'         => 'integer',
+				'description'  => __( 'Initial number of faces to show in facepiles', 'semantic-linkbacks' ),
+				'show_in_rest' => true,
+				'default'      => 8,
+			)
+		);
 	}
 
 	/**

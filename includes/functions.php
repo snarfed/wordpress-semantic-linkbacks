@@ -12,27 +12,52 @@ function get_linkbacks_number( $type = null, $post_id = null ) {
 		$post_id = get_the_ID();
 	}
 	$args = array(
-		'post_id'	=> $post_id,
-		'count'	 	=> true,
-		'status'	=> 'approve',
+		'post_id' => $post_id,
+		'count'   => true,
+		'status'  => 'approve',
 	);
 
 	if ( $type ) { // use type if set
 		if ( 'mention' == $type ) {
- 			$args['type__not_in'] = 'comment';
-			$args['meta_query'] = array(
- 				'relation' => 'OR',
-				array( 'key' => 'semantic_linkbacks_type', 'value' => '' ),
-				array( 'key' => 'semantic_linkbacks_type', 'compare' => 'NOT EXISTS' ),
-				array( 'key' => 'semantic_linkbacks_type', 'value' => 'mention' ),
+			 $args['type__not_in'] = 'comment';
+			$args['meta_query']    = array(
+				'relation' => 'OR',
+				array(
+					'key'   => 'semantic_linkbacks_type',
+					'value' => '',
+				),
+				array(
+					'key'     => 'semantic_linkbacks_type',
+					'compare' => 'NOT EXISTS',
+				),
+				array(
+					'key'   => 'semantic_linkbacks_type',
+					'value' => 'mention',
+				),
 			);
 		} elseif ( 'rsvp' == $type ) {
-			$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => 'rsvp', 'compare' => 'LIKE' ) );
+			$args['meta_query'] = array(
+				array(
+					'key'     => 'semantic_linkbacks_type',
+					'value'   => 'rsvp',
+					'compare' => 'LIKE',
+				),
+			);
 		} else {
-			$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => $type ) );
+			$args['meta_query'] = array(
+				array(
+					'key'   => 'semantic_linkbacks_type',
+					'value' => $type,
+				),
+			);
 		}
 	} else { // check only if type exists
-		$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'compare' => 'EXISTS' ) );
+		$args['meta_query'] = array(
+			array(
+				'key'     => 'semantic_linkbacks_type',
+				'compare' => 'EXISTS',
+			),
+		);
 	}
 
 	$comments = get_comments( $args );
@@ -57,27 +82,52 @@ function get_linkbacks( $type = null, $post_id = null, $order = 'DESC' ) {
 		$post_id = get_the_ID();
 	}
 	$args = array(
-		'post_id'	=> $post_id,
-		'status'	=> 'approve',
-		'order'		=> $order,
+		'post_id' => $post_id,
+		'status'  => 'approve',
+		'order'   => $order,
 	);
 
 	if ( $type ) { // use type if set
 		if ( 'mention' == $type ) {
- 			$args['type__not_in'] = 'comment';
-			$args['meta_query'] = array(
- 				'relation' => 'OR',
-				array( 'key' => 'semantic_linkbacks_type', 'value' => '' ),
-				array( 'key' => 'semantic_linkbacks_type', 'compare' => 'NOT EXISTS' ),
-				array( 'key' => 'semantic_linkbacks_type', 'value' => 'mention' ),
+			 $args['type__not_in'] = 'comment';
+			$args['meta_query']    = array(
+				'relation' => 'OR',
+				array(
+					'key'   => 'semantic_linkbacks_type',
+					'value' => '',
+				),
+				array(
+					'key'     => 'semantic_linkbacks_type',
+					'compare' => 'NOT EXISTS',
+				),
+				array(
+					'key'   => 'semantic_linkbacks_type',
+					'value' => 'mention',
+				),
 			);
 		} elseif ( 'rsvp' == $type ) {
-			$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => 'rsvp', 'compare' => 'LIKE' ) );
+			$args['meta_query'] = array(
+				array(
+					'key'     => 'semantic_linkbacks_type',
+					'value'   => 'rsvp',
+					'compare' => 'LIKE',
+				),
+			);
 		} else {
-			$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'value' => $type ) );
+			$args['meta_query'] = array(
+				array(
+					'key'   => 'semantic_linkbacks_type',
+					'value' => $type,
+				),
+			);
 		}
 	} else { // check only if type exists
-		$args['meta_query'] = array( array( 'key' => 'semantic_linkbacks_type', 'compare' => 'EXISTS' ) );
+		$args['meta_query'] = array(
+			array(
+				'key'     => 'semantic_linkbacks_type',
+				'compare' => 'EXISTS',
+			),
+		);
 	}
 
 	return get_comments( $args );
@@ -98,10 +148,10 @@ function has_linkbacks( $type = null, $post_ID = null ) {
 function list_linkbacks( $args, $comments ) {
 	$defaults = array(
 		'avatar_size' => 64,
-		'style' => 'ul', // What HTML type to wrap it in. Accepts 'ul', 'ol'.
+		'style'       => 'ul', // What HTML type to wrap it in. Accepts 'ul', 'ol'.
 		'style-class' => 'mention-list', // What class to assign to the wrapper
-		'li-class' => 'single-mention', // What class to assign to the list elements
-		'echo' => true // Whether to echo the output or return
+		'li-class'    => 'single-mention', // What class to assign to the list elements
+		'echo'        => true, // Whether to echo the output or return
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -117,21 +167,20 @@ function list_linkbacks( $args, $comments ) {
 	}
 	if ( is_string( $r['li-class'] ) ) {
 		$classes = explode( ' ', $r['li-class'] );
-	}
-	else {
+	} else {
 		$classes = $r['li-class'];
 	}
 	// All of the list_linkbacks() calls right now are in linkbacks.php, and
 	// they pass the mf2 class as the last li-class element, which is unique,
 	// so use that.
-	$id_class = $classes[count($classes) - 1];
+	$id_class    = $classes[ count( $classes ) - 1 ];
 	$ellipsis_id = 'mention-ellipsis-' . $id_class;
-	$fold_id = 'mentions-below-fold-' . $id_class;
+	$fold_id     = 'mentions-below-fold-' . $id_class;
 
 	$classes[] = 'h-cite';
-	$classes = join( ' ', $classes );
-	$return = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
-	$fold_at = get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
+	$classes   = join( ' ', $classes );
+	$return    = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
+	$fold_at   = get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
 
 	foreach ( $comments as $i => $comment ) {
 		if ( $fold_at && $i == $fold_at ) {
@@ -141,18 +190,20 @@ function list_linkbacks( $args, $comments ) {
 		// If it's an emoji reaction, overlay the emoji.
 		$overlay = '';
 		$content = trim( wp_strip_all_tags( $comment->comment_content ) );
-		$title = Linkbacks_Handler::comment_text_excerpt( '', $comment );
+		$title   = Linkbacks_Handler::comment_text_excerpt( '', $comment );
 		if ( Emoji\is_single_emoji( $content ) ) {
 			$overlay = '<span class="emoji-overlay">' . $content . '</span>';
-			$url = wp_parse_url( Linkbacks_Handler::get_url( $comment ), PHP_URL_HOST );
-			$title = sprintf( '%1$s %2$s on %3$s.',
+			$url     = wp_parse_url( Linkbacks_Handler::get_url( $comment ), PHP_URL_HOST );
+			$title   = sprintf(
+				'%1$s %2$s on %3$s.',
 				$comment->comment_author,
 				$content,
 				preg_replace( '/^www\./', '', $url )
 			);
 		}
 
-		$return .= sprintf( '<li class="%1$s" id="%5$s">
+		$return .= sprintf(
+			'<li class="%1$s" id="%5$s">
 				<span class="p-author h-card">
 					<a class="u-url" title="%6$s" href="%3$s">%2$s %8$s</a>
 					<span class="hide-name p-name">%4$s</span>
