@@ -13,6 +13,16 @@
 	display: none;
 }
 
+.mention-list .toggle-additional-facepiles {
+	display: inline-block;
+	text-align: center;
+	height: 64px;
+	width: 64px;
+	line-height: 1.5;
+	font-size: 32px;
+	cursor: pointer;
+}
+
 .mention-list li img {
 	height: 64px;
 	width: 64px;
@@ -31,5 +41,5 @@ li.emoji-reaction {
 }
 
 .reactions {
-    clear: both;
+	clear: both;
 }

@@ -135,15 +135,7 @@ function list_linkbacks( $args, $comments ) {
 
 	foreach ( $comments as $i => $comment ) {
 		if ( $fold_at && $i == $fold_at ) {
-			$return .= sprintf( '<li id="%2$s" class="single-mention mention-ellipsis">
-				<h3> &nbsp;
-				<a href="" onclick="document.getElementById(\'%1$s\').style.display = \'inline\';
-					document.getElementById(\'%2$s\').style.display = \'none\';
-					return false;">...</a>
-				</h3>
-				</li>
-				<span id="%1$s" style="display: none">',
-				$fold_id, $ellipsis_id );
+			$classes .= ' additional-facepile';
 		}
 
 		// If it's an emoji reaction, overlay the emoji.
@@ -179,7 +171,7 @@ function list_linkbacks( $args, $comments ) {
 	}
 
 	if ( $fold_at && count( $comments ) > $fold_at ) {
-		$return .= '</span>';
+		$return .= '<li class="toggle-additional-facepiles">&hellip;</li>';
 	}
 
 	$return .= sprintf( '</%1$s>', $r['style'] );

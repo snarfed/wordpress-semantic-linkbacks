@@ -42,7 +42,7 @@ class Semantic_Linkbacks_Plugin {
 		require_once( dirname( __FILE__ ) . '/includes/class-linkbacks-mf2-handler.php' );
 		add_action( 'init', array( 'Linkbacks_MF2_Handler', 'init' ) );
 
-		add_action( 'wp_enqueue_scripts', array( 'Semantic_Linkbacks_Plugin', 'style_load' ) );
+		add_action( 'wp_enqueue_scripts', array( 'Semantic_Linkbacks_Plugin', 'enqueue_scripts' ) );
 
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_title_filter' ), 21 );
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_content_filter' ), 22 );
@@ -125,8 +125,14 @@ class Semantic_Linkbacks_Plugin {
 		load_template( plugin_dir_path( __FILE__ ) . 'templates/discussion-settings.php' );
 	}
 
-
-	public static function style_load() {
+	/**
+	 * Add CSS and JavaScript
+	 */
+	public static function enqueue_scripts() {
 		wp_enqueue_style( 'semantic-linkbacks-css', plugin_dir_url( __FILE__ ) . 'css/semantic-linkbacks.css', array(), self::$version );
+
+		if ( is_singular() && 0 != get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 ) ) {
+			wp_enqueue_script( 'semantic-linkbacks', plugin_dir_url( __FILE__ ) . 'js/semantic-linkbacks.js', array( 'jquery' ), self::$version, true );
+		}
 	}
 }
