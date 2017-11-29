@@ -108,7 +108,7 @@ class Linkbacks_Handler {
 	 */
 	public static function enhance( $commentdata, $comment = array(), $commentarr = array() ) {
 		// check if comment is a linkback
-		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ) ) ) {
+		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ), true ) ) {
 			return $commentdata;
 		}
 
@@ -139,7 +139,7 @@ class Linkbacks_Handler {
 
 		// remove "webmention" comment-type if $type is "reply"
 		if ( isset( $commentdata['comment_meta']['semantic_linkbacks_type'] ) ) {
-			if ( in_array( $commentdata['comment_meta']['semantic_linkbacks_type'], apply_filters( 'semantic_linkbacks_comment_types', array( 'reply' ) ) ) ) {
+			if ( in_array( $commentdata['comment_meta']['semantic_linkbacks_type'], apply_filters( 'semantic_linkbacks_comment_types', array( 'reply' ) ), true ) ) {
 				$commentdata['comment_type'] = '';
 			}
 		}
@@ -188,19 +188,29 @@ class Linkbacks_Handler {
 	 */
 	public static function get_comment_type_excerpts() {
 		$strings = array(
-			// special case. any value that evals to false will be considered standard
+			// translators: Name verb on domain
 			'mention'       => __( '%1$s mentioned %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
-
+			// translators: Name verb on domain
 			'reply'         => __( '%1$s replied to %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'repost'        => __( '%1$s reposted %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'like'          => __( '%1$s liked %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'favorite'      => __( '%1$s favorited %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'tag'           => __( '%1$s tagged %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'bookmark'      => __( '%1$s bookmarked %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'rsvp:yes'      => __( '%1$s is <strong>attending</strong>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'rsvp:no'       => __( '%1$s is <strong>not attending</strong>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'rsvp:maybe'    => __( 'Maybe %1$s will be <strong>attending</strong>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'rsvp:invited'  => __( '%1$s is <strong>invited</strong>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
 			'rsvp:tracking' => __( '%1$s <strong>tracks</strong> this event.', 'semantic-linkbacks' ),
 		);
 
@@ -348,13 +358,13 @@ class Linkbacks_Handler {
 
 		// only change text for "real" comments (replys)
 		if ( ! $semantic_linkbacks_type ||
-			'' != $comment->comment_type ||
-			'reply' != $semantic_linkbacks_type ) {
+			'' !== $comment->comment_type ||
+			'reply' !== $semantic_linkbacks_type ) {
 			return $text;
 		}
 
 		$url  = self::get_url( $comment );
-		$host = parse_url( $url, PHP_URL_HOST );
+		$host = wp_parse_url( $url, PHP_URL_HOST );
 
 		// strip leading www, if any
 		$host = preg_replace( '/^www\./', '', $host );
@@ -387,14 +397,14 @@ class Linkbacks_Handler {
 		$semantic_linkbacks_type = self::get_type( $comment );
 
 		// only change text for pingbacks/trackbacks/webmentions
-		if ( '' == $comment->comment_type ||
+		if ( '' === $comment->comment_type ||
 			! $semantic_linkbacks_type ||
-			'reply' == $semantic_linkbacks_type ) {
+			'reply' === $semantic_linkbacks_type ) {
 			return $text;
 		}
 
 		// check semantic linkback type
-		if ( ! in_array( $semantic_linkbacks_type, array_keys( self::get_comment_type_strings() ) ) ) {
+		if ( ! in_array( $semantic_linkbacks_type, array_keys( self::get_comment_type_strings() ), true ) ) {
 			$semantic_linkbacks_type = 'mention';
 		}
 
@@ -403,7 +413,7 @@ class Linkbacks_Handler {
 		} else {
 			$post_format = get_post_format( $comment->comment_post_ID );
 			// add "standard" as default
-			if ( ! $post_format || ! in_array( $post_format, array_keys( self::get_post_format_strings() ) ) ) {
+			if ( ! $post_format || ! in_array( $post_format, array_keys( self::get_post_format_strings() ), true ) ) {
 				$post_format = 'standard';
 			}
 		}
@@ -426,7 +436,7 @@ class Linkbacks_Handler {
 
 		// generate output. use full content if it's small enough, otherwise use excerpt.
 		$text_len = mb_strlen( html_entity_decode( $text, ENT_QUOTES ) );
-		if ( ! ( 'mention' == $semantic_linkbacks_type && $text_len <= MAX_INLINE_MENTION_LENGTH ) ) {
+		if ( ! ( 'mention' === $semantic_linkbacks_type && $text_len <= MAX_INLINE_MENTION_LENGTH ) ) {
 			$text = sprintf( $comment_type_excerpts[ $semantic_linkbacks_type ], get_comment_author_link( $comment->comment_ID ), $post_type, $url, $host );
 		}
 		return apply_filters( 'semantic_linkbacks_excerpt', $text );

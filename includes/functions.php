@@ -18,9 +18,9 @@ function get_linkbacks_number( $type = null, $post_id = null ) {
 	);
 
 	if ( $type ) { // use type if set
-		if ( 'mention' == $type ) {
-			 $args['type__not_in'] = 'comment';
-			$args['meta_query']    = array(
+		if ( 'mention' === $type ) {
+			$args['type__not_in'] = 'comment';
+			$args['meta_query']   = array(
 				'relation' => 'OR',
 				array(
 					'key'   => 'semantic_linkbacks_type',
@@ -35,7 +35,7 @@ function get_linkbacks_number( $type = null, $post_id = null ) {
 					'value' => 'mention',
 				),
 			);
-		} elseif ( 'rsvp' == $type ) {
+		} elseif ( 'rsvp' === $type ) {
 			$args['meta_query'] = array(
 				array(
 					'key'     => 'semantic_linkbacks_type',
@@ -88,9 +88,9 @@ function get_linkbacks( $type = null, $post_id = null, $order = 'DESC' ) {
 	);
 
 	if ( $type ) { // use type if set
-		if ( 'mention' == $type ) {
-			 $args['type__not_in'] = 'comment';
-			$args['meta_query']    = array(
+		if ( 'mention' === $type ) {
+			$args['type__not_in'] = 'comment';
+			$args['meta_query']   = array(
 				'relation' => 'OR',
 				array(
 					'key'   => 'semantic_linkbacks_type',
@@ -105,7 +105,7 @@ function get_linkbacks( $type = null, $post_id = null, $order = 'DESC' ) {
 					'value' => 'mention',
 				),
 			);
-		} elseif ( 'rsvp' == $type ) {
+		} elseif ( 'rsvp' === $type ) {
 			$args['meta_query'] = array(
 				array(
 					'key'     => 'semantic_linkbacks_type',
@@ -183,7 +183,7 @@ function list_linkbacks( $args, $comments ) {
 	$fold_at   = get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
 
 	foreach ( $comments as $i => $comment ) {
-		if ( $fold_at && $i == $fold_at ) {
+		if ( $fold_at && $i === $fold_at ) {
 			$classes .= ' additional-facepile';
 		}
 
