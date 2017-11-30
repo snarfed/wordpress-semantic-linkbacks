@@ -4,7 +4,7 @@
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.8.2  
 **Requires PHP:** 5.3  
-**Tested up to:** 4.8.3  
+**Tested up to:** 4.9  
 **Stable tag:** 3.6.0  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
@@ -15,7 +15,7 @@ Richer Comments and Linkbacks for WordPress!
 
 Generates richer WordPress comments from linkbacks such as [Webmention](https://wordpress.org/plugins/webmention) or classic linkback protocols like Trackback or Pingback.
 
-The limited display for trackbacks and linkbacks is replaced by a clean full sentence, such as "Bob mentioned this article on bob.com." If Bob's site uses markup that the plugin can interpret, it may add his profile picture or other parts of his page to display as a full comment.
+The limited display for trackbacks and linkbacks is replaced by a clean full sentence, such as "Bob mentioned this article on bob.com." If Bob's site uses markup that the plugin can interpret, it may add his profile picture or other parts of his page to display as a full comment. It will optionally show collections of profile pictures, known as Facepiles, instead of the full setences.
 
 Semantic Linkbacks uses [Microformats 2](http://microformats.org/wiki/microformats2) to get information about the linked post and it is highly extensible to also add support for other forms of markup.
 
@@ -173,7 +173,7 @@ rather than rerequesting this information.
 ## Thanks to ##
 
 * Pelle Wessman ([@voxpelli](https://github.com/voxpelli)) for his awesome [WebMention test-pinger](https://github.com/voxpelli/node-webmention-testpinger)
-* Ryan Barrett ([@snarfed](https://github.com/snarfed)) for his feedback
+* Ryan Barrett ([@snarfed](https://github.com/snarfed)) for his feedback and pull requests
 * Barnaby Walters ([@barnabywalters](https://github.com/barnabywalters)) for his awesome [mf2 parser](https://github.com/indieweb/php-mf2)
 * David Shanske ([@dshanske](https://github.com/dshanske)) for his feedback and a lot of pull requests
 * ([@acegiak](https://github.com/acegiak)) for the initial plugin

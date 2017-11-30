@@ -28,35 +28,35 @@ class Linkbacks_MF2_Handler {
 		 * @link http://indiewebcamp.com/replies
 		 */
 		$class_mapper['in-reply-to'] = 'reply';
-		$class_mapper['reply'] = 'reply';
-		$class_mapper['reply-of'] = 'reply';
+		$class_mapper['reply']       = 'reply';
+		$class_mapper['reply-of']    = 'reply';
 
 		/*
 		 * repost
 		 * @link http://indiewebcamp.com/repost
 		 */
-		$class_mapper['repost'] = 'repost';
+		$class_mapper['repost']    = 'repost';
 		$class_mapper['repost-of'] = 'repost';
 
 		/*
 		 * likes
 		 * @link http://indiewebcamp.com/likes
 		 */
-		$class_mapper['like'] = 'like';
+		$class_mapper['like']    = 'like';
 		$class_mapper['like-of'] = 'like';
 
 		/*
 		 * favorite
 		 * @link http://indiewebcamp.com/favorite
 		 */
-		$class_mapper['favorite'] = 'favorite';
+		$class_mapper['favorite']    = 'favorite';
 		$class_mapper['favorite-of'] = 'favorite';
 
 		/*
 		 * bookmark
 		 * @link http://indiewebcamp.com/bookmark
 		 */
-		$class_mapper['bookmark'] = 'bookmark';
+		$class_mapper['bookmark']    = 'bookmark';
 		$class_mapper['bookmark-of'] = 'bookmark';
 
 		/*
@@ -87,7 +87,7 @@ class Linkbacks_MF2_Handler {
 		 * @link http://indiewebcamp.com/in-reply-to
 		 */
 		$rel_mapper['in-reply-to'] = 'reply';
-		$rel_mapper['reply-of'] = 'reply';
+		$rel_mapper['reply-of']    = 'reply';
 
 		return apply_filters( 'semantic_linkbacks_microformats_rel_mapper', $rel_mapper );
 	}
@@ -109,7 +109,7 @@ class Linkbacks_MF2_Handler {
 		}
 
 		// parse source html
-		$parser = new Parser( $commentdata['remote_source_original'], $source );
+		$parser   = new Parser( $commentdata['remote_source_original'], $source );
 		$mf_array = $parser->parse( true );
 
 		// get all 'relevant' entries
@@ -126,9 +126,11 @@ class Linkbacks_MF2_Handler {
 			return array();
 		}
 
-		$commentdata['remote_source_mf2'] = $entry;
-		$commentdata['remote_source_properties'] = $properties = array_filter( self::flatten_microformats( $entry ) );
-		$commentdata['remote_source_rels'] = $rels = $mf_array['rels'];
+		$commentdata['remote_source_mf2']        = $entry;
+		$properties                              = array_filter( self::flatten_microformats( $entry ) );
+		$commentdata['remote_source_properties'] = $properties;
+		$rels                                    = $mf_array['rels'];
+		$commentdata['remote_source_rels']       = $rels;
 
 		// try to find some content
 		// @link http://indiewebcamp.com/comments-presentation
@@ -165,9 +167,10 @@ class Linkbacks_MF2_Handler {
 				if ( self::is_url( $author ) ) {
 					$response = Linkbacks_Handler::retrieve( $author );
 					if ( ! is_wp_error( $response ) ) {
-						$parser = new Parser( wp_remote_retrieve_body( $response ), $author );
-						$author_array = $parser->parse( true );
-						$properties['author'] = $author = self::flatten_microformats( self::get_representative_author( $author_array, $author ) );
+						$parser               = new Parser( wp_remote_retrieve_body( $response ), $author );
+						$author_array         = $parser->parse( true );
+						$author               = self::flatten_microformats( self::get_representative_author( $author_array, $author ) );
+						$properties['author'] = $author;
 					}
 				} else {
 					$commentdata['comment_author'] = wp_slash( $author );
@@ -177,7 +180,8 @@ class Linkbacks_MF2_Handler {
 			if ( is_array( $author ) ) {
 				if ( ! isset( $author['me'] ) ) {
 					if ( isset( $mf_array['rels']['me'] ) ) {
-						$properties['author']['me'] = $author['me'] = $mf_array['rels']['me'];
+						$author['me']               = $mf_array['rels']['me'];
+						$properties['author']['me'] = $author['me'];
 					}
 				}
 				if ( isset( $author['name'] ) ) {
@@ -224,11 +228,11 @@ class Linkbacks_MF2_Handler {
 					$commentdata['comment_meta']['geo_address'] = self::first( $location['name'] );
 				}
 			} else {
-				if ( substr( $location, 0, 4 ) == 'geo:' ) {
-					$geo = explode( ':', substr( urldecode( $location ), 4 ) );
-					$geo = explode( ';', $geo[0] );
+				if ( substr( $location, 0, 4 ) === 'geo:' ) {
+					$geo    = explode( ':', substr( urldecode( $location ), 4 ) );
+					$geo    = explode( ';', $geo[0] );
 					$coords = explode( ',', $geo[0] );
-					$commentdata['comment_meta']['geo_latitude'] = trim( $coords[0] );
+					$commentdata['comment_meta']['geo_latitude']  = trim( $coords[0] );
 					$commentdata['comment_meta']['geo_longitude'] = trim( $coords[1] );
 				} else {
 					$commentdata['comment_meta']['geo_address'] = $location;
@@ -259,7 +263,7 @@ class Linkbacks_MF2_Handler {
 		$whitelist = array_merge( $whitelist, array_keys( self::get_class_mapper() ) );
 		$whitelist = apply_filters( 'semantic_linkbacks_mf2_props_whitelist', $whitelist );
 		foreach ( $properties as $key => $value ) {
-			if ( in_array( $key, $whitelist ) ) {
+			if ( in_array( $key, $whitelist, true ) ) {
 				if ( self::is_url( $value ) ) {
 					$value = esc_url_raw( $value );
 				}
@@ -288,7 +292,7 @@ class Linkbacks_MF2_Handler {
 			if ( is_array( $properties[ $key ] ) ) {
 				$properties[ $key ] = array_unique( $properties[ $key ] );
 			}
-			if ( 1 == count( $properties[ $key ] ) ) {
+			if ( 1 === count( $properties[ $key ] ) ) {
 				return $properties[ $key ][0];
 			}
 			return $properties[ $key ];
@@ -326,7 +330,7 @@ class Linkbacks_MF2_Handler {
 
 	// Accepted h types
 	public static function is_h( $string ) {
-		return in_array( $string, array( 'h-cite', 'h-entry', 'h-feed', 'h-product', 'h-event', 'h-review', 'h-recipe' ) );
+		return in_array( $string, array( 'h-cite', 'h-entry', 'h-feed', 'h-product', 'h-event', 'h-review', 'h-recipe' ), true );
 	}
 
 	public static function flatten_microformats( $item ) {
@@ -393,7 +397,7 @@ class Linkbacks_MF2_Handler {
 		if ( ! isset( $mf_array['items'] ) ) {
 			return $entries;
 		}
-		if ( 0 == count( $mf_array['items'] ) ) {
+		if ( 0 === count( $mf_array['items'] ) ) {
 			return $entries;
 		}
 
@@ -402,14 +406,14 @@ class Linkbacks_MF2_Handler {
 
 		// check if it is an h-feed
 		if ( isset( $first_item['type'] ) &&
-			in_array( 'h-feed', $first_item['type'] ) &&
+			in_array( 'h-feed', $first_item['type'], true ) &&
 			isset( $first_item['children'] ) ) {
 			$mf_array['items'] = $first_item['children'];
 		}
 
 		// iterate array
 		foreach ( $mf_array['items'] as $mf ) {
-			if ( isset( $mf['type'] ) && in_array( 'h-entry', $mf['type'] ) ) {
+			if ( isset( $mf['type'] ) && in_array( 'h-entry', $mf['type'], true ) ) {
 				$entries[] = $mf;
 			}
 		}
@@ -429,16 +433,15 @@ class Linkbacks_MF2_Handler {
 	public static function get_representative_author( $mf_array, $source ) {
 		foreach ( $mf_array['items'] as $mf ) {
 			if ( isset( $mf['type'] ) ) {
-				if ( in_array( 'h-card', $mf['type'] ) ) {
+				if ( in_array( 'h-card', $mf['type'], true ) ) {
 					// check domain
 					if ( isset( $mf['properties'] ) && isset( $mf['properties']['url'] ) ) {
 						foreach ( $mf['properties']['url'] as $url ) {
-							if ( wp_parse_url( $url, PHP_URL_HOST ) == wp_parse_url( $source, PHP_URL_HOST ) ) {
+							if ( wp_parse_url( $url, PHP_URL_HOST ) === wp_parse_url( $source, PHP_URL_HOST ) ) {
 								if ( isset( $mf_array['rels']['me'] ) ) {
 									$mf['properties']['me'] = $mf_array['rels']['me'];
 								}
 								return $mf;
-								break;
 							}
 						}
 					}
@@ -492,11 +495,11 @@ class Linkbacks_MF2_Handler {
 				// check properties if target urls was mentioned
 				foreach ( $entry['properties'] as $key => $values ) {
 					// check content for the link
-					if ( 'content' == $key &&
+					if ( 'content' === $key &&
 						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i', $values[0]['html'], $context ) ) {
 						return $entry;
-					} elseif ( 'summary' == $key &&
-						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i',  $values[0], $context ) ) {
+					} elseif ( 'summary' === $key &&
+						preg_match_all( '/<a[^>]+?' . preg_quote( $target, '/' ) . '[^>]*>([^>]+?)<\/a>/i', $values[0], $context ) ) {
 						return $entry;
 					}
 				}
@@ -522,7 +525,7 @@ class Linkbacks_MF2_Handler {
 		// check properties for target-url
 		foreach ( $entry['properties'] as $key => $values ) {
 			// check u-* params
-			if ( in_array( $key, array_keys( $classes ) ) ) {
+			if ( in_array( $key, array_keys( $classes ), true ) ) {
 				// check "normal" links
 				if ( self::compare_urls( $target, $values ) ) {
 					return $classes[ $key ];
@@ -554,9 +557,9 @@ class Linkbacks_MF2_Handler {
 		// check rels for target-url
 		foreach ( $mf_array['rels'] as $key => $values ) {
 			// check rel params
-			if ( in_array( $key, array_keys( $rels ) ) ) {
+			if ( in_array( $key, array_keys( $rels ), true ) ) {
 				foreach ( $values as $value ) {
-					if ( $value == $target ) {
+					if ( $value === $target ) {
 						return $rels[ $key ];
 					}
 				}

@@ -8,7 +8,7 @@
 class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	public static $reactions = array();
 
-	static function should_facepile( $comment ) {
+	protected static function should_facepile( $comment ) {
 		if ( self::is_reaction( $comment ) && get_option( 'semantic_linkbacks_facepile_reaction', true ) ) {
 			return true;
 		}
@@ -27,15 +27,15 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 
 		$option = 'semantic_linkbacks_facepile_' . $type;
 
-		return $type && 'reply' != $type && get_option( $option, true );
+		return $type && 'reply' !== $type && get_option( $option, true );
 	}
 
-	static function get_comment_author_link( $comment_ID = 0 ) {
-		$comment = get_comment( $comment_ID );
+	protected static function get_comment_author_link( $comment_id = 0 ) {
+		$comment = get_comment( $comment_id );
 		$url     = get_comment_author_url( $comment );
 		$author  = get_comment_author( $comment );
 
-		if ( empty( $url ) || 'http://' == $url ) {
+		if ( empty( $url ) || 'http://' === $url ) {
 			$return = sprintf( '<span class="p-name">%s</span>', $author );
 		} else {
 			$return = sprintf( '<a href="%s" rel="external" class="u-url p-name">%s</a>', $url, $author );
@@ -54,12 +54,12 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 		return apply_filters( 'get_comment_author_link', $return, $author, $comment->comment_ID );
 	}
 
-	static function is_reaction( $comment ) {
-		return ( $comment->type == '' &&
+	protected static function is_reaction( $comment ) {
+		return ( '' === $comment->type &&
 				Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) ) );
 	}
 
-	function start_el( &$output, $comment, $depth = 0, $args = array(), $id = 0 ) {
+	public function start_el( &$output, $comment, $depth = 0, $args = array(), $id = 0 ) {
 		if ( self::is_reaction( $comment ) ) {
 			self::$reactions[] = $comment;
 		}
@@ -69,16 +69,16 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 		}
 	}
 
-	function end_el( &$output, $comment, $depth = 0, $args = array() ) {
+	public function end_el( &$output, $comment, $depth = 0, $args = array() ) {
 		if ( ! self::should_facepile( $comment ) ) {
 			return parent::end_el( $output, $comment, $depth, $args );
 		}
 	}
 
 	protected function _html5_comment( $comment, $depth, $args ) {
-		$tag = ( 'div' === $args['style'] ) ? 'div' : 'li';
+		$tag  = ( 'div' === $args['style'] ) ? 'div' : 'li';
 		$type = Linkbacks_Handler::get_type( $comment );
-		$url = Linkbacks_Handler::get_url( $comment );
+		$url  = Linkbacks_Handler::get_url( $comment );
 		$host = wp_parse_url( $url, PHP_URL_HOST );
 		// strip leading www, if any
 		$host = preg_replace( '/^www\./', '', $host );
@@ -88,15 +88,20 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 			<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
 				<footer class="comment-meta">
 					<div class="comment-author vcard h-card u-author">
-						<?php if ( 0 != $args['avatar_size'] ) echo get_avatar( $comment, $args['avatar_size'] ); ?>
 						<?php
-							/* translators: %s: comment author link */
-							printf( __( '%s <span class="says">says:</span>' ),
+						if ( 0 !== $args['avatar_size'] ) {
+							echo get_avatar( $comment, $args['avatar_size'] );}
+?>
+						<?php
+							/* translators: %s: comment author */
+							printf(
+								/* translators: %s: comment author link */
+								__( '%s <span class="says">says:</span>', 'semantic-linkbacks' ),
 								sprintf( '<b>%s</b>', self::get_comment_author_link( $comment ) )
 							);
-							if ( $type ) {
-								printf( '<small>&nbsp;@&nbsp;<cite><a href="%s">%s</a></cite></small>', $url, $host );
-							}
+						if ( $type ) {
+							printf( '<small>&nbsp;@&nbsp;<cite><a href="%s">%s</a></cite></small>', $url, $host );
+						}
 						?>
 					</div><!-- .comment-author -->
 
@@ -105,15 +110,15 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 							<time class="dt-published" datetime="<?php comment_time( DATE_W3C ); ?>">
 								<?php
 									/* translators: 1: comment date, 2: comment time */
-									printf( __( '%1$s at %2$s' ), get_comment_date( '', $comment ), get_comment_time() );
+									printf( __( '%1$s at %2$s', 'semantic-linkbacks' ), get_comment_date( '', $comment ), get_comment_time() );
 								?>
 							</time>
 						</a>
-						<?php edit_comment_link( __( 'Edit' ), '<span class="edit-link">', '</span>' ); ?>
+						<?php edit_comment_link( __( 'Edit', 'semantic-linkbacks' ), '<span class="edit-link">', '</span>' ); ?>
 					</div><!-- .comment-metadata -->
 
-					<?php if ( '0' == $comment->comment_approved ) : ?>
-					<p class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.' ); ?></p>
+					<?php if ( '0' === $comment->comment_approved ) : ?>
+					<p class="comment-awaiting-moderation"><?php _e( 'Your response is awaiting moderation.', 'semantic-linkbacks' ); ?></p>
 					<?php endif; ?>
 				</footer><!-- .comment-meta -->
 
@@ -122,13 +127,17 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 				</div><!-- .comment-content -->
 
 				<?php
-				comment_reply_link( array_merge( $args, array(
-					'add_below' => 'div-comment',
-					'depth'     => $depth,
-					'max_depth' => $args['max_depth'],
-					'before'    => '<div class="reply">',
-					'after'     => '</div>'
-				) ) );
+				comment_reply_link(
+					array_merge(
+						$args, array(
+							'add_below' => 'div-comment',
+							'depth'     => $depth,
+							'max_depth' => $args['max_depth'],
+							'before'    => '<div class="reply">',
+							'after'     => '</div>',
+						)
+					)
+				);
 				?>
 			</article><!-- .comment-body -->
 <?php
