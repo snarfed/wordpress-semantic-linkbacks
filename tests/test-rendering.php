@@ -55,7 +55,7 @@ class RenderingTest extends WP_UnitTestCase {
 		$html = list_linkbacks( array( 'echo' => false ), $comments );
 		$person_0 = strpos( $html, '<a class="u-url" title="Person 0 liked this Article on example.com."' );
 		$person_1 = strpos( $html, '<a class="u-url" title="Person 1 liked this Article on example.com."' );
-		$person_2 = strpos( $html, 'additional-facepile" id="' );
+		$person_2 = strpos( $html, 'additional-facepile' );
 		$ellipsis = strpos( $html, '<li id="toggle-additional-facepiles" class="single-mention mention-ellipsis">' );
 		$this->assertGreaterThan( 0, $person_0 );
 		$this->assertGreaterThan( $person_0, $person_1 );
