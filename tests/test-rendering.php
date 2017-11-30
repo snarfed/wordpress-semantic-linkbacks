@@ -55,12 +55,12 @@ class RenderingTest extends WP_UnitTestCase {
 		$html = list_linkbacks( array( 'echo' => false ), $comments );
 		$person_0 = strpos( $html, '<a class="u-url" title="Person 0 liked this Article on example.com."' );
 		$person_1 = strpos( $html, '<a class="u-url" title="Person 1 liked this Article on example.com."' );
-		$ellipsis = strpos( $html, '<li id="mention-ellipsis-single-mention" class="single-mention mention-ellipsis">' );
-		$person_2 = strpos( $html, '<a class="u-url" title="Person 2 liked this Article on example.com."' );
+		$person_2 = strpos( $html, 'additional-facepile" id="' );
+		$ellipsis = strpos( $html, '<li id="toggle-additional-facepiles" class="single-mention mention-ellipsis">' );
 		$this->assertGreaterThan( 0, $person_0 );
 		$this->assertGreaterThan( $person_0, $person_1 );
-		$this->assertGreaterThan( $person_1, $ellipsis );
-		$this->assertGreaterThan( $ellipsis, $person_2 );
+		$this->assertGreaterThan( $person_1, $person_2 );
+		$this->assertGreaterThan( $person_2, $ellipsis );
 	}
 
 	public function test_facepile_no_fold() {
@@ -70,7 +70,7 @@ class RenderingTest extends WP_UnitTestCase {
 		$this->assertContains( '<a class="u-url" title="Person 0', $html );
 		$this->assertContains( '<a class="u-url" title="Person 1', $html );
 		$this->assertContains( '<a class="u-url" title="Person 2', $html );
-		$this->assertEquals( false, strpos( '<li class="single-mention mention-ellipsis">', $html ) );
+		$this->assertEquals( false, strpos( '<li class="toggle-additional-facepiles">', $html ) );
 	}
 
 	public function test_reactions() {
