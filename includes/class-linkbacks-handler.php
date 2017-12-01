@@ -481,7 +481,7 @@ class Linkbacks_Handler {
 
 		$option = 'semantic_linkbacks_facepile_' . $type;
 
-		if ( get_option( $option, false ) && $args['default'] === 'blank' ) {
+		if ( get_option( $option, false ) && 'blank' === $args['default'] ) {
 			$args['default'] = 'mm';
 		}
 
