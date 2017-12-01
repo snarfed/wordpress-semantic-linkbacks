@@ -25,7 +25,9 @@ class Linkbacks_Handler {
 		// To extend or to override the default behavior, just use the `comment_text` filter with a lower
 		// priority (so that it's called after this one) or remove the filters completely in
 		// your code: `remove_filter('comment_text', array('Linkbacks_Handler', 'comment_text_add_cite'), 11);`
-		add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_add_cite' ), 11, 3 );
+		if ( self::default_comment_render() ) {
+			add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_add_cite' ), 11, 3 );
+		}
 		add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 12, 3 );
 		add_filter( 'comment_excerpt', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 5, 2 );
 
@@ -50,6 +52,15 @@ class Linkbacks_Handler {
 	public static function filter_comment_args( $args ) {
 		$args['walker'] = new Semantic_Linkbacks_Walker_Comment();
 		return $args;
+	}
+
+	/**
+	 * Filter whether to override comment presentation.
+	 * To use the default html5_comment set this filter to false
+	 *
+	 */
+	public static function default_comment_render() {
+		return ! apply_filters( 'semantic_linkbacks_default_comment_render', ! current_theme_supports( 'microformats2' ) );
 	}
 
 	/**
@@ -354,7 +365,7 @@ class Linkbacks_Handler {
 			return $text;
 		}
 
-		$semantic_linkbacks_type = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_type', true );
+		$semantic_linkbacks_type = self::get_type( $comment );
 
 		// only change text for "real" comments (replys)
 		if ( ! $semantic_linkbacks_type ||
@@ -371,9 +382,8 @@ class Linkbacks_Handler {
 		// note that WordPress's sanitization strips the class="u-url". sigh. :/ also,
 		// <cite> is one of the few elements that make it through the sanitization and
 		// is still uncommon enough that we can use it for styling.
-		$text .= '<p><cite><a class="u-url" href="' . $url . '">via ' . $host . '</a></cite></p>';
-
-		return apply_filters( 'semantic_linkbacks_cite', $text );
+		$cite = apply_filters( 'semantic_linkbacks_cite', '<p><cite><a class="u-url" href="%1s">via %2s</a></cite></p>' );
+		return $text . sprintf( $cite, $url, $host );
 	}
 
 	/**
@@ -472,7 +482,7 @@ class Linkbacks_Handler {
 			return $args;
 		}
 
-		$type = get_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_type', true );
+		$type = self::get_type( $id_or_email );
 		$type = explode( ':', $type );
 
 		if ( is_array( $type ) ) {

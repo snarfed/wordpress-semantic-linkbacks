@@ -76,8 +76,13 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	}
 
 	protected function html5_comment( $comment, $depth, $args ) {
+		// To use the default html5_comment set this filter to false
+		if ( Linkbacks_Handler::default_comment_render() ) {
+			parent::html5_comment( $comment, $depth, $args );
+			return;
+		}
 		$tag  = ( 'div' === $args['style'] ) ? 'div' : 'li';
-		$cite = apply_filters( 'semantic_linkbacks_cite_text', '<small>&nbsp;@&nbsp;<cite><a href="%1s">%2s</a></cite></small>');
+		$cite = apply_filters( 'semantic_linkbacks_cite', '<small>&nbsp;@&nbsp;<cite><a href="%1s">%2s</a></cite></small>');
 		$type = Linkbacks_Handler::get_type( $comment );
 		$url  = Linkbacks_Handler::get_url( $comment );
 		$host = wp_parse_url( $url, PHP_URL_HOST );
