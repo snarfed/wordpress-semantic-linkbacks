@@ -75,8 +75,9 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 		}
 	}
 
-	protected function _html5_comment( $comment, $depth, $args ) {
+	protected function html5_comment( $comment, $depth, $args ) {
 		$tag  = ( 'div' === $args['style'] ) ? 'div' : 'li';
+		$cite = apply_filters( 'semantic_linkbacks_cite_text', '<small>&nbsp;@&nbsp;<cite><a href="%1s">%2s</a></cite></small>');
 		$type = Linkbacks_Handler::get_type( $comment );
 		$url  = Linkbacks_Handler::get_url( $comment );
 		$host = wp_parse_url( $url, PHP_URL_HOST );
@@ -99,8 +100,8 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 								__( '%s <span class="says">says:</span>', 'semantic-linkbacks' ),
 								sprintf( '<b>%s</b>', self::get_comment_author_link( $comment ) )
 							);
-						if ( $type ) {
-							printf( '<small>&nbsp;@&nbsp;<cite><a href="%s">%s</a></cite></small>', $url, $host );
+						if ( $type && ! empty( $cite ) ) {
+							printf( $cite, $url, $host );
 						}
 						?>
 					</div><!-- .comment-author -->
