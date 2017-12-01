@@ -7,7 +7,7 @@ class RenderingTest extends WP_UnitTestCase {
 	}
 
 	public function make_comments( $num, $semantic_linkbacks_type = 'like' ) {
-		$comments = [];
+		$comments = array();
 		for ( $i = 0; $i < $num; $i++ ) {
 			$id = wp_new_comment( array(
 				'comment_author_url' => 'http://example.com/person' . $i,
