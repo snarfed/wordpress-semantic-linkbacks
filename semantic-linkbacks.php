@@ -9,7 +9,7 @@
  * License: MIT
  * License URI: http://opensource.org/licenses/MIT
  * Text Domain: semantic-linkbacks
- * Requires PHP: 5.4
+ * Requires PHP: 5.3
  */
 
 add_action( 'plugins_loaded', array( 'Semantic_Linkbacks_Plugin', 'init' ) );
