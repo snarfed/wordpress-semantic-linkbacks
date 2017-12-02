@@ -82,7 +82,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 			return;
 		}
 		$tag  = ( 'div' === $args['style'] ) ? 'div' : 'li';
-		$cite = apply_filters( 'semantic_linkbacks_cite', '<small>&nbsp;@&nbsp;<cite><a href="%1s">%2s</a></cite></small>');
+		$cite = apply_filters( 'semantic_linkbacks_cite', '<small>&nbsp;@&nbsp;<cite><a href="%1s">%2s</a></cite></small>' );
 		$type = Linkbacks_Handler::get_type( $comment );
 		$url  = Linkbacks_Handler::get_url( $comment );
 		$host = wp_parse_url( $url, PHP_URL_HOST );
