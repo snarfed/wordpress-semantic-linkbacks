@@ -7,10 +7,10 @@ class MicroformatsTest extends WP_UnitTestCase {
 		$comment = Linkbacks_MF2_Handler::generate_commentdata(
 			array(
 				'remote_source_original' => file_get_contents( $path ),
-				'comment_author_url' => 'http://example.com/webmention/target/placeholder',
-				'target' => 'http://example.com/webmention/target/placeholder',
-				'comment_type' => 'webmention',
-				'comment_author' => basename( $path, '.html' ),
+				'comment_author_url'     => 'http://example.com/webmention/target/placeholder',
+				'target'                 => 'http://example.com/webmention/target/placeholder',
+				'comment_type'           => 'webmention',
+				'comment_author'         => basename( $path, '.html' ),
 			)
 		);
 
@@ -19,7 +19,10 @@ class MicroformatsTest extends WP_UnitTestCase {
 	}
 
 	public function templateProvider() {
-		return array_map( function( $path ) { return array( $path ); },
-						  glob( dirname( __FILE__ ) . '/templates/*.html' ) );
+		return array_map(
+			function( $path ) {
+					return array( $path ); },
+			glob( dirname( __FILE__ ) . '/templates/*.html' )
+		);
 	}
 }

@@ -3,9 +3,9 @@
 **Donate link:** http://14101978.de  
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.8.2  
-**Requires PHP:** 5.3  
-**Tested up to:** 4.9  
-**Stable tag:** 3.6.0  
+**Requires PHP:** 5.4  
+**Tested up to:** 4.9.1  
+**Stable tag:** 3.7.0  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -67,6 +67,24 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.7.0 ###
+* Add settings to enable each type independently in the Facepile
+* Render mentions as normal comments again not facepiles
+* Make sure avatars are always visible images
+* Add new get_facepile_avatar filter to ensure visible avatars
+* Support Reacji...aka single-emoji reactions
+* Bump minimum PHP to 5.4 due emoji detector library dependency issues
+* Overlay emoji on individual avatars in reactions facepile
+* Offer mf2 compatible template for comments
+* Fix semantic_linkbacks_cite filter as was previously filtering the entire comment text
+* Switch semantic_links_cite filter to filtering the format for the citation instead of the prepared citation
+* Count correct text length for unicode characters
+* Facepile Template improvements
+* Allow new comment template to be overridden by filter or theme declaring microformats2 support 
+* Code standards compliance changes
+* Improved testing for PHP versions 5.4 and up to ensure compatibility
+* Remove direct calls to comment meta in favor of helper functions to ensure future proofing
 
 ### 3.6.0 ###
 
