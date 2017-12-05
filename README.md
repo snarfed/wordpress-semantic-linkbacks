@@ -68,6 +68,10 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
+### 3.7.1 ###
+
+* fixed reacjis and facepiles
+
 ### 3.7.0 ###
 
 * Add settings to enable each type independently in the Facepile
