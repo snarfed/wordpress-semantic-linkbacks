@@ -25,7 +25,7 @@ class Linkbacks_Handler {
 		// To extend or to override the default behavior, just use the `comment_text` filter with a lower
 		// priority (so that it's called after this one) or remove the filters completely in
 		// your code: `remove_filter('comment_text', array('Linkbacks_Handler', 'comment_text_add_cite'), 11);`
-		if ( self::default_comment_render() ) {
+		if ( ! self::render_comments() ) {
 			add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_add_cite' ), 11, 3 );
 		}
 		add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 12, 3 );
@@ -58,9 +58,10 @@ class Linkbacks_Handler {
 	 * Filter whether to override comment presentation.
 	 * To use the default html5_comment set this filter to false
 	 *
+	 * @return boolean
 	 */
-	public static function default_comment_render() {
-		return ! apply_filters( 'semantic_linkbacks_default_comment_render', ! current_theme_supports( 'microformats2' ) );
+	public static function render_comments() {
+		return apply_filters( 'semantic_linkbacks_render_comments', ! current_theme_supports( 'microformats2' ) );
 	}
 
 	/**

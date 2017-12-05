@@ -77,7 +77,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 
 	protected function html5_comment( $comment, $depth, $args ) {
 		// To use the default html5_comment set this filter to false
-		if ( Linkbacks_Handler::default_comment_render() ) {
+		if ( ! Linkbacks_Handler::render_comments() ) {
 			parent::html5_comment( $comment, $depth, $args );
 			return;
 		}
