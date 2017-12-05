@@ -13,10 +13,10 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 			return true;
 		}
 
-		if ( 'comment' !== get_comment_type( $comment ) ) {
+		$type = Linkbacks_Handler::get_type( $comment );
+
+		if ( ! $type ) {
 			$type = 'mention';
-		} else {
-			$type = Linkbacks_Handler::get_type( $comment );
 		}
 
 		$type = explode( ':', $type );
@@ -55,8 +55,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	}
 
 	protected static function is_reaction( $comment ) {
-		return ( '' === $comment->type &&
-				Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) ) );
+		return Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) );
 	}
 
 	public function start_el( &$output, $comment, $depth = 0, $args = array(), $id = 0 ) {

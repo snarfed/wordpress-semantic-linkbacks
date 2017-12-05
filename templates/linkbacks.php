@@ -1,5 +1,6 @@
 <?php if ( get_option( 'semantic_linkbacks_facepile_reaction', true ) && Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
 <div class="reactions">
+	<h3><?php echo __( 'Reacjis', 'semantic-linkbacks' ); ?></h3>
 	<?php
 	list_linkbacks(
 		array(
