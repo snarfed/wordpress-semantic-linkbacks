@@ -104,6 +104,7 @@ class RenderingTest extends WP_UnitTestCase {
 
 		$this->assertStringMatchesFormat(
 			'<div class="reactions">
+	<h3>Reacjis</h3>
 	<ul class="mention-list"><li class="single-mention p-reply emoji-reaction h-cite" id="comment-%d">
 				<span class="p-author h-card">
 					<a class="u-url" title="Person 😢 on example.com." href="http://example.com/person"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /> <span class="emoji-overlay">😢</span></a>
