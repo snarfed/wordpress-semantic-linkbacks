@@ -15,10 +15,6 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 
 		$type = Linkbacks_Handler::get_type( $comment );
 
-		if ( ! $type ) {
-			$type = 'mention';
-		}
-
 		$type = explode( ':', $type );
 
 		if ( is_array( $type ) ) {
