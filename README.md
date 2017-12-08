@@ -5,7 +5,7 @@
 **Requires at least:** 4.8.2  
 **Requires PHP:** 5.4  
 **Tested up to:** 4.9.1  
-**Stable tag:** 3.7.1  
+**Stable tag:** 3.7.2  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -68,9 +68,13 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
+### 3.7.2 ###
+
+* Bugfix: "Normal comments" hidden in comment-section (https://github.com/pfefferle/wordpress-semantic-linkbacks/issues/140)
+
 ### 3.7.1 ###
 
-* fixed reacjis and facepiles
+* Fixed reacjis and facepiles
 
 ### 3.7.0 ###
 
