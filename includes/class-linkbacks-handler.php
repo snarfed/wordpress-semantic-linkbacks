@@ -559,22 +559,21 @@ class Linkbacks_Handler {
 	public static function comment_class( $classes, $class, $comment_id, $post_id ) {
 		// get comment
 		$comment = get_comment( $comment_id );
-
 		// "comment type to class" mapper
 		$class_mapping = array(
-			'mention'       => array( 'h-as-mention' ),
+			'mention'       => array( 'p-mention' ),
 
-			'reply'         => array( 'h-as-reply' ),
-			'repost'        => array( 'h-as-repost', 'p-repost' ),
-			'like'          => array( 'h-as-like', 'p-like' ),
-			'favorite'      => array( 'h-as-favorite', 'p-favorite' ),
-			'tag'           => array( 'h-as-tag', 'p-tag' ),
-			'bookmark'      => array( 'h-as-bookmark', 'p-bookmark' ),
-			'rsvp:yes'      => array( 'h-as-rsvp' ),
-			'rsvp:no'       => array( 'h-as-rsvp' ),
-			'rsvp:maybe'    => array( 'h-as-rsvp' ),
-			'rsvp:invited'  => array( 'h-as-rsvp' ),
-			'rsvp:tracking' => array( 'h-as-rsvp' ),
+			'reply'         => array( 'p-reply', 'u-comment' ),
+			'repost'        => array( 'p-repost' ),
+			'like'          => array( 'p-like' ),
+			'favorite'      => array( 'p-favorite' ),
+			'tag'           => array( 'p-tag' ),
+			'bookmark'      => array( 'p-bookmark' ),
+			'rsvp:yes'      => array( 'p-rsvp' ),
+			'rsvp:no'       => array( 'p-rsvp' ),
+			'rsvp:maybe'    => array( 'p-rsvp' ),
+			'rsvp:invited'  => array( 'p-rsvp' ),
+			'rsvp:tracking' => array( 'p-rsvp' ),
 		);
 
 		$semantic_linkbacks_type = self::get_type( $comment );
@@ -582,7 +581,7 @@ class Linkbacks_Handler {
 		// check the comment type
 		if ( $semantic_linkbacks_type && isset( $class_mapping[ $semantic_linkbacks_type ] ) ) {
 			$classes = array_merge( $classes, $class_mapping[ $semantic_linkbacks_type ] );
-
+			$classes[] = 'h-cite';
 			$classes = array_unique( $classes );
 		}
 
