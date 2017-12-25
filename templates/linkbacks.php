@@ -91,7 +91,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'tag',
+			'type' => 'rsvp-yes',
 		),
 		get_linkbacks( 'rsvp:yes' )
 	);
