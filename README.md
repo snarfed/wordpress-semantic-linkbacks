@@ -68,6 +68,12 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
+### 3.7.3 ###
+* Remove `h-as` properties
+* Remove hard-coded microformats2 properties from facepile and move them to being generated from comment_class
+* Remove unused properties
+* Introduce type argument in list_linkbacks to generate unique ideas for each list of linkbacks without having to specify them using style and li-class
+
 ### 3.7.2 ###
 
 * Bugfix: "Normal comments" hidden in comment-section (https://github.com/pfefferle/wordpress-semantic-linkbacks/issues/140)
