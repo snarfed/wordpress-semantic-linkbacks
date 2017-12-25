@@ -4,7 +4,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array( 'single-mention', 'p-reply', 'emoji-reaction' ),
+			'type' => 'reacji',
 		),
 		Semantic_Linkbacks_Walker_Comment::$reactions
 	);
@@ -18,7 +18,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array( 'single-mention', 'p-like' ),
+			'type' => 'like',
 		),
 		get_linkbacks( 'like' )
 	);
@@ -32,7 +32,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array( 'single-mention', 'p-favorite' ),
+			'type' => 'favorite',
 		),
 		get_linkbacks( 'favorite' )
 	);
@@ -46,7 +46,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array( 'single-mention', 'p-bookmark' ),
+			'type' => 'bookmark',
 		),
 		get_linkbacks( 'bookmark' )
 	);
@@ -60,7 +60,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array( 'single-mention', 'p-repost' ),
+			'type' => 'repost',
 		),
 		get_linkbacks( 'repost' )
 	);
@@ -74,7 +74,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array( 'single-mention', 'p-tag' ),
+			'type' => 'tag',
 		),
 		get_linkbacks( 'tag' )
 	);
@@ -91,10 +91,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array(
-				'single-mention',
-				'p-rsvp',
-			)
+			'tag',
 		),
 		get_linkbacks( 'rsvp:yes' )
 	);
@@ -106,10 +103,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array(
-				'single-mention',
-				'p-rsvp',
-			)
+			'type' => 'invited',
 		),
 		get_linkbacks( 'rsvp:invited' )
 	);
@@ -121,10 +115,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array(
-				'single-mention',
-				'p-rsvp',
-			)
+			'type' => 'rsvp-maybe',
 		),
 		get_linkbacks( 'rsvp:maybe' )
 	);
@@ -136,10 +127,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array(
-				'single-mention',
-				'p-rsvp',
-			)
+			'type' => 'rsvp-no',
 		),
 		get_linkbacks( 'rsvp:no' )
 	);
@@ -151,10 +139,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array(
-				'single-mention',
-				'p-rsvp',
-			)
+			'type' => 'rsvp-tracking',
 		),
 		get_linkbacks( 'rsvp:tracking' )
 	);
@@ -169,7 +154,7 @@
 	<?php
 	list_linkbacks(
 		array(
-			'li-class' => array( 'single-mention', 'p-mention' ),
+			'type' => 'mention',
 		),
 		get_linkbacks( 'mention' )
 	);

@@ -561,19 +561,19 @@ class Linkbacks_Handler {
 		$comment = get_comment( $comment_id );
 		// "comment type to class" mapper
 		$class_mapping = array(
-			'mention'       => array( 'p-mention' ),
+			'mention'       => array( 'u-mention' ),
 
-			'reply'         => array( 'p-reply', 'u-comment' ),
-			'repost'        => array( 'p-repost' ),
-			'like'          => array( 'p-like' ),
-			'favorite'      => array( 'p-favorite' ),
-			'tag'           => array( 'p-tag' ),
-			'bookmark'      => array( 'p-bookmark' ),
-			'rsvp:yes'      => array( 'p-rsvp' ),
-			'rsvp:no'       => array( 'p-rsvp' ),
-			'rsvp:maybe'    => array( 'p-rsvp' ),
-			'rsvp:invited'  => array( 'p-rsvp' ),
-			'rsvp:tracking' => array( 'p-rsvp' ),
+			'reply'         => array( 'u-comment' ),
+			'repost'        => array( 'u-repost' ),
+			'like'          => array( 'u-like' ),
+			'favorite'      => array( 'u-favorite' ),
+			'tag'           => array( 'u-tag' ),
+			'bookmark'      => array( 'u-bookmark' ),
+			'rsvp:yes'      => array( 'u-rsvp' ),
+			'rsvp:no'       => array( 'u-rsvp' ),
+			'rsvp:maybe'    => array( 'u-rsvp' ),
+			'rsvp:invited'  => array( 'u-rsvp' ),
+			'rsvp:tracking' => array( 'u-rsvp' ),
 		);
 
 		$semantic_linkbacks_type = self::get_type( $comment );
@@ -581,10 +581,9 @@ class Linkbacks_Handler {
 		// check the comment type
 		if ( $semantic_linkbacks_type && isset( $class_mapping[ $semantic_linkbacks_type ] ) ) {
 			$classes = array_merge( $classes, $class_mapping[ $semantic_linkbacks_type ] );
-			$classes[] = 'h-cite';
 			$classes = array_unique( $classes );
 		}
-
+		$classes[] = 'h-cite';
 		return $classes;
 	}
 
