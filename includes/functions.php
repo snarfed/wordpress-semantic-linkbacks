@@ -150,8 +150,9 @@ function list_linkbacks( $args, $comments ) {
 		'avatar_size' => 64,
 		'style'       => 'ul', // What HTML type to wrap it in. Accepts 'ul', 'ol'.
 		'style-class' => 'mention-list', // What class to assign to the wrapper
-		'li-class'    => 'single-mention', // What class to assign to the list elements
+		'li-class'    => null, // What class to assign to the list elements
 		'echo'        => true, // Whether to echo the output or return
+		'type'        => 'mention', // Type is the semantic linkbacks type and is here only to automatically add to the classes if present
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -170,21 +171,19 @@ function list_linkbacks( $args, $comments ) {
 	} else {
 		$classes = $r['li-class'];
 	}
-	// All of the list_linkbacks() calls right now are in linkbacks.php, and
-	// they pass the mf2 class as the last li-class element, which is unique,
-	// so use that.
-	$id_class    = $classes[ count( $classes ) - 1 ];
-	$ellipsis_id = 'mention-ellipsis-' . $id_class;
-	$fold_id     = 'mentions-below-fold-' . $id_class;
+	if ( is_string( $r['style-class'] ) ) {
+		$r['style-class'] = explode( ' ', $r['style-class'] );
+	}
 
-	$classes[] = 'h-cite';
-	$classes   = join( ' ', $classes );
-	$return    = sprintf( '<%1$s class="%2$s">', $r['style'], $r['style-class'] );
-	$fold_at   = get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
+	$classes[]          = 'linkback-' . $r['type'] . '-single';
+	$r['style-class'][] = 'linkback-' . $r['type'];
+
+	$return  = sprintf( '<%1$s class="%2$s">', $r['style'], join( ' ', $r['style-class'] ) );
+	$fold_at = (int) get_option( 'semantic_linkbacks_facepiles_fold_limit', 8 );
 
 	foreach ( $comments as $i => $comment ) {
 		if ( $fold_at && $i === $fold_at ) {
-			$classes .= ' additional-facepile';
+			$classes[] = 'additional-facepile';
 		}
 
 		// If it's an emoji reaction, overlay the emoji.
@@ -201,6 +200,8 @@ function list_linkbacks( $args, $comments ) {
 				preg_replace( '/^www\./', '', $url )
 			);
 		}
+		$class = get_comment_class( $classes, $comment );
+		$class = join( ' ', $class );
 
 		$return .= sprintf(
 			'<li class="%1$s" id="%5$s">
@@ -210,7 +211,7 @@ function list_linkbacks( $args, $comments ) {
 				</span>
 				<a class="u-url" href="%7$s"></a>
 			</li>',
-			$classes,
+			$class,
 			get_avatar( $comment, $r['avatar_size'] ),
 			get_comment_author_url( $comment ),
 			get_comment_author( $comment ),
