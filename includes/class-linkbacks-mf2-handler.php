@@ -64,6 +64,11 @@ class Linkbacks_MF2_Handler {
 		 * @link http://indiewebcamp.com/rsvp
 		 */
 		$class_mapper['rsvp'] = 'rsvp';
+		/*
+		 * invite
+		 * @link https://indieweb.org/invitation
+		 */
+		$class_mapper['invitee'] = 'invite';
 
 		/*
 		 * tag
@@ -160,6 +165,10 @@ class Linkbacks_MF2_Handler {
 			$author = self::get_representative_author( $mf_array, $source );
 			$author = self::flatten_microformats( $author );
 		}
+		// If this is an invite than the invite should be displayed instead of the author
+		if ( isset( $properties['invitee'] ) ) {
+			$author = $properties['invitee'];
+		}
 
 		// if author is present use the informations for the comment
 		if ( $author ) {
@@ -246,6 +255,9 @@ class Linkbacks_MF2_Handler {
 		} else {
 			// get post type
 			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( self::get_entry_type( $commentdata['target'], $entry, $mf_array ) );
+		}
+		if ( isset( $properties['invitee'] ) ) {
+			$commentdata['comment_meta']['semantic_linkbacks_type'] = wp_slash( 'invite' );
 		}
 
 		$whitelist = array(

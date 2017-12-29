@@ -5,7 +5,7 @@
 **Requires at least:** 4.8.2  
 **Requires PHP:** 5.4  
 **Tested up to:** 4.9.1  
-**Stable tag:** 3.7.3  
+**Stable tag:** 3.7.4  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -67,6 +67,9 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.7.4 ###
+* Replace `rsvp-invite` property which is not in use with `invite` property and add unit tests
 
 ### 3.7.3 ###
 

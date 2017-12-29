@@ -1,5 +1,17 @@
 <?php
 class MicroformatsTest extends WP_UnitTestCase {
+
+	public static function assertArraySubset( array $expectation, array $reality, $strict = false, $message = '' ) {
+		foreach ( $expectation as $key => $value ) {
+			self::assertArrayHasKey( $key, $reality, $message );
+			if ( is_array( $value ) ) {
+				self::assertArraySubset( $value, $reality[ $key ], $strict, $message . '[' . $key . ']' );
+			} else {
+				self::assertEquals( $value, $reality[ $key ], $message . '[' . $key . ']' );
+			}
+		}
+	}
+
 	/**
 	 * @dataProvider templateProvider
 	 */
