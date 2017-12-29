@@ -223,7 +223,7 @@ class Linkbacks_Handler {
 			// translators: Name verb on domain
 			'rsvp:invited'  => __( '%1$s is <strong>invited</strong>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'rsvp:tracking' => __( '%1$s <strong>tracks</strong> this event.', 'semantic-linkbacks' ),
+			'rsvp:interested' => __( '%1$s is <strong>interested</strong> in this event.', 'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -249,7 +249,7 @@ class Linkbacks_Handler {
 			'rsvp:no'       => __( 'RSVP', 'semantic-linkbacks' ),
 			'rsvp:invited'  => __( 'RSVP', 'semantic-linkbacks' ),
 			'rsvp:maybe'    => __( 'RSVP', 'semantic-linkbacks' ),
-			'rsvp:tracking' => __( 'RSVP', 'semantic-linkbacks' ),
+			'rsvp:interested' => __( 'RSVP', 'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -595,7 +595,7 @@ class Linkbacks_Handler {
 			'rsvp:no'       => array( 'u-rsvp' ),
 			'rsvp:maybe'    => array( 'u-rsvp' ),
 			'rsvp:invited'  => array( 'u-rsvp' ),
-			'rsvp:tracking' => array( 'u-rsvp' ),
+			'rsvp:interested' => array( 'u-rsvp' ),
 		);
 
 		$semantic_linkbacks_type = self::get_type( $comment );
