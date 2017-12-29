@@ -73,6 +73,7 @@ Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks]
 * Remove hard-coded microformats2 properties from facepile and move them to being generated from comment_class
 * Remove unused properties
 * Introduce type argument in list_linkbacks to generate unique ideas for each list of linkbacks without having to specify them using style and li-class
+* Whitelist property swarm-coins, used by [OwnYourSwarm](https://ownyourswarm.p3k.io/docs#coins) and display it if using built-in comment handler.
 
 ### 3.7.2 ###
 

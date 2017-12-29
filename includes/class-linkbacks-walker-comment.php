@@ -76,11 +76,12 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 			parent::html5_comment( $comment, $depth, $args );
 			return;
 		}
-		$tag  = ( 'div' === $args['style'] ) ? 'div' : 'li';
-		$cite = apply_filters( 'semantic_linkbacks_cite', '<small>&nbsp;@&nbsp;<cite><a href="%1s">%2s</a></cite></small>' );
-		$type = Linkbacks_Handler::get_type( $comment );
-		$url  = Linkbacks_Handler::get_url( $comment );
-		$host = wp_parse_url( $url, PHP_URL_HOST );
+		$tag   = ( 'div' === $args['style'] ) ? 'div' : 'li';
+		$cite  = apply_filters( 'semantic_linkbacks_cite', '<small>&nbsp;@&nbsp;<cite><a href="%1s">%2s</a></cite></small>' );
+		$type  = Linkbacks_Handler::get_type( $comment );
+		$url   = Linkbacks_Handler::get_url( $comment );
+		$coins = Linkbacks_Handler::get_prop( $comment, 'mf2_swarm-coins' );
+		$host  = wp_parse_url( $url, PHP_URL_HOST );
 		// strip leading www, if any
 		$host = preg_replace( '/^www\./', '', $host );
 
@@ -103,10 +104,21 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 						if ( $type && ! empty( $cite ) ) {
 							printf( $cite, $url, $host );
 						}
+
 						?>
 					</div><!-- .comment-author -->
 
 					<div class="comment-metadata">
+					<?php
+						if ( $coins ) {
+							// translators: Number of Swarm Coins
+							printf( _n( '+%d coin', '+%d coins', (int) $coins, 'semantic-linkbacks' ), $coins );
+							echo ' / ';
+						}
+					?>
+
+
+
 						<a class="u-url" href="<?php echo esc_url( get_comment_link( $comment, $args ) ); ?>">
 							<time class="dt-published" datetime="<?php comment_time( DATE_W3C ); ?>">
 								<?php

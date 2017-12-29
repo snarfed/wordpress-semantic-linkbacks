@@ -327,11 +327,33 @@ class Linkbacks_Handler {
 	 * @return string the type
 	 */
 	public static function get_type( $comment ) {
-		if ( is_numeric( $comment ) ) {
-			$comment = get_comment( $comment );
+		if ( $comment instanceof WP_Comment ) {
+			$comment = $comment->comment_ID;
 		}
 		// get type...
-		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_type', true );
+		return get_comment_meta( $comment, 'semantic_linkbacks_type', true );
+	}
+
+	/**
+	 * Return property
+	 *
+	 * @param int|WP_Comment $comment Comment
+	 * @param string $key Key
+	 *
+	 * @return boolean|string|array Property or False if Property Does Not Exist
+	 */
+	public static function get_prop( $comment, $key ) {
+		if ( $comment instanceof WP_Comment ) {
+			$comment = $comment->comment_ID;
+		}
+		$prop = get_comment_meta( $comment, $key );
+		if ( ! $prop || is_string( $prop ) ) {
+			return $prop;
+		}
+		if ( 1 === count( $prop ) ) {
+			return array_shift( $prop );
+		}
+		return $prop;
 	}
 
 
@@ -343,11 +365,11 @@ class Linkbacks_Handler {
 	 * @return string the URL
 	 */
 	public static function get_author_url( $comment ) {
-		if ( is_numeric( $comment ) ) {
-			$comment = get_comment( $comment );
+		if ( $comment instanceof WP_Comment ) {
+			$comment = $comment->comment_ID;
 		}
 		// get author URL...
-		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_author_url', true );
+		return get_comment_meta( $comment, 'semantic_linkbacks_author_url', true );
 	}
 
 	/**
