@@ -69,6 +69,7 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
 = 3.7.3 =
+* Replace tracking with interested property as noted on https://indieweb.org/rsvp
 * Remove `h-as` properties
 * Remove hard-coded microformats2 properties from facepile and move them to being generated from comment_class
 * Remove unused properties
