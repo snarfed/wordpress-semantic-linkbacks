@@ -421,18 +421,17 @@ class Linkbacks_Handler {
 	public static function get_post_type( $post_id ) {
 		$post_format = 'post';
 		if ( 'page' === get_post_type( $post_id ) ) {
-			$post_format = 'page';
+			$post_type = 'page';
 		}
 		if ( current_theme_supports( 'post-formats' ) ) {
 			$post_typestrings = self::get_post_type_strings();
 			$post_format = get_post_format( $post_id );
+			$post_type = 'standard';
 			
 			// add "standard" as default for post format enabled types
 			if ( $post_format && in_array( $post_format, array_keys( $post_typestrings ), true ) ) {
 				$post_type = $post_typestrings[ $post_format ];
 			}
-			
-			$post_format = 'standard';
 		}
 
 		// If this is the page homepages are redirected to then use the site name
