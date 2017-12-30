@@ -419,7 +419,7 @@ class Linkbacks_Handler {
 	 * @return string the post type
 	 */
 	public static function get_post_type( $post_id ) {
-		$post_format = 'post';
+		$post_type = 'post';
 		if ( 'page' === get_post_type( $post_id ) ) {
 			$post_type = 'page';
 		}
