@@ -256,15 +256,17 @@ class Linkbacks_Handler {
 	}
 
 	/**
-	* Returns an array of post formats (with articlex)
+	* Returns an array of post types (with articles)
 	*
 	* @return array The array of translated comment type names.
 	*/
-	public static function get_post_format_strings() {
+	public static function get_post_type_strings() {
 		$strings = array(
-			// Special case. any value that evals to false will be considered standard
+			// Generic Post Types
+			'post'     => __( 'this Post', 'semantic-linkbacks' ),
+			'page'     => __( 'this Page', 'semantic-linkbacks' ),
+			// Post Format Types
 			'standard' => __( 'this Article', 'semantic-linkbacks' ),
-
 			'aside'    => __( 'this Aside', 'semantic-linkbacks' ),
 			'chat'     => __( 'this Chat', 'semantic-linkbacks' ),
 			'gallery'  => __( 'this Gallery', 'semantic-linkbacks' ),
@@ -410,6 +412,39 @@ class Linkbacks_Handler {
 	}
 
 	/**
+	 * Returns a post type that is used to generate text. This can be from post formats/kinds/post type/etc
+	 *
+	 * @param int $post_id Post ID
+	 *
+	 * @return string the post type
+	 */
+	public static function get_post_type( $post_id ) {
+		$post_typestrings = self::get_post_type_strings();
+		$post_format = 'post';
+		if ( 'page' === get_post_type( $post_id ) ) {
+			$post_format = 'page';
+		}
+		if ( current_theme_supports( 'post-formats' ) ) {
+			$post_format = get_post_format( $post_id );
+			// add "standard" as default for post format enabled types
+			if ( ! $post_format || ! in_array( $post_format, array_keys( $post_typestrings ), true ) ) {
+				$post_format = 'standard';
+			}
+		}
+
+		$post_type          = $post_typestrings[ $post_format ];
+
+		// If this is the page homepages are redirected to then use the site name
+		if ( $post_id === get_option( 'webmention_home_mentions', 0 ) ) {
+			$post_type = get_bloginfo( 'name' );
+		}
+
+		return apply_filters( 'semantic_linkbacks_post_type', $post_type, $post_id );
+	}
+
+
+
+	/**
 	 * Generate excerpt for all types except "reply"
 	 *
 	 * @param string $text the comment text
@@ -441,21 +476,7 @@ class Linkbacks_Handler {
 			$semantic_linkbacks_type = 'mention';
 		}
 
-		if ( ! current_theme_supports( 'post-formats' ) ) {
-			$post_format = 'standard';
-		} else {
-			$post_format = get_post_format( $comment->comment_post_ID );
-			// add "standard" as default
-			if ( ! $post_format || ! in_array( $post_format, array_keys( self::get_post_format_strings() ), true ) ) {
-				$post_format = 'standard';
-			}
-		}
-
-		// get post type
-		$post_formatstrings = self::get_post_format_strings();
-		$post_type          = $post_formatstrings[ $post_format ];
-
-		$post_type = apply_filters( 'semantic_linkbacks_post_type', $post_type, $comment->comment_post_ID );
+		$post_type = self::get_post_type( $comment->comment_post_ID );
 
 		// get all the excerpts
 		$comment_type_excerpts = self::get_comment_type_excerpts();

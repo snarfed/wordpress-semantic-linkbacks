@@ -70,6 +70,7 @@ Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks]
 
 = 3.7.4 =
 * Replace `rsvp-invite` property which is not in use with `invite` property and add unit tests
+* Enhance post type returns to include post, page, and sitename
 
 = 3.7.3 =
 
