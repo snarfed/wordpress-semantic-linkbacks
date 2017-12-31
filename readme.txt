@@ -69,7 +69,9 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
 = 3.7.4 =
+
 * Replace `rsvp-invite` property which is not in use with `invite` property and add unit tests
+* Enhance post type returns to include post, page, and sitename
 * Add basic person tagging support
 
 = 3.7.3 =
