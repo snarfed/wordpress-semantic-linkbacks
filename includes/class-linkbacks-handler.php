@@ -419,25 +419,23 @@ class Linkbacks_Handler {
 	 * @return string the post type
 	 */
 	public static function get_post_type( $post_id ) {
-		$post_format = 'post';
-		if ( 'page' === get_post_type( $post_id ) ) {
-			$post_format = 'page';
-		}
-		if ( current_theme_supports( 'post-formats' ) ) {
-			$post_typestrings = self::get_post_type_strings();
+		$post_typestrings = self::get_post_type_strings();
+		$post_type = $post_typestrings[ 'post' ];
+		
+		// If this is the page homepages are redirected to then use the site name
+		if ( $post_id === get_option( 'webmention_home_mentions', 0 ) ) {
+			$post_type = get_bloginfo( 'name' );
+		} else if ( 'page' === get_post_type( $post_id ) ) {
+			$post_type = $post_typestrings[ 'page' ];
+		} else if ( current_theme_supports( 'post-formats' ) ) {
 			$post_format = get_post_format( $post_id );
 			
 			// add "standard" as default for post format enabled types
 			if ( ! $post_format || ! in_array( $post_format, array_keys( $post_typestrings ), true ) ) {
 				$post_format = 'standard';
 			}
-		}
-		
-		$post_type = $post_typestrings[ $post_format ];
-
-		// If this is the page homepages are redirected to then use the site name
-		if ( $post_id === get_option( 'webmention_home_mentions', 0 ) ) {
-			$post_type = get_bloginfo( 'name' );
+			
+			$post_type = $post_typestrings[ $post_format ];
 		}
 
 		return apply_filters( 'semantic_linkbacks_post_type', $post_type, $post_id );
