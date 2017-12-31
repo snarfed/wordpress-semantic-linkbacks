@@ -431,7 +431,7 @@ class Linkbacks_Handler {
 			$post_format = get_post_format( $post_id );
 			
 			// add "standard" as default for post format enabled types
-			if ( ! $post_format || ! in_array( $post_format, array_keys( $post_typestrings ), true ) ) {
+			if ( ! $post_format || ! in_array( $post_format, array_keys( $post_typestrings ), true ) ) {
 				$post_format = 'standard';
 			}
 			
