@@ -7,6 +7,7 @@
 	list-style: none;
 	vertical-align: top;
 	margin-left: 3px;
+	position: relative;
 }
 
 .mention-list .hide-name {
