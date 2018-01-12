@@ -1,6 +1,6 @@
 # Semantic-Linkbacks #
 **Contributors:** pfefferle, dshanske  
-**Donate link:** http://14101978.de  
+**Donate link:** https://notiz.blog/donate/  
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.8.2  
 **Requires PHP:** 5.4  
