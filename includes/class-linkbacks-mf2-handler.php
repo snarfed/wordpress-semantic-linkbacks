@@ -264,7 +264,7 @@ class Linkbacks_MF2_Handler {
 		// Check for person tagging
 		if ( isset( $properties['category'] ) ) {
 			if ( in_array( $commentdata['target'], $properties['category'], true ) ) {
-				$commentdata['category'] = array( $commentdata['target'] ); 
+				$commentdata['category'] = array( $commentdata['target'] );
 			}
 		}
 
@@ -370,7 +370,8 @@ class Linkbacks_MF2_Handler {
 			$properties = $item['properties'];
 			foreach ( $properties as $key => $value ) {
 				$flat[ $key ] = self::get_property( $key, $properties );
-				if ( 1 < count( $flat[ $key ] ) ) {
+
+				if ( ! is_string( $flat[ $key ] ) && 1 < count( $flat[ $key ] ) ) {
 					$flat[ $key ] = self::flatten_microformats( $flat[ $key ] );
 				}
 			}
@@ -601,6 +602,9 @@ class Linkbacks_MF2_Handler {
 	 */
 	public static function compare_urls( $needle, $haystack, $schemeless = true ) {
 		if ( ! self::is_url( $needle ) ) {
+			return false;
+		}
+		if ( is_array( reset( $haystack ) ) ) {
 			return false;
 		}
 		if ( true === $schemeless ) {
