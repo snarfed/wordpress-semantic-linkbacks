@@ -82,6 +82,36 @@
 </div>
 <?php endif; ?>
 
+<?php if ( get_option( 'semantic_linkbacks_facepile_listen', true ) && has_linkbacks( 'listen' ) ) : ?>
+<div class="listens">
+	<h3><?php echo __( 'Listening', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'type' => 'listen',
+		),
+		get_linkbacks( 'listen' )
+	);
+	?>
+</div>
+<?php endif; ?>
+
+<?php if ( get_option( 'semantic_linkbacks_facepile_watch', true ) && has_linkbacks( 'watch' ) ) : ?>
+<div class="watches">
+	<h3><?php echo __( 'Watching', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'type' => 'watch',
+		),
+		get_linkbacks( 'watch' )
+	);
+	?>
+</div>
+<?php endif; ?>
+
+
+
 <?php if ( get_option( 'semantic_linkbacks_facepile_rsvp', true ) && has_linkbacks( 'rsvp' ) ) : ?>
 <div class="rsvps">
 	<h3><?php _e( 'RSVPs', 'semantic-linkbacks' ); ?></h3>
@@ -98,14 +128,14 @@
 	?>
 	<?php endif; ?>
 
-	<?php if ( get_option( 'semantic_linkbacks_facepile_rsvp', true ) && has_linkbacks( 'rsvp:invited' ) ) : ?>
+	<?php if ( get_option( 'semantic_linkbacks_facepile_invited', true ) && has_linkbacks( 'invited' ) ) : ?>
 	<h4><?php _e( 'Invited', 'semantic-linkbacks' ); ?></h4>
 	<?php
 	list_linkbacks(
 		array(
 			'type' => 'invited',
 		),
-		get_linkbacks( 'rsvp:invited' )
+		get_linkbacks( 'invited' )
 	);
 	?>
 	<?php endif; ?>

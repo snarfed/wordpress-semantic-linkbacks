@@ -30,6 +30,18 @@
 			<input type="checkbox" name="semantic_linkbacks_facepile_bookmark" id="semantic_linkbacks_facepile_bookmark" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_bookmark', true ) ); ?> />
 			<?php _e( 'Bookmarks', 'semantic-linkbacks' ) ?>
 		</label></li>
+		<li><label for="semantic_linkbacks_facepile_invited">
+			<input type="checkbox" name="semantic_linkbacks_facepile_invited" id="semantic_linkbacks_facepile_invited" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_invited', true ) ); ?> />
+			<?php _e( 'Invites', 'semantic-linkbacks' ) ?>
+		</label></li>
+		<li><label for="semantic_linkbacks_facepile_listen">
+			<input type="checkbox" name="semantic_linkbacks_facepile_listen" id="semantic_linkbacks_facepile_listen" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_listen', true ) ); ?> />
+			<?php _e( 'Listens', 'semantic-linkbacks' ) ?>
+		</label></li>
+		<li><label for="semantic_linkbacks_facepile_watch">
+			<input type="checkbox" name="semantic_linkbacks_facepile_watch" id="semantic_linkbacks_facepile_watch" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_watch', true ) ); ?> />
+			<?php _e( 'Watches', 'semantic-linkbacks' ) ?>
+		</label></li>
 		<li><label for="semantic_linkbacks_facepile_rsvp">
 			<input type="checkbox" name="semantic_linkbacks_facepile_rsvp" id="semantic_linkbacks_facepile_rsvp" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_rsvp', true ) ); ?> />
 			<?php _e( 'RSVPs', 'semantic-linkbacks' ) ?>

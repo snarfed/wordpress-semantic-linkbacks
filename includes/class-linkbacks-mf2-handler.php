@@ -25,7 +25,7 @@ class Linkbacks_MF2_Handler {
 
 		/*
 		 * replies
-		 * @link http://indiewebcamp.com/replies
+		 * @link http://indieweb.org/replies
 		 */
 		$class_mapper['in-reply-to'] = 'reply';
 		$class_mapper['reply']       = 'reply';
@@ -33,35 +33,35 @@ class Linkbacks_MF2_Handler {
 
 		/*
 		 * repost
-		 * @link http://indiewebcamp.com/repost
+		 * @link http://indieweb.org/repost
 		 */
 		$class_mapper['repost']    = 'repost';
 		$class_mapper['repost-of'] = 'repost';
 
 		/*
 		 * likes
-		 * @link http://indiewebcamp.com/likes
+		 * @link http://indieweb.org/likes
 		 */
 		$class_mapper['like']    = 'like';
 		$class_mapper['like-of'] = 'like';
 
 		/*
 		 * favorite
-		 * @link http://indiewebcamp.com/favorite
+		 * @link http://indieweb.org/favorite
 		 */
 		$class_mapper['favorite']    = 'favorite';
 		$class_mapper['favorite-of'] = 'favorite';
 
 		/*
 		 * bookmark
-		 * @link http://indiewebcamp.com/bookmark
+		 * @link http://indieweb.org/bookmark
 		 */
 		$class_mapper['bookmark']    = 'bookmark';
 		$class_mapper['bookmark-of'] = 'bookmark';
 
 		/*
 		 * rsvp
-		 * @link http://indiewebcamp.com/rsvp
+		 * @link http://indieweb.org/rsvp
 		 */
 		$class_mapper['rsvp'] = 'rsvp';
 		/*
@@ -72,10 +72,24 @@ class Linkbacks_MF2_Handler {
 
 		/*
 		 * tag
-		 * @link http://indiewebcamp.com/tag
+		 * @link http://indieweb.org/tag
 		 */
-		$class_mapper['tag-of'] = 'tag';
+		$class_mapper['tag-of']   = 'tag';
 		$class_mapper['category'] = 'tag';
+
+		/*
+		 * listen
+		 * @link http://indieweb.org/listen
+		 */
+		$class_mapper['listen-of'] = 'listen';
+		$class_mapper['listen']    = 'listen';
+
+		/*
+		 * watch
+		 * @link http://indieweb.org/watch
+		 */
+		$class_mapper['watch-of'] = 'watch';
+		$class_mapper['watch']    = 'watch';
 
 		return apply_filters( 'semantic_linkbacks_microformats_class_mapper', $class_mapper );
 	}
@@ -90,7 +104,7 @@ class Linkbacks_MF2_Handler {
 
 		/*
 		 * replies
-		 * @link http://indiewebcamp.com/in-reply-to
+		 * @link http://indieweb.org/in-reply-to
 		 */
 		$rel_mapper['in-reply-to'] = 'reply';
 		$rel_mapper['reply-of']    = 'reply';
@@ -139,7 +153,7 @@ class Linkbacks_MF2_Handler {
 		$commentdata['remote_source_rels']       = $rels;
 
 		// try to find some content
-		// @link http://indiewebcamp.com/comments-presentation
+		// @link http://indieweb.org/comments-presentation
 		if ( isset( $properties['summary'] ) ) {
 			$commentdata['comment_content'] = wp_slash( $properties['summary'] );
 		} elseif ( isset( $properties['content'] ) ) {
@@ -277,7 +291,7 @@ class Linkbacks_MF2_Handler {
 			'audio',
 			'photo',
 			'featured',
-			'swarm-coins' // https://ownyourswarm.p3k.io/docs#coins
+			'swarm-coins', // https://ownyourswarm.p3k.io/docs#coins
 		);
 
 		// Add in supported properties
