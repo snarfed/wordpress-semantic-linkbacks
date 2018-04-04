@@ -201,29 +201,33 @@ class Linkbacks_Handler {
 	public static function get_comment_type_excerpts() {
 		$strings = array(
 			// translators: Name verb on domain
-			'mention'       => __( '%1$s mentioned %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			'mention'         => __( '%1$s mentioned %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'reply'         => __( '%1$s replied to %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			'reply'           => __( '%1$s replied to %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'repost'        => __( '%1$s reposted %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			'repost'          => __( '%1$s reposted %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'like'          => __( '%1$s liked %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			'like'            => __( '%1$s liked %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'favorite'      => __( '%1$s favorited %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			'favorite'        => __( '%1$s favorited %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'tag'           => __( '%1$s tagged %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			'tag'             => __( '%1$s tagged %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'bookmark'      => __( '%1$s bookmarked %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
+			'bookmark'        => __( '%1$s bookmarked %2$s on <a href="%3$s">%4$s</a>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'rsvp:yes'      => __( '%1$s is <strong>attending</strong>.', 'semantic-linkbacks' ),
+			'rsvp:yes'        => __( '%1$s is <strong>attending</strong>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'rsvp:no'       => __( '%1$s is <strong>not attending</strong>.', 'semantic-linkbacks' ),
+			'rsvp:no'         => __( '%1$s is <strong>not attending</strong>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'rsvp:maybe'    => __( 'Maybe %1$s will be <strong>attending</strong>.', 'semantic-linkbacks' ),
+			'rsvp:maybe'      => __( 'Maybe %1$s will be <strong>attending</strong>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
 			'rsvp:interested' => __( '%1$s is <strong>interested</strong> in this event.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'invited'       => __( '%1$s is <strong>invited</strong>.', 'semantic-linkbacks' ),
+			'invited'         => __( '%1$s is <strong>invited</strong>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
+			'listen'          => __( '%1$s is <strong>listening</strong>.', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
+			'watch'           => __( '%1$s is <strong>watching</strong>.', 'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -237,19 +241,21 @@ class Linkbacks_Handler {
 	public static function get_comment_type_strings() {
 		$strings = array(
 			// Special case. any value that evals to false will be considered standard
-			'mention'       => __( 'Mention', 'semantic-linkbacks' ),
+			'mention'         => __( 'Mention', 'semantic-linkbacks' ),
 
-			'reply'         => __( 'Reply', 'semantic-linkbacks' ),
-			'repost'        => __( 'Repost', 'semantic-linkbacks' ),
-			'like'          => __( 'Like', 'semantic-linkbacks' ),
-			'favorite'      => __( 'Favorite', 'semantic-linkbacks' ),
-			'tag'           => __( 'Tag', 'semantic-linkbacks' ),
-			'bookmark'      => __( 'Bookmark', 'semantic-linkbacks' ),
-			'rsvp:yes'      => __( 'RSVP', 'semantic-linkbacks' ),
-			'rsvp:no'       => __( 'RSVP', 'semantic-linkbacks' ),
-			'rsvp:maybe'    => __( 'RSVP', 'semantic-linkbacks' ),
+			'reply'           => __( 'Reply', 'semantic-linkbacks' ),
+			'repost'          => __( 'Repost', 'semantic-linkbacks' ),
+			'like'            => __( 'Like', 'semantic-linkbacks' ),
+			'favorite'        => __( 'Favorite', 'semantic-linkbacks' ),
+			'tag'             => __( 'Tag', 'semantic-linkbacks' ),
+			'bookmark'        => __( 'Bookmark', 'semantic-linkbacks' ),
+			'rsvp:yes'        => __( 'RSVP', 'semantic-linkbacks' ),
+			'rsvp:no'         => __( 'RSVP', 'semantic-linkbacks' ),
+			'rsvp:maybe'      => __( 'RSVP', 'semantic-linkbacks' ),
 			'rsvp:interested' => __( 'RSVP', 'semantic-linkbacks' ),
-			'invited'       => __( 'Invited', 'semantic-linkbacks' ),
+			'invited'         => __( 'Invited', 'semantic-linkbacks' ),
+			'listen'          => __( 'Listening', 'semantic-linkbacks' ),
+			'watch'           => __( 'Watching', 'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -420,21 +426,21 @@ class Linkbacks_Handler {
 	 */
 	public static function get_post_type( $post_id ) {
 		$post_typestrings = self::get_post_type_strings();
-		$post_type = $post_typestrings[ 'post' ];
-		
+		$post_type        = $post_typestrings['post'];
+
 		// If this is the page homepages are redirected to then use the site name
 		if ( $post_id === get_option( 'webmention_home_mentions', 0 ) ) {
 			$post_type = get_bloginfo( 'name' );
-		} else if ( 'page' === get_post_type( $post_id ) ) {
-			$post_type = $post_typestrings[ 'page' ];
-		} else if ( current_theme_supports( 'post-formats' ) ) {
+		} elseif ( 'page' === get_post_type( $post_id ) ) {
+			$post_type = $post_typestrings['page'];
+		} elseif ( current_theme_supports( 'post-formats' ) ) {
 			$post_format = get_post_format( $post_id );
-			
+
 			// add "standard" as default for post format enabled types
 			if ( ! $post_format || ! in_array( $post_format, array_keys( $post_typestrings ), true ) ) {
 				$post_format = 'standard';
 			}
-			
+
 			$post_type = $post_typestrings[ $post_format ];
 		}
 
@@ -603,19 +609,21 @@ class Linkbacks_Handler {
 		$comment = get_comment( $comment_id );
 		// "comment type to class" mapper
 		$class_mapping = array(
-			'mention'       => array( 'u-mention' ),
+			'mention'         => array( 'u-mention' ),
 
-			'reply'         => array( 'u-comment' ),
-			'repost'        => array( 'u-repost' ),
-			'like'          => array( 'u-like' ),
-			'favorite'      => array( 'u-favorite' ),
-			'tag'           => array( 'u-tag' ),
-			'bookmark'      => array( 'u-bookmark' ),
-			'rsvp:yes'      => array( 'u-rsvp' ),
-			'rsvp:no'       => array( 'u-rsvp' ),
-			'rsvp:maybe'    => array( 'u-rsvp' ),
+			'reply'           => array( 'u-comment' ),
+			'repost'          => array( 'u-repost' ),
+			'like'            => array( 'u-like' ),
+			'favorite'        => array( 'u-favorite' ),
+			'tag'             => array( 'u-tag' ),
+			'bookmark'        => array( 'u-bookmark' ),
+			'rsvp:yes'        => array( 'u-rsvp' ),
+			'rsvp:no'         => array( 'u-rsvp' ),
+			'rsvp:maybe'      => array( 'u-rsvp' ),
 			'rsvp:interested' => array( 'u-rsvp' ),
-			'invited'       => array( 'u-invitee' ),
+			'invited'         => array( 'u-invitee' ),
+			'listen'          => array( 'u-listen' ),
+			'watch'           => array( 'u-watch' ),
 		);
 
 		$semantic_linkbacks_type = self::get_type( $comment );
