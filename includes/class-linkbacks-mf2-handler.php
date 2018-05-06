@@ -78,6 +78,13 @@ class Linkbacks_MF2_Handler {
 		$class_mapper['category'] = 'tag';
 
 		/*
+		 * read
+		 * @link http://indieweb.org/read
+		 */
+		$class_mapper['read-of'] = 'read';
+		$class_mapper['read']  = 'read';
+
+		/*
 		 * listen
 		 * @link http://indieweb.org/listen
 		 */
@@ -292,6 +299,7 @@ class Linkbacks_MF2_Handler {
 			'photo',
 			'featured',
 			'swarm-coins', // https://ownyourswarm.p3k.io/docs#coins
+			'read-status', // https://indieweb.org/read
 		);
 
 		// Add in supported properties

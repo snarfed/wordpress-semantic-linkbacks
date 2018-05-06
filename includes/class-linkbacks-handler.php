@@ -225,9 +225,11 @@ class Linkbacks_Handler {
 			// translators: Name verb on domain
 			'invited'         => __( '%1$s is <strong>invited</strong>.', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'listen'          => __( '%1$s is <strong>listening</strong>.', 'semantic-linkbacks' ),
+			'listen'          => __( '%1$s <strong>listened</strong> to %2$s (via <a href="%3$s">%4$s</a>).', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'watch'           => __( '%1$s is <strong>watching</strong>.', 'semantic-linkbacks' ),
+			'watch'           => __( '%1$s <strong>watched</strong> %2$s (via <a href="%3$s">%4$s</a>).', 'semantic-linkbacks' ),
+			// translators: Name verb on domain
+			'read'            => __( '%1$s <strong>read</strong> %2$s (via <a href="%3$s">%4$s</a>).', 'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -254,8 +256,9 @@ class Linkbacks_Handler {
 			'rsvp:maybe'      => __( 'RSVP', 'semantic-linkbacks' ),
 			'rsvp:interested' => __( 'RSVP', 'semantic-linkbacks' ),
 			'invited'         => __( 'Invited', 'semantic-linkbacks' ),
-			'listen'          => __( 'Listening', 'semantic-linkbacks' ),
-			'watch'           => __( 'Watching', 'semantic-linkbacks' ),
+			'listen'          => __( 'Listen', 'semantic-linkbacks' ),
+			'watch'           => __( 'Watch', 'semantic-linkbacks' ),
+			'read'            => __( 'Read', 'semantic-linkbacks' ),
 		);
 
 		return $strings;
@@ -623,6 +626,7 @@ class Linkbacks_Handler {
 			'rsvp:interested' => array( 'u-rsvp' ),
 			'invited'         => array( 'u-invitee' ),
 			'listen'          => array( 'u-listen' ),
+			'read'            => array( 'u-read' ),
 			'watch'           => array( 'u-watch' ),
 		);
 
