@@ -46,6 +46,7 @@ class Semantic_Linkbacks_Plugin {
 
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_title_filter' ), 21 );
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_content_filter' ), 22 );
+
 		self::plugin_textdomain();
 
 		// initialize admin settings
@@ -53,6 +54,7 @@ class Semantic_Linkbacks_Plugin {
 	}
 
 	public static function admin_init() {
+		self::privacy_declaration();
 		add_settings_field( 'semantic_linkbacks_discussion_settings', __( 'Semantic Linkbacks Settings', 'semantic-linkbacks' ), array( 'Semantic_Linkbacks_Plugin', 'discussion_settings' ), 'discussion', 'default' );
 		register_setting(
 			'discussion', 'semantic_linkbacks_facepile_mention', array(
@@ -153,4 +155,19 @@ class Semantic_Linkbacks_Plugin {
 			wp_enqueue_script( 'semantic-linkbacks', plugin_dir_url( __FILE__ ) . 'js/semantic-linkbacks.js', array( 'jquery' ), self::$version, true );
 		}
 	}
+
+	public static function privacy_declaration() {
+		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
+			$content = __(
+				'For received webmentions, pingbacks and trackbacks, such as responding to a post or article, this site stores information retrieved from the source
+				in order to provide a richer comment. Items such as author name and image, summary of the text, etc may be stored if present in the source and are 
+				solely to provide richer comments. We will remove any of this on request.', 'semantic-linkbacks'
+			);
+			wp_add_privacy_policy_content(
+				'Semantic Linkbacks',
+				wp_kses_post( wpautop( $content, false ) )
+			);
+		}
+	}
+
 }
