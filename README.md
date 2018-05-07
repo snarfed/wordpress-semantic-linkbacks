@@ -19,6 +19,11 @@ The limited display for trackbacks and linkbacks is replaced by a clean full sen
 
 Semantic Linkbacks uses [Microformats 2](http://microformats.org/wiki/microformats2) to get information about the linked post and it is highly extensible to also add support for other forms of markup.
 
+## Privacy and Data Collection ##
+
+This plugin collects data from sites that send webmentions for the purpose of displaying richer comments on a site. This data is under the control of the site owner. It is the personal responsibility 
+of that individual or individuals to remove any information at the request of the original content creator. Over time, we will add additional tools to assist in doing so.
+
 ## Frequently Asked Questions ##
 
 ### Do I need to mark up my site? ###
