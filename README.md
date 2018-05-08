@@ -40,6 +40,9 @@ The IndieWeb community defines several types of feedback:
 * Favorites: <http://indieweb.org/favorite>
 * RSVPs: <http://indieweb.org/rsvp>
 * Tagging: <http://indieweb.org/tag>
+* Listen: <http://indieweb.org/listen>
+* Watch: <http://indieweb.org/watch>
+* Read: <http://indieweb.org/read>
 * Classic "Mentions": <http://indieweb.org/mentions>
 
 ### How do I extend this plugin? ###
@@ -67,6 +70,11 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.7.7 ###
+* Add read type
+* Capture read-status if available
+* Change string as previous tense was off
 
 ### 3.7.6 ###
 * Update Parser to version 0.4.3
