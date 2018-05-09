@@ -38,6 +38,9 @@ class Linkbacks_Handler {
 		add_filter( 'wp_list_comments_args', array( 'Linkbacks_Handler', 'filter_comment_args' ) );
 		add_action( 'comment_form_before', array( 'Linkbacks_Handler', 'show_mentions' ) );
 
+		// Domain Approval Check
+		add_filter( 'semantic_linkbacks_commentdata', array( 'Linkbacks_Handler', 'domain_approval_check' ), 99, 1 );
+
 		// Register Meta Keys
 		self::register_meta();
 	}
@@ -157,6 +160,24 @@ class Linkbacks_Handler {
 		}
 
 		return wp_unslash( $commentdata );
+	}
+
+	/**
+	 * Use the whitelist check function to approve a comment if the source domain is on the whitelist.
+	 *
+	 * @param array $commentdata
+	 * @return array $commentdata
+	 */
+	public static function domain_approval_check( $commentdata ) {
+		if ( ! $commentdata || is_wp_error( $commentdata ) || ! class_exists( 'Webmention_Receiver' ) || ! isset( $commentdata['semantic_linkbacks_canonical'] ) ) {
+			return $commentdata;
+		}
+		// Check if the canonical URL is on the whitelist
+		if ( Webmention_Receiver::domain_whitelist_check( $commentdata['semantic_linkbacks_canonical'] ) ) {
+			$commentdata['comment_approved'] = 1;
+		}
+
+		return $commentdata;
 	}
 
 	/**
