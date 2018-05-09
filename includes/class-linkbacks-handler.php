@@ -534,6 +534,13 @@ class Linkbacks_Handler {
 			return $args;
 		}
 
+		$allowed_comment_types = apply_filters( 'get_avatar_comment_types', array( 'comment' ) );
+		if ( ! empty( $id_or_email->comment_type ) && ! in_array( $id_or_email->comment_type, (array) $allowed_comment_types, true ) ) {
+			$args['url'] = false;
+			/** This filter is documented in wp-includes/link-template.php */
+			return apply_filters( 'get_avatar_data', $args, $id_or_email );
+		}
+
 		$type = self::get_type( $id_or_email );
 		$type = explode( ':', $type );
 
@@ -651,7 +658,6 @@ class Linkbacks_Handler {
 	public static function get_avatar_comment_types( $types ) {
 		$types[] = 'pingback';
 		$types[] = 'trackback';
-		$types[] = 'webmention';
 
 		return array_unique( $types );
 	}
