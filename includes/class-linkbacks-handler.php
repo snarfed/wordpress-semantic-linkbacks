@@ -13,12 +13,17 @@ class Linkbacks_Handler {
 	 * Initialize the plugin, registering WordPress hooks.
 	 */
 	public static function init() {
+
+		/* Add meta boxes on the 'add_meta_boxes' hook. */
+		add_action( 'add_meta_boxes', array( 'Linkbacks_Handler', 'add_meta_boxes' ) );
+
 		// enhance linkbacks
 		add_filter( 'preprocess_comment', array( 'Linkbacks_Handler', 'enhance' ), 0, 1 );
 		add_filter( 'wp_update_comment_data', array( 'Linkbacks_Handler', 'enhance' ), 11, 3 );
 
 		// Updates Comment Meta if set in commentdata
 		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'update_meta' ), 10, 2 );
+		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'save_comment_meta' ) );
 
 		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 5 );
 
@@ -46,6 +51,43 @@ class Linkbacks_Handler {
 
 		// Register Meta Keys
 		self::register_meta();
+	}
+
+	/**
+	 * Create a  meta boxes to be displayed on the comment editor screen.
+	 */
+	public static function add_meta_boxes() {
+		add_meta_box(
+			'semantic-linkbacks-meta',
+			esc_html__( 'Semantic Linkbacks Data', 'semantic-linkbacks' ),
+			array( 'Linkbacks_Handler', 'comment_metabox' ),
+			'comment',
+			'normal',
+			'default'
+		);
+	}
+
+	public static function comment_metabox() {
+		load_template( dirname( __FILE__ ) . '/../templates/linkbacks-edit-comment-form.php' );
+	}
+
+	public static function save_comment_meta( $comment_id ) {
+		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+		// Check the user's permissions.
+		if ( ! current_user_can( 'edit_comment', $comment_id ) ) {
+			return;
+		}
+		if ( ! empty( $_POST['semantic_linkbacks_type'] ) ) {
+			update_comment_meta( $comment_id, 'semantic_linkbacks_type', $_POST['semantic_linkbacks_type'] );
+		}
+		if ( ! empty( $_POST['semantic_linkbacks_avatar'] ) ) {
+			update_comment_meta( $comment_id, 'semantic_linkbacks_avatar', $_POST['semantic_linkbacks_avatar'] );
+		} else {
+			delete_comment_meta( $comment_id, 'semantic_linkbacks_avatar' );
+		}
 	}
 
 	/**
@@ -293,6 +335,18 @@ class Linkbacks_Handler {
 		);
 
 		return $strings;
+	}
+
+	public static function comment_type_select( $type, $echo = false ) {
+		$choices = self::get_comment_type_strings();
+		$return  = '';
+		foreach ( $choices as $value => $text ) {
+			$return .= sprintf( '<option value=%1s %2s>%3s</option>', $value, selected( $type, $value, false ), $text );
+		}
+		if ( ! $echo ) {
+			return $return;
+		}
+		echo $return;
 	}
 
 	/**
