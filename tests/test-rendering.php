@@ -8,6 +8,13 @@ class RenderingTest extends WP_UnitTestCase {
 				return false;
 			}
 		);
+		add_filter(
+			'get_avatar_comment_types', function( $types ) {
+				$types[] = 'webmention';
+				return $types;
+			}
+		);
+
 	}
 
 	public function make_comments( $num, $semantic_linkbacks_type = 'like' ) {
