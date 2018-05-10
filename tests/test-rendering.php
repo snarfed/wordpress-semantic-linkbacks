@@ -49,28 +49,6 @@ class RenderingTest extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_facepile_converts_default_gravatar_to_mystery_man() {
-		update_option( 'avatar_default', 'blank' );
-
-		$comment = get_comment(
-			wp_new_comment(
-				array(
-					'comment_author_url' => 'http://example.com/person',
-					'comment_author'     => 'Person',
-					'comment_type'       => 'webmention',
-				)
-			)
-		);
-		$this->assertContains( 'gravatar.com/avatar/?s=96&d=blank', get_avatar_url( $comment, array( 'size' => 96 ) ) );
-
-		update_option( 'semantic_linkbacks_facepile_like', 1 );
-		add_comment_meta( $comment->comment_ID, 'semantic_linkbacks_type', 'like' );
-
-		$html = list_linkbacks( array( 'echo' => false ), array( $comment ) );
-		$this->assertContains( 'gravatar.com/avatar/?s=64&#038;d=mm', $html );
-		$this->assertFalse( strpos( $html, 'gravatar.com/avatar/?s=64&#038;d=blank' ) );
-	}
-
 	public function test_facepile_fold() {
 		$comments = $this->make_comments( 3 );
 		$html     = list_linkbacks( array( 'echo' => false ), $comments );
