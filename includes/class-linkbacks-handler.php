@@ -22,6 +22,9 @@ class Linkbacks_Handler {
 
 		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 5 );
 
+		// All the default gravatars come from Gravatar instead of being generated locally so add a local default
+		add_filter( 'avatar_defaults', array( 'Linkbacks_Handler', 'anonymous_avatar' ) );
+
 		// To extend or to override the default behavior, just use the `comment_text` filter with a lower
 		// priority (so that it's called after this one) or remove the filters completely in
 		// your code: `remove_filter('comment_text', array('Linkbacks_Handler', 'comment_text_add_cite'), 11);`
@@ -56,6 +59,13 @@ class Linkbacks_Handler {
 		$args['walker'] = new Semantic_Linkbacks_Walker_Comment();
 		return $args;
 	}
+
+	public static function anonymous_avatar( $avatar_defaults ) {
+		$url                     = plugin_dir_url( dirname( __FILE__ ) ) . 'img/anonymous.png';
+		$avatar_defaults[ $url ] = __( 'Anonymous', 'semantic-linkbacks' );
+		return $avatar_defaults;
+	}
+
 
 	/**
 	 * Filter whether to override comment presentation.
@@ -537,7 +547,8 @@ class Linkbacks_Handler {
 		if ( is_numeric( $comment ) ) {
 			$comment = get_comment( $comment );
 		}
-		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
+		$avatar_url = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
+		return $avatar_url ? $avatar_url : plugin_dir_url( dirname( __FILE__ ) ) . 'img/anonymous.png';
 	}
 
 	/**
