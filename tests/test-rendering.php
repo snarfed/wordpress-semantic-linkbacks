@@ -63,12 +63,13 @@ class RenderingTest extends WP_UnitTestCase {
 	}
 
 	public function test_facepile_no_fold() {
-		$comments = $this->make_comments( 3 );
+		$comments = $this->make_comments( 4 );
 		update_option( 'semantic_linkbacks_facepiles_fold_limit', 0 );
 		$html = list_linkbacks( array( 'echo' => false ), $comments );
 		$this->assertContains( '<a class="u-url" title="Person 0', $html );
 		$this->assertContains( '<a class="u-url" title="Person 1', $html );
 		$this->assertContains( '<a class="u-url" title="Person 2', $html );
+		$this->assertContains( '<a class="u-url" title="Person 3', $html );
 		$this->assertEquals( false, strpos( '<li class="toggle-additional-facepiles">', $html ) );
 	}
 
