@@ -238,7 +238,7 @@ class Linkbacks_MF2_Handler {
 			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = self::first( $properties['url'] );
 			// If  the source URL and the canonical URL are not on the same domain, set this flag in the comment data to trigger actions in the Linkbacks_Handler class
 			if ( wp_parse_url( $properties['url'], PHP_URL_HOST ) !== wp_parse_url( $source, PHP_URL_HOST ) ) {
-				$commentdata['delegated_mention'] = 1;
+				$commentdata['proxy_mention'] = 1;
 			}
 		} else {
 			$commentdata['comment_meta']['semantic_linkbacks_canonical'] = esc_url_raw( $source );
