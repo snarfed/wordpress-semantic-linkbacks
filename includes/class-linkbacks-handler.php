@@ -103,7 +103,7 @@ class Linkbacks_Handler {
 	}
 
 	public static function anonymous_avatar( $avatar_defaults ) {
-		$url                     = plugin_dir_url( dirname( __FILE__ ) ) . 'img/anonymous.png';
+		$url                     = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
 		$avatar_defaults[ $url ] = __( 'Anonymous', 'semantic-linkbacks' );
 		return $avatar_defaults;
 	}
@@ -602,7 +602,7 @@ class Linkbacks_Handler {
 			$comment = get_comment( $comment );
 		}
 		$avatar_url = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
-		return $avatar_url ? $avatar_url : plugin_dir_url( dirname( __FILE__ ) ) . 'img/anonymous.png';
+		return $avatar_url ? $avatar_url : plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
 	}
 
 	/**

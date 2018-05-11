@@ -74,7 +74,7 @@ The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronpareck
 
 = Who made the anonymous icon? =
 
-Elliot Grieveson [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0), from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Elliot_Grieveson.png).
+The anonymous user icon is user-secret from the [Fontawesome](https://fontawesome.com). For more information on the free licensing for this, visit their [page](https://fontawesome.com/license).
 
 == Changelog ==
 
