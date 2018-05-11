@@ -96,6 +96,22 @@
 </div>
 <?php endif; ?>
 
+<?php if ( get_option( 'semantic_linkbacks_facepile_read', true ) && has_linkbacks( 'read' ) ) : ?>
+<div class="reads">
+	<h3><?php echo __( 'Reading', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'type' => 'read',
+		),
+		get_linkbacks( 'read' )
+	);
+	?>
+</div>
+<?php endif; ?>
+
+
+
 <?php if ( get_option( 'semantic_linkbacks_facepile_watch', true ) && has_linkbacks( 'watch' ) ) : ?>
 <div class="watches">
 	<h3><?php echo __( 'Watching', 'semantic-linkbacks' ); ?></h3>
