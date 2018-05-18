@@ -51,7 +51,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	}
 
 	protected static function is_reaction( $comment ) {
-		return Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) );
+		return Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) ) && empty( $comment->comment_parent );
 	}
 
 	public function start_el( &$output, $comment, $depth = 0, $args = array(), $id = 0 ) {
