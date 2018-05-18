@@ -200,9 +200,13 @@ function list_linkbacks( $args, $comments ) {
 				preg_replace( '/^www\./', '', $url )
 			);
 		}
-		$class = get_comment_class( $classes, $comment );
-		$class = join( ' ', $class );
-
+		$class  = get_comment_class( $classes, $comment );
+		$class  = join( ' ', $class );
+		$avatar = get_avatar( $comment, $r['avatar_size'] );
+		// If the avatar comes back empty show the name
+		if ( ! $avatar ) {
+			$avatar = get_comment_author( $comment );
+		}
 		$return .= sprintf(
 			'<li class="%1$s" id="%5$s">
 				<span class="p-author h-card">
@@ -212,7 +216,7 @@ function list_linkbacks( $args, $comments ) {
 				<a class="u-url" href="%7$s"></a>
 			</li>',
 			$class,
-			get_avatar( $comment, $r['avatar_size'] ),
+			$avatar,
 			get_comment_author_url( $comment ),
 			get_comment_author( $comment ),
 			esc_attr( 'comment-' . $comment->comment_ID ),

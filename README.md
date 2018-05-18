@@ -70,7 +70,11 @@ First, [follow these instructions](https://wordpress.stackexchange.com/questions
 
 ### Who made the logos? ###
 
-The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronparecki.com) and the Microformats logo is made by [Dan Cederholm](http://simplebits.com/work/microformats/)
+The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronparecki.com) and the Microformats logo is made by [Dan Cederholm](http://simplebits.com/work/microformats/).
+
+### Who made the anonymous icon? ###
+
+The anonymous user icon is user-secret from the [Fontawesome](https://fontawesome.com). For more information on the free licensing for this, visit their [page](https://fontawesome.com/license).
 
 ## Changelog ##
 

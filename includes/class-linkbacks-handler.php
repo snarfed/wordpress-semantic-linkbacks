@@ -13,14 +13,22 @@ class Linkbacks_Handler {
 	 * Initialize the plugin, registering WordPress hooks.
 	 */
 	public static function init() {
+
+		/* Add meta boxes on the 'add_meta_boxes' hook. */
+		add_action( 'add_meta_boxes', array( 'Linkbacks_Handler', 'add_meta_boxes' ) );
+
 		// enhance linkbacks
 		add_filter( 'preprocess_comment', array( 'Linkbacks_Handler', 'enhance' ), 0, 1 );
 		add_filter( 'wp_update_comment_data', array( 'Linkbacks_Handler', 'enhance' ), 11, 3 );
 
 		// Updates Comment Meta if set in commentdata
 		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'update_meta' ), 10, 2 );
+		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'save_comment_meta' ) );
 
 		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 5 );
+
+		// All the default gravatars come from Gravatar instead of being generated locally so add a local default
+		add_filter( 'avatar_defaults', array( 'Linkbacks_Handler', 'anonymous_avatar' ) );
 
 		// To extend or to override the default behavior, just use the `comment_text` filter with a lower
 		// priority (so that it's called after this one) or remove the filters completely in
@@ -38,8 +46,48 @@ class Linkbacks_Handler {
 		add_filter( 'wp_list_comments_args', array( 'Linkbacks_Handler', 'filter_comment_args' ) );
 		add_action( 'comment_form_before', array( 'Linkbacks_Handler', 'show_mentions' ) );
 
+		// Domain Approval Check
+		add_filter( 'semantic_linkbacks_commentdata', array( 'Linkbacks_Handler', 'domain_approval_check' ), 99, 1 );
+
 		// Register Meta Keys
 		self::register_meta();
+	}
+
+	/**
+	 * Create a  meta boxes to be displayed on the comment editor screen.
+	 */
+	public static function add_meta_boxes() {
+		add_meta_box(
+			'semantic-linkbacks-meta',
+			esc_html__( 'Semantic Linkbacks Data', 'semantic-linkbacks' ),
+			array( 'Linkbacks_Handler', 'comment_metabox' ),
+			'comment',
+			'normal',
+			'default'
+		);
+	}
+
+	public static function comment_metabox() {
+		load_template( dirname( __FILE__ ) . '/../templates/linkbacks-edit-comment-form.php' );
+	}
+
+	public static function save_comment_meta( $comment_id ) {
+		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+		// Check the user's permissions.
+		if ( ! current_user_can( 'edit_comment', $comment_id ) ) {
+			return;
+		}
+		if ( ! empty( $_POST['semantic_linkbacks_type'] ) ) {
+			update_comment_meta( $comment_id, 'semantic_linkbacks_type', $_POST['semantic_linkbacks_type'] );
+		}
+		if ( ! empty( $_POST['semantic_linkbacks_avatar'] ) ) {
+			update_comment_meta( $comment_id, 'semantic_linkbacks_avatar', $_POST['semantic_linkbacks_avatar'] );
+		} else {
+			delete_comment_meta( $comment_id, 'semantic_linkbacks_avatar' );
+		}
 	}
 
 	/**
@@ -53,6 +101,13 @@ class Linkbacks_Handler {
 		$args['walker'] = new Semantic_Linkbacks_Walker_Comment();
 		return $args;
 	}
+
+	public static function anonymous_avatar( $avatar_defaults ) {
+		$url                     = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
+		$avatar_defaults[ $url ] = __( 'Anonymous', 'semantic-linkbacks' );
+		return $avatar_defaults;
+	}
+
 
 	/**
 	 * Filter whether to override comment presentation.
@@ -160,6 +215,24 @@ class Linkbacks_Handler {
 	}
 
 	/**
+	 * Use the whitelist check function to approve a comment if the source domain is on the whitelist.
+	 *
+	 * @param array $commentdata
+	 * @return array $commentdata
+	 */
+	public static function domain_approval_check( $commentdata ) {
+		if ( ! $commentdata || is_wp_error( $commentdata ) || ! class_exists( 'Webmention_Receiver' ) || ! isset( $commentdata['semantic_linkbacks_canonical'] ) ) {
+			return $commentdata;
+		}
+		// Check if the canonical URL is on the whitelist
+		if ( Webmention_Receiver::domain_whitelist_check( $commentdata['semantic_linkbacks_canonical'] ) ) {
+			$commentdata['comment_approved'] = 1;
+		}
+
+		return $commentdata;
+	}
+
+	/**
 	 * Retrieve Remote Source
 	 *
 	 * @param string $url URL to Retrieve
@@ -262,6 +335,18 @@ class Linkbacks_Handler {
 		);
 
 		return $strings;
+	}
+
+	public static function comment_type_select( $type, $echo = false ) {
+		$choices = self::get_comment_type_strings();
+		$return  = '';
+		foreach ( $choices as $value => $text ) {
+			$return .= sprintf( '<option value=%1s %2s>%3s</option>', $value, selected( $type, $value, false ), $text );
+		}
+		if ( ! $echo ) {
+			return $return;
+		}
+		echo $return;
 	}
 
 	/**
@@ -516,7 +601,8 @@ class Linkbacks_Handler {
 		if ( is_numeric( $comment ) ) {
 			$comment = get_comment( $comment );
 		}
-		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
+		$avatar_url = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
+		return $avatar_url ? $avatar_url : plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
 	}
 
 	/**
@@ -532,6 +618,13 @@ class Linkbacks_Handler {
 			! isset( $id_or_email->comment_type ) ||
 			$id_or_email->user_id ) {
 			return $args;
+		}
+
+		$allowed_comment_types = apply_filters( 'get_avatar_comment_types', array( 'comment' ) );
+		if ( ! empty( $id_or_email->comment_type ) && ! in_array( $id_or_email->comment_type, (array) $allowed_comment_types, true ) ) {
+			$args['url'] = false;
+			/** This filter is documented in wp-includes/link-template.php */
+			return apply_filters( 'get_avatar_data', $args, $id_or_email );
 		}
 
 		$type = self::get_type( $id_or_email );
@@ -651,7 +744,6 @@ class Linkbacks_Handler {
 	public static function get_avatar_comment_types( $types ) {
 		$types[] = 'pingback';
 		$types[] = 'trackback';
-		$types[] = 'webmention';
 
 		return array_unique( $types );
 	}
