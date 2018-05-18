@@ -221,11 +221,11 @@ class Linkbacks_Handler {
 	 * @return array $commentdata
 	 */
 	public static function domain_approval_check( $commentdata ) {
-		if ( ! $commentdata || is_wp_error( $commentdata ) || ! class_exists( 'Webmention_Receiver' ) || ! isset( $commentdata['semantic_linkbacks_canonical'] ) ) {
+		if ( ! $commentdata || is_wp_error( $commentdata ) || ! function_exists( 'is_webmention_source_whitelisted' ) || ! isset( $commentdata['semantic_linkbacks_canonical'] ) ) {
 			return $commentdata;
 		}
 		// Check if the canonical URL is on the whitelist
-		if ( Webmention_Receiver::domain_whitelist_check( $commentdata['semantic_linkbacks_canonical'] ) ) {
+		if ( is_webmention_source_whitelisted( $commentdata['semantic_linkbacks_canonical'] ) ) {
 			$commentdata['comment_approved'] = 1;
 		}
 
