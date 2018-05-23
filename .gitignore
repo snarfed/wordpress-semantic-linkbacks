@@ -12,3 +12,4 @@ wordpress
 !/vendor/p3k/emoji-detector/src
 !/vendor/p3k/emoji-detector/LICENSE
 .DS_Store
+package-lock.json

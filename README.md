@@ -4,8 +4,8 @@
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.8.2  
 **Requires PHP:** 5.4  
-**Tested up to:** 4.9.4  
-**Stable tag:** 3.7.6  
+**Tested up to:** 4.9.6  
+**Stable tag:** 3.7.7  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -21,7 +21,7 @@ Semantic Linkbacks uses [Microformats 2](http://microformats.org/wiki/microforma
 
 ## Privacy and Data Collection ##
 
-This plugin collects data from sites that send webmentions for the purpose of displaying richer comments on a site. This data is under the control of the site owner. It is the personal responsibility 
+This plugin collects data from sites that send webmentions for the purpose of displaying richer comments on a site. This data is under the control of the site owner. It is the personal responsibility
 of that individual or individuals to remove any information at the request of the original content creator. Over time, we will add additional tools to assist in doing so.
 
 ## Frequently Asked Questions ##

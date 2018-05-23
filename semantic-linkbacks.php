@@ -5,7 +5,7 @@
  * Description: Semantic Linkbacks for WebMentions, Trackbacks and Pingbacks
  * Author: Matthias Pfefferle
  * Author URI: https://notiz.blog/
- * Version: 3.7.6
+ * Version: 3.7.7
  * License: MIT
  * License URI: http://opensource.org/licenses/MIT
  * Text Domain: semantic-linkbacks
@@ -13,6 +13,9 @@
  */
 
 add_action( 'plugins_loaded', array( 'Semantic_Linkbacks_Plugin', 'init' ) );
+
+// initialize admin settings
+add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
 
 /**
  * Semantic linkbacks class
@@ -48,9 +51,6 @@ class Semantic_Linkbacks_Plugin {
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_content_filter' ), 22 );
 
 		self::plugin_textdomain();
-
-		// initialize admin settings
-		add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
 	}
 
 	public static function admin_init() {
@@ -160,7 +160,7 @@ class Semantic_Linkbacks_Plugin {
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
 			$content = __(
 				'For received webmentions, pingbacks and trackbacks, such as responding to a post or article, this site stores information retrieved from the source
-				in order to provide a richer comment. Items such as author name and image, summary of the text, etc may be stored if present in the source and are 
+				in order to provide a richer comment. Items such as author name and image, summary of the text, etc may be stored if present in the source and are
 				solely to provide richer comments. We will remove any of this on request.', 'semantic-linkbacks'
 			);
 			wp_add_privacy_policy_content(
