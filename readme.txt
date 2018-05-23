@@ -21,15 +21,13 @@ Semantic Linkbacks uses [Microformats 2](http://microformats.org/wiki/microforma
 
 == Privacy and Data Collection ==
 
-This plugin collects data from sites that send webmentions for the purpose of displaying richer comments on a site. This data is under the control of the site owner. It is the personal responsibility
-of that individual or individuals to remove any information at the request of the original content creator. Over time, we will add additional tools to assist in doing so.
+This plugin collects data from sites that send webmentions for the purpose of displaying richer comments on a site. This data is under the control of the site owner. It is the personal responsibility of that individual or individuals to remove any information at the request of the original content creator. Over time, we will add additional tools to assist in doing so.
 
 == Frequently Asked Questions ==
 
 = Do I need to mark up my site? =
 
-Most modern WordPress themes support the older Microformats standard, which means the plugin should be able to get basic information from
-to enhance linkbacks. The plugin is most useful with webmention support(separate plugin) and sites/themes that support Microformats 2.
+Most modern WordPress themes support the older Microformats standard, which means the plugin should be able to get basic information from to enhance linkbacks. The plugin is most useful with webmention support(separate plugin) and sites/themes that support Microformats 2.
 
 = Why Webmentions? =
 
@@ -56,8 +54,7 @@ See [Extensions](https://indieweb.org/Semantic_Linkbacks#Extensions)
 
 = How do I add this into my plugin? =
 
-The plugin will automatically enhance webmentions, trackbacks, and pingbacks with an avatar and additional context. It will also automatically add a facepile instead of individual
-comments, but this feature can either be turned off by an aware theme or under Discussion in your Settings.
+The plugin will automatically enhance webmentions, trackbacks, and pingbacks with an avatar and additional context. It will also automatically add a facepile instead of individual comments, but this feature can either be turned off by an aware theme or under Discussion in your Settings.
 
 = Why do some [emoji reactions](https://indieweb.org/reacji) not show up? =
 
@@ -81,11 +78,13 @@ The anonymous user icon is user-secret from the [Fontawesome](https://fontawesom
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
 = 3.7.7 =
+
 * Add read type
 * Capture read-status if available
 * Change string as previous tense was off
 
 = 3.7.6 =
+
 * Update Parser to version 0.4.3
 * Introduce watch and listen properties
 
