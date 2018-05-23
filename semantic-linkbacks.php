@@ -164,7 +164,7 @@ class Semantic_Linkbacks_Plugin {
 				solely to provide richer comments. We will remove any of this on request.', 'semantic-linkbacks'
 			);
 			wp_add_privacy_policy_content(
-				'Semantic Linkbacks',
+				'Semantic-Linkbacks',
 				wp_kses_post( wpautop( $content, false ) )
 			);
 		}
