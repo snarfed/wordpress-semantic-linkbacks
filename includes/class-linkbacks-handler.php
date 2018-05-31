@@ -613,6 +613,10 @@ class Linkbacks_Handler {
 	 * @return array $args
 	 */
 	public static function anonymous_avatar_data( $args, $id_or_email ) {
+		// The comment list table in WordPress always uses the mystery even when the default is not that
+		if ( 'mm' === $args['default'] && 'anonymous' === get_option( 'avatar_default', 'anonymous' ) ) {
+			$args['default'] = 'anonymous';
+		}
 		if ( 'anonymous' !== $args['default'] ) {
 			return $args;
 		}
@@ -621,14 +625,12 @@ class Linkbacks_Handler {
 			$args['url'] = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
 			return $args;
 		}
-		if ( ! $id_or_email instanceof WP_Comment ) {
-			return $args;
-		}
 		// Replace gravatar
 		if ( strpos( $args['url'], 'gravatar.com' ) ) {
-			if ( ! $id_or_email->comment_author_email ) {
+			if ( $id_or_email instanceof WP_Comment && ! $id_or_email->comment_author_email ) {
 				$args['url'] = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
 			} else {
+				$args['url'] = str_replace( 'd=mm', 'd=' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.png', $args['url'] );
 				$args['url'] = str_replace( 'd=anonymous', 'd=' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.png', $args['url'] );
 			}
 		}
