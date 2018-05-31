@@ -25,7 +25,8 @@ class Linkbacks_Handler {
 		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'update_meta' ), 10, 2 );
 		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'save_comment_meta' ) );
 
-		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 5 );
+		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 2 );
+		add_filter( 'get_avatar_data', array( 'Linkbacks_Handler', 'anonymous_avatar_data' ), 12, 2 );
 
 		// All the default gravatars come from Gravatar instead of being generated locally so add a local default
 		add_filter( 'avatar_defaults', array( 'Linkbacks_Handler', 'anonymous_avatar' ) );
@@ -103,8 +104,7 @@ class Linkbacks_Handler {
 	}
 
 	public static function anonymous_avatar( $avatar_defaults ) {
-		$url                     = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
-		$avatar_defaults[ $url ] = __( 'Anonymous', 'semantic-linkbacks' );
+		$avatar_defaults['anonymous'] = __( 'Anonymous (hosted locally)', 'semantic-linkbacks' );
 		return $avatar_defaults;
 	}
 
@@ -517,7 +517,7 @@ class Linkbacks_Handler {
 		$post_type        = $post_typestrings['post'];
 
 		// If this is the page homepages are redirected to then use the site name
-		if ( $post_id === get_option( 'webmention_home_mentions', 0 ) ) {
+		if ( get_option( 'webmention_home_mentions', 0 ) === $post_id ) {
 			$post_type = get_bloginfo( 'name' );
 		} elseif ( 'page' === get_post_type( $post_id ) ) {
 			$post_type = $post_typestrings['page'];
@@ -601,8 +601,38 @@ class Linkbacks_Handler {
 		if ( is_numeric( $comment ) ) {
 			$comment = get_comment( $comment );
 		}
-		$avatar_url = get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
-		return $avatar_url ? $avatar_url : plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
+		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
+	}
+
+	/**
+	 * Replaces the default avatar with the WebMention uf2 photo
+	 *
+	 * @param array             $args Arguments passed to get_avatar_data(), after processing.
+	 * @param int|string|object $id_or_email A user ID, email address, or comment object
+	 *
+	 * @return array $args
+	 */
+	public static function anonymous_avatar_data( $args, $id_or_email ) {
+		if ( 'anonymous' !== $args['default'] ) {
+			return $args;
+		}
+		// Always override if default forced
+		if ( $args['force_default'] ) {
+			$args['url'] = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
+			return $args;
+		}
+		if ( ! $id_or_email instanceof WP_Comment ) {
+			return $args;
+		}
+		// Replace gravatar
+		if ( strpos( $args['url'], 'gravatar.com' ) ) {
+			if ( ! $id_or_email->comment_author_email ) {
+				$args['url'] = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
+			} else {
+				$args['url'] = str_replace( 'd=anonymous', 'd=' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.png', $args['url'] );
+			}
+		}
+		return $args;
 	}
 
 	/**
@@ -637,7 +667,7 @@ class Linkbacks_Handler {
 		$option = 'semantic_linkbacks_facepile_' . $type;
 
 		if ( get_option( $option, false ) && 'blank' === $args['default'] ) {
-			$args['default'] = 'mm';
+			$args['default'] = 'anonymous';
 		}
 
 		// check if comment has an avatar
