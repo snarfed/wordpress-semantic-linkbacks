@@ -46,6 +46,10 @@
 			<input type="checkbox" name="semantic_linkbacks_facepile_rsvp" id="semantic_linkbacks_facepile_rsvp" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_rsvp', true ) ); ?> />
 			<?php _e( 'RSVPs', 'semantic-linkbacks' ) ?>
 		</label></li>
+		<li><label for="semantic_linkbacks_facepile_read">
+			<input type="checkbox" name="semantic_linkbacks_facepile_read" id="semantic_linkbacks_facepile_read" value="1" <?php echo checked( true, get_option( 'semantic_linkbacks_facepile_read', true ) ); ?> />
+			<?php _e( 'Reads', 'semantic-linkbacks' ) ?>
+		</label></li>
 	</ul>
 
 	<label for="semantic_linkbacks_facepiles_fold_limit">
