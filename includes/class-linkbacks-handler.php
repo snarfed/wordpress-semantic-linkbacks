@@ -617,7 +617,7 @@ class Linkbacks_Handler {
 	 */
 	public static function anonymous_avatar_data( $args, $id_or_email ) {
 		// The comment list table in WordPress always uses the mystery even when the default is not that
-		if ( 'mm' === $args['default'] && 'anonymous' === get_option( 'avatar_default', 'anonymous' ) ) {
+		if ( 'mm' === $args['default'] && 'anonymous' === get_option( 'avatar_default', 'anonymous' ) && ! $args['force_default'] ) {
 			$args['default'] = 'anonymous';
 		}
 		if ( 'anonymous' !== $args['default'] ) {
