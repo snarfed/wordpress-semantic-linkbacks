@@ -9,7 +9,8 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	public static $reactions = array();
 
 	protected static function should_facepile( $comment ) {
-		if ( self::is_reaction( $comment ) && get_option( 'semantic_linkbacks_facepile_reaction', true ) ) {
+		$facepiles = get_option( 'semantic_linkbacks_facepiles' );
+		if ( self::is_reaction( $comment ) && in_array( 'reaction', $facepiles, true ) ) {
 			return true;
 		}
 
@@ -21,9 +22,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 			$type = $type[0];
 		}
 
-		$option = 'semantic_linkbacks_facepile_' . $type;
-
-		return $type && 'reply' !== $type && get_option( $option, true );
+		return $type && 'reply' !== $type && in_array( $type, $facepiles, true );
 	}
 
 	protected static function get_comment_author_link( $comment_id = 0 ) {

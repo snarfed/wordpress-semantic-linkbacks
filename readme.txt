@@ -77,6 +77,11 @@ The anonymous user icon is user-secret from the [Fontawesome](https://fontawesom
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
+= 3.7.8 =
+
+* Redo settings and settings page
+* Settings page to merge with Webmentions page if webmentions loaded
+
 = 3.7.7 =
 
 * Add read type
