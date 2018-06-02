@@ -69,13 +69,23 @@ First, [follow these instructions](https://wordpress.stackexchange.com/questions
 
 The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronparecki.com) and the Microformats logo is made by [Dan Cederholm](http://simplebits.com/work/microformats/).
 
-= Who made the anonymous icon? =
+= Who made the avatars and why are you providing default avatars? =
 
-The anonymous user icon is user-secret from the [Fontawesome](https://fontawesome.com). For more information on the free licensing for this, visit their [page](https://fontawesome.com/license).
+Even the WordPress default avatars are served by querying Gravatar.com which serves the file. Gravatar works by you providing an email address which it uses to match the image.
+The majority of linkbacks enhanced by this plugin do not have email addresses therefore we know that gravatar will not have anything on file. If there is no email address it will
+serve the local avatar, otherwise it will still go out to gravatar to search for a matching avatar twice a day.
 
+The plugin does attempt to store the URL to an actual profile image on the source site. The default avatar is only used if there is no such image found.
+
+* The anonymous user icon is user-secret from the [Fontawesome](https://fontawesome.com). For more information on the free licensing for this, visit their [page](https://fontawesome.com/license).
+* The mystery icon is a locally cached version of the mystery icon normally provided by WordPress and Gravatar.
+* The silhouette icon is from the [Faenza icon theme](https://code.google.com/archive/p/faenza-icon-theme/downloads) and licensed under the GPL.
 == Changelog ==
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+= 3.8.0 =
+* Add locally hosted avatars including a local copy of the mystery man and serve them if there is no gravatar
 
 = 3.7.7 =
 
