@@ -656,7 +656,7 @@ class Linkbacks_Handler {
 	 *
 	 * @return boolean
 	 */
-	public static function check_gravatar( $comment, $expires = 3600 * 12 ) {
+	public static function check_gravatar( $comment, $expires = 43200 ) {
 		$hash = md5( strtolower( trim( $comment->comment_author_email ) ) );
 		$url  = 'https://www.gravatar.com/avatar/' . $hash . '?d=404';
 		$data = get_comment_meta( $comment->comment_ID, 'slgv_' . $hash, true );
