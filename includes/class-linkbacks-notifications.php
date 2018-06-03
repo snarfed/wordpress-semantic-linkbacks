@@ -29,7 +29,6 @@ class Linkbacks_Notifications {
 
 	/**
 	 * Register Bulk send outgoing email
-	 *
 	 */
 	public static function register_bulk_send( $bulk_actions ) {
 		$bulk_actions['resend_notification_email'] = __( 'Resend Comment Email', 'semantic-linkbacks' );
@@ -45,7 +44,6 @@ class Linkbacks_Notifications {
 
 	/**
 	 * Handle Bulk Send Outgoing EMail
-	 *
 	 */
 	public static function bulk_send_Notifications( $redirect_to, $doaction, $comment_ids ) {
 		if ( ! in_array( $doaction, array( 'resend_notification_email', 'resend_moderation_email', 'send_pushover_text' ), true ) ) {
@@ -90,13 +88,13 @@ class Linkbacks_Notifications {
 		return $notify_message;
 
 	}
-
-		/**
-		 * Generate the moderation text
-		 *
+	
+	/**
+	 * Generate the moderation text
+	 *
 	 * @param int|WP_Comment $comment comment
-		 * @return string $message Appropriate text.
-		 */
+	 * @return string $message Appropriate text.
+	 */
 	public static function moderate_text( $comment ) {
 		$comment = get_comment( $comment );
 		if ( EMPTY_TRASH_DAYS ) {
@@ -110,15 +108,14 @@ class Linkbacks_Notifications {
 		$message .= sprintf( __( 'Spam it: %s', 'semantic-linkbacks' ), admin_url( "comment.php?action=spam&c={$comment->comment_ID}#wpbody-content" ) ) . "\r\n";
 		return $message;
 	}
-
-
-		/**
-		 * Filter the comment notification subject
-		 *
-		 * @param string $subject
+	
+	/**
+	 * Filter the comment notification subject
+	 *
+	 * @param string $subject
 	 * @param int $comment_id comment
-		 * @return string $subject
-		 */
+	 * @return string $subject
+	 */
 	public static function comment_notification_subject( $subject, $comment_id ) {
 		$comment = get_comment( $comment_id );
 		$type    = Linkbacks_Handler::get_type( $comment );
@@ -137,7 +134,7 @@ class Linkbacks_Notifications {
 	 * @param string $notify_message
 	 * @param int $comment_id comment
 	 * @return string $notify_message
-	 **/
+	 */
 	public static function comment_moderation_text( $notify_message, $comment_id ) {
 		$comment         = get_comment( $comment_id );
 		$notify_message  = self::moderation( $comment ) . "\r\n\r\n";
@@ -151,7 +148,7 @@ class Linkbacks_Notifications {
 	 * @param string $notify_messsage
 	 * @param int|WP_Comment $comment
 	 * @return string $notify_basic
-	 **/
+	 */
 	public static function basic_notification_text( $notify_message, $comment_id ) {
 		$comment = get_comment( $comment_id );
 		$type    = Linkbacks_Handler::get_type( $comment );
