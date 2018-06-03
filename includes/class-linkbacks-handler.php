@@ -115,7 +115,6 @@ class Linkbacks_Handler {
 	public static function anonymous_avatar( $avatar_defaults ) {
 		$defaults                   = array(
 			'silhouette' => __( 'Silhouette (hosted locally)', 'semantic-linkbacks' ),
-			'anonymous'  => __( 'Anonymous (hosted locally)', 'semantic-linkbacks' ),
 		);
 		$avatar_defaults['mystery'] = __( 'Mystery Person (hosted locally)', 'semantic-linkbacks' );
 		return array_merge( $defaults, $avatar_defaults );
@@ -634,8 +633,6 @@ class Linkbacks_Handler {
 			$type = get_option( 'avatar_default', 'silhouette' );
 		}
 		switch ( $type ) {
-			case 'anonymous':
-				return plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
 			case 'silhouette':
 				return plugin_dir_url( dirname( __FILE__ ) ) . 'img/silhouette.svg';
 			case 'mm':
@@ -648,35 +645,21 @@ class Linkbacks_Handler {
 	}
 
 	/**
-	 * Function to check if there is a gravatar and cache the result
+	 * Function to check if there is a gravatar
 	 *
 	 *
 	 * @param WP_Comment $comment
-	 * @param int $expires Expiry cache time
 	 *
 	 * @return boolean
 	 */
-	public static function check_gravatar( $comment, $expires = 43200 ) {
-		$hash = md5( strtolower( trim( $comment->comment_author_email ) ) );
-		$url  = 'https://www.gravatar.com/avatar/' . $hash . '?d=404';
-		$data = get_comment_meta( $comment->comment_ID, 'slgv_' . $hash, true );
-		if ( is_array( $data ) ) {
-			if ( $data['expiry'] <= time() ) {
-				$data = false;
-				delete_comment_meta( $comment->comment_ID, 'slgv_' . $hash );
-			}
+	public static function check_gravatar( $comment ) {
+		$hash     = md5( strtolower( trim( $comment->comment_author_email ) ) );
+		$url      = 'https://www.gravatar.com/avatar/' . $hash . '?d=404';
+		$response = wp_remote_head( $url );
+		if ( is_wp_error( $response ) || 404 === wp_remote_retrieve_response_code( $response ) ) {
+			return false;
 		}
-		if ( ! $data ) {
-			$response = wp_remote_head( $url );
-			if ( is_wp_error( $response ) || 404 === wp_remote_retrieve_response_code( $response ) ) {
-				$data = array( 'check' => false );
-			} else {
-				$data = array( 'check' => true );
-			}
-			$data['expiry'] = time() + (int) $expires;
-			update_comment_meta( $comment->comment_ID, 'slgv_' . $hash, $data );
-		}
-		return isset( $data['check'] ) ? $data['check'] : false;
+		return true;
 	}
 
 
@@ -689,7 +672,7 @@ class Linkbacks_Handler {
 	 * @return array $args
 	 */
 	public static function anonymous_avatar_data( $args, $id_or_email ) {
-		if ( ! in_array( $args['default'], array( 'silhouette', 'anonymous', 'mm', 'mystery', 'mysteryman' ), true ) ) {
+		if ( ! in_array( $args['default'], array( 'silhouette', 'mm', 'mystery', 'mysteryman' ), true ) ) {
 			return $args;
 		}
 		// Always override if default forced
@@ -704,10 +687,12 @@ class Linkbacks_Handler {
 		if ( $id_or_email instanceof WP_Comment ) {
 			if ( ! empty( $id_or_email->comment_author_email ) ) {
 				if ( self::check_gravatar( $id_or_email ) ) {
-					return $args;
+					update_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', $args['url'] );
 				} else {
+					update_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', self::get_default_avatar() );
 					$args['url'] = self::get_default_avatar();
 				}
+				return $args;
 			} else {
 				$args['url'] = self::get_default_avatar();
 			}

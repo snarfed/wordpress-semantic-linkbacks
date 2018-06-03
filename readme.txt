@@ -69,15 +69,16 @@ First, [follow these instructions](https://wordpress.stackexchange.com/questions
 
 The Webmention and Pingback logos are made by [Aaron Parecki](http://aaronparecki.com) and the Microformats logo is made by [Dan Cederholm](http://simplebits.com/work/microformats/).
 
-= Who made the avatars and why are you providing default avatars? =
+= Why are you providing avatars? =
+
+The plugin attempts to store the URL to an actual profile image on the source site. The default avatar set by WordPress is only used if there is no such image found.
 
 Even the WordPress default avatars are served by querying Gravatar.com which serves the file. Gravatar works by you providing an email address which it uses to match the image.
-The majority of linkbacks enhanced by this plugin do not have email addresses therefore we know that gravatar will not have anything on file. If there is no email address it will
-serve the local avatar, otherwise it will still go out to gravatar to search for a matching avatar twice a day.
+The majority of linkbacks enhanced by this plugin do not have email addresses therefore we know that gravatar will not have anything on file. 
 
-The plugin does attempt to store the URL to an actual profile image on the source site. The default avatar is only used if there is no such image found.
+If there is no email address it will serve the local avatar if you select one of the locally stored ones. If there is an email, it will go out to gravatar.com and see if they
+have a gravatar on file. If there is it will store the gravatar URL, otherwise it will store the URL for the local avatar set at the time.
 
-* The anonymous user icon is user-secret from the [Fontawesome](https://fontawesome.com). For more information on the free licensing for this, visit their [page](https://fontawesome.com/license).
 * The mystery icon is a locally cached version of the mystery icon normally provided by WordPress and Gravatar.
 * The silhouette icon is from the [Faenza icon theme](https://code.google.com/archive/p/faenza-icon-theme/downloads) and licensed under the GPL.
 == Changelog ==
