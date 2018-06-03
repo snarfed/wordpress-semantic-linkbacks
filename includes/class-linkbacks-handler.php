@@ -35,9 +35,9 @@ class Linkbacks_Handler {
 		// priority (so that it's called after this one) or remove the filters completely in
 		// your code: `remove_filter('comment_text', array('Linkbacks_Handler', 'comment_text_add_cite'), 11);`
 		if ( ! self::render_comments() ) {
-			add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_add_cite' ), 11, 3 );
+			add_filter( 'get_comment_text', array( 'Linkbacks_Handler', 'comment_text_add_cite' ), 11, 3 );
 		}
-		add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 12, 3 );
+		add_filter( 'get_comment_text', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 12, 3 );
 		add_filter( 'comment_excerpt', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 5, 2 );
 
 		add_filter( 'get_comment_link', array( 'Linkbacks_Handler', 'get_comment_link' ), 99, 3 );
@@ -311,9 +311,10 @@ class Linkbacks_Handler {
 	/**
 	* Returns an array of comment type slugs to their translated and pretty display versions
 	*
+	* @param $type Return only one type. All if null
 	* @return array The array of translated comment type names.
 	*/
-	public static function get_comment_type_strings() {
+	public static function get_comment_type_strings( $type = null ) {
 		$strings = array(
 			// Special case. any value that evals to false will be considered standard
 			'mention'         => __( 'Mention', 'semantic-linkbacks' ),
@@ -333,8 +334,10 @@ class Linkbacks_Handler {
 			'watch'           => __( 'Watch', 'semantic-linkbacks' ),
 			'read'            => __( 'Read', 'semantic-linkbacks' ),
 		);
-
-		return $strings;
+		if ( ! $type ) {
+			return $strings;
+		}
+		return isset( $strings[ $type ] ) ? $strings[ $type ] : $strings['mention'];
 	}
 
 	public static function comment_type_select( $type, $echo = false ) {
@@ -779,5 +782,4 @@ class Linkbacks_Handler {
 
 		return array_unique( $types );
 	}
-
 }
