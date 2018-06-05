@@ -35,9 +35,9 @@ class Linkbacks_Handler {
 		// priority (so that it's called after this one) or remove the filters completely in
 		// your code: `remove_filter('comment_text', array('Linkbacks_Handler', 'comment_text_add_cite'), 11);`
 		if ( ! self::render_comments() ) {
-			add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_add_cite' ), 11, 3 );
+			add_filter( 'get_comment_text', array( 'Linkbacks_Handler', 'comment_text_add_cite' ), 11, 3 );
 		}
-		add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 12, 3 );
+		add_filter( 'get_comment_text', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 12, 3 );
 		add_filter( 'comment_excerpt', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 5, 2 );
 
 		add_filter( 'get_comment_link', array( 'Linkbacks_Handler', 'get_comment_link' ), 99, 3 );
@@ -68,10 +68,19 @@ class Linkbacks_Handler {
 		);
 	}
 
+	/**
+	 * Load template for comment metabox.
+	 */
 	public static function comment_metabox() {
 		load_template( dirname( __FILE__ ) . '/../templates/linkbacks-edit-comment-form.php' );
 	}
 
+	/**
+	 * Saves Comment Meta Options
+	 *
+	 * @param int $comment_id
+	 *
+	 */
 	public static function save_comment_meta( $comment_id ) {
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -104,7 +113,7 @@ class Linkbacks_Handler {
 	}
 
 	public static function anonymous_avatar( $avatar_defaults ) {
-		$avatar_defaults['anonymous'] = __( 'Anonymous (hosted locally)', 'semantic-linkbacks' );
+		$avatar_defaults['mystery'] = __( 'Mystery Person (hosted locally)', 'semantic-linkbacks' );
 		return $avatar_defaults;
 	}
 
@@ -311,9 +320,10 @@ class Linkbacks_Handler {
 	/**
 	* Returns an array of comment type slugs to their translated and pretty display versions
 	*
+	* @param $type Return only one type. All if null
 	* @return array The array of translated comment type names.
 	*/
-	public static function get_comment_type_strings() {
+	public static function get_comment_type_strings( $type = null ) {
 		$strings = array(
 			// Special case. any value that evals to false will be considered standard
 			'mention'         => __( 'Mention', 'semantic-linkbacks' ),
@@ -333,8 +343,10 @@ class Linkbacks_Handler {
 			'watch'           => __( 'Watch', 'semantic-linkbacks' ),
 			'read'            => __( 'Read', 'semantic-linkbacks' ),
 		);
-
-		return $strings;
+		if ( ! $type ) {
+			return $strings;
+		}
+		return isset( $strings[ $type ] ) ? $strings[ $type ] : $strings['mention'];
 	}
 
 	public static function comment_type_select( $type, $echo = false ) {
@@ -604,8 +616,49 @@ class Linkbacks_Handler {
 		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
 	}
 
+
 	/**
-	 * Replaces the default avatar with the WebMention uf2 photo
+	 * Function to retrieve default avatar URL
+	 *
+	 *
+	 * @param string $type Default Avatar URL
+	 *
+	 * @return string|boolean $url
+	 */
+	public static function get_default_avatar( $type = null ) {
+		if ( ! $type ) {
+			$type = get_option( 'avatar_default', 'mystery' );
+		}
+		switch ( $type ) {
+			case 'mm':
+			case 'mystery':
+			case 'mysteryman':
+				return plugin_dir_url( dirname( __FILE__ ) ) . 'img/mm.jpg';
+		}
+		return apply_filters( 'semantic_linkbacks_default_avatar', $type );
+	}
+
+	/**
+	 * Function to check if there is a gravatar
+	 *
+	 *
+	 * @param WP_Comment $comment
+	 *
+	 * @return boolean
+	 */
+	public static function check_gravatar( $comment ) {
+		$hash     = md5( strtolower( trim( $comment->comment_author_email ) ) );
+		$url      = 'https://www.gravatar.com/avatar/' . $hash . '?d=404';
+		$response = wp_remote_head( $url );
+		if ( is_wp_error( $response ) || 404 === wp_remote_retrieve_response_code( $response ) ) {
+			return false;
+		}
+		return true;
+	}
+
+
+	/**
+	 * Replaces the default avatar with a locally stored default
 	 *
 	 * @param array             $args Arguments passed to get_avatar_data(), after processing.
 	 * @param int|string|object $id_or_email A user ID, email address, or comment object
@@ -613,25 +666,30 @@ class Linkbacks_Handler {
 	 * @return array $args
 	 */
 	public static function anonymous_avatar_data( $args, $id_or_email ) {
-		// The comment list table in WordPress always uses the mystery even when the default is not that
-		if ( 'mm' === $args['default'] && 'anonymous' === get_option( 'avatar_default', 'anonymous' ) ) {
-			$args['default'] = 'anonymous';
-		}
-		if ( 'anonymous' !== $args['default'] ) {
+		$local = apply_filters( 'semantic_linkbacks_local_avatars', array( 'mm', 'mystery', 'mysteryman' ) );
+		if ( ! in_array( $args['default'], $local, true ) ) {
 			return $args;
 		}
 		// Always override if default forced
 		if ( $args['force_default'] ) {
-			$args['url'] = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
+			$args['url'] = self::get_default_avatar( $args['default'] );
 			return $args;
 		}
-		// Replace gravatar
-		if ( strpos( $args['url'], 'gravatar.com' ) ) {
-			if ( $id_or_email instanceof WP_Comment && ! $id_or_email->comment_author_email ) {
-				$args['url'] = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
+		if ( ! strpos( $args['url'], 'gravatar.com' ) ) {
+			return $args;
+		}
+		$args['url'] = str_replace( 'd=' . $args['default'], 'd=' . self::get_default_avatar( $args['default'] ), $args['url'] );
+		if ( $id_or_email instanceof WP_Comment ) {
+			if ( ! empty( $id_or_email->comment_author_email ) ) {
+				if ( self::check_gravatar( $id_or_email ) ) {
+					update_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', $args['url'] );
+				} else {
+					update_comment_meta( $id_or_email->comment_ID, 'semantic_linkbacks_avatar', self::get_default_avatar() );
+					$args['url'] = self::get_default_avatar();
+				}
+				return $args;
 			} else {
-				$args['url'] = str_replace( 'd=mm', 'd=' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.png', $args['url'] );
-				$args['url'] = str_replace( 'd=anonymous', 'd=' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.png', $args['url'] );
+				$args['url'] = self::get_default_avatar();
 			}
 		}
 		return $args;
@@ -647,8 +705,8 @@ class Linkbacks_Handler {
 	 */
 	public static function pre_get_avatar_data( $args, $id_or_email ) {
 		if ( ! $id_or_email instanceof WP_Comment ||
-			! isset( $id_or_email->comment_type ) ||
-			$id_or_email->user_id ) {
+		! isset( $id_or_email->comment_type ) ||
+		$id_or_email->user_id ) {
 			return $args;
 		}
 
@@ -779,5 +837,4 @@ class Linkbacks_Handler {
 
 		return array_unique( $types );
 	}
-
 }

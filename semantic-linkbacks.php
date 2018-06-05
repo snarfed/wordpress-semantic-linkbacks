@@ -45,6 +45,9 @@ class Semantic_Linkbacks_Plugin {
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-mf2-handler.php';
 		add_action( 'init', array( 'Linkbacks_MF2_Handler', 'init' ) );
 
+		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-notifications.php';
+		add_action( 'init', array( 'Linkbacks_Notifications', 'init' ) );
+
 		add_action( 'wp_enqueue_scripts', array( 'Semantic_Linkbacks_Plugin', 'enqueue_scripts' ) );
 
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_title_filter' ), 21 );
