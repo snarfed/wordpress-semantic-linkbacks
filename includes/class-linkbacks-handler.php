@@ -113,11 +113,8 @@ class Linkbacks_Handler {
 	}
 
 	public static function anonymous_avatar( $avatar_defaults ) {
-		$defaults                   = array(
-			'silhouette' => __( 'Silhouette (hosted locally)', 'semantic-linkbacks' ),
-		);
 		$avatar_defaults['mystery'] = __( 'Mystery Person (hosted locally)', 'semantic-linkbacks' );
-		return array_merge( $defaults, $avatar_defaults );
+		return $avatar_defaults;
 	}
 
 
@@ -630,18 +627,15 @@ class Linkbacks_Handler {
 	 */
 	public static function get_default_avatar( $type = null ) {
 		if ( ! $type ) {
-			$type = get_option( 'avatar_default', 'silhouette' );
+			$type = get_option( 'avatar_default', 'mystery' );
 		}
 		switch ( $type ) {
-			case 'silhouette':
-				return plugin_dir_url( dirname( __FILE__ ) ) . 'img/silhouette.svg';
 			case 'mm':
 			case 'mystery':
 			case 'mysteryman':
 				return plugin_dir_url( dirname( __FILE__ ) ) . 'img/mm.jpg';
-			default:
-				return false;
 		}
+		return apply_filters( 'semantic_linkbacks_default_avatar', $type );
 	}
 
 	/**
@@ -672,7 +666,8 @@ class Linkbacks_Handler {
 	 * @return array $args
 	 */
 	public static function anonymous_avatar_data( $args, $id_or_email ) {
-		if ( ! in_array( $args['default'], array( 'silhouette', 'mm', 'mystery', 'mysteryman' ), true ) ) {
+		$local = apply_filters( 'semantic_linkbacks_local_avatars', array( 'mm', 'mystery', 'mysteryman' ) );
+		if ( ! in_array( $args['default'], $local, true ) ) {
 			return $args;
 		}
 		// Always override if default forced

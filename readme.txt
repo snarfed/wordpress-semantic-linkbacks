@@ -76,17 +76,17 @@ The plugin attempts to store the URL to an actual profile image on the source si
 Even the WordPress default avatars are served by querying Gravatar.com which serves the file. Gravatar works by you providing an email address which it uses to match the image.
 The majority of linkbacks enhanced by this plugin do not have email addresses therefore we know that gravatar will not have anything on file. 
 
-If there is no email address it will serve the local avatar if you select one of the locally stored ones. If there is an email, it will go out to gravatar.com and see if they
-have a gravatar on file. If there is it will store the gravatar URL, otherwise it will store the URL for the local avatar set at the time.
+If there is no email address it will serve the local avatar. If there is an email, it will go out to gravatar.com and see if they
+have a gravatar on file. If there is it will store the gravatar URL, otherwise it will store the URL for the local avatar if set.
 
-* The mystery icon is a locally cached version of the mystery icon normally provided by WordPress and Gravatar.
-* The silhouette icon is from the [Faenza icon theme](https://code.google.com/archive/p/faenza-icon-theme/downloads) and licensed under the GPL.
+The plugin uses a locally cached version of the mystery icon normally provided by WordPress and Gravatar.
+
 == Changelog ==
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
 = 3.8.0 =
-* Add locally hosted avatars including a local copy of the mystery man and serve them if there is no gravatar
+* Add locally hosted copy of the mystery man icon and serve it if there is no gravatar
 
 = 3.7.7 =
 
