@@ -329,6 +329,7 @@ class Linkbacks_Handler {
 			'listen'          => __( 'Listen', 'semantic-linkbacks' ),
 			'watch'           => __( 'Watch', 'semantic-linkbacks' ),
 			'read'            => __( 'Read', 'semantic-linkbacks' ),
+			'reacji'          => __( 'Reacji', 'semantic-linkbacks' )
 		);
 		if ( ! $type ) {
 			return $strings;
