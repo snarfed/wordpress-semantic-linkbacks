@@ -1,5 +1,5 @@
 <?php $facepiles = get_option( 'semantic_linkbacks_facepiles' ); ?>
-<?php if ( in_array( 'reaction', $facepiles, true ) && Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
+<?php if ( in_array( 'reacji', $facepiles, true ) && Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
 <div class="reactions">
 	<h3><?php echo __( 'Reacjis', 'semantic-linkbacks' ); ?></h3>
 	<?php
@@ -133,7 +133,7 @@
 <div class="rsvps">
 	<h3><?php _e( 'RSVPs', 'semantic-linkbacks' ); ?></h3>
 
-	<?php if ( has_linkbacks( 'rsvp:yes' ) ) : ?>
+	<?php if ( in_array( 'rsvp:yes', $facepiles, true ) && has_linkbacks( 'rsvp:yes' ) ) : ?>
 	<h4><?php _e( 'Yes', 'semantic-linkbacks' ); ?></h4>
 	<?php
 	list_linkbacks(
@@ -157,7 +157,7 @@
 	?>
 	<?php endif; ?>
 
-	<?php if ( in_array( 'rsvp', $facepiles, true ) && has_linkbacks( 'rsvp:maybe' ) ) : ?>
+	<?php if ( in_array( 'rsvp:maybe', $facepiles, true ) && has_linkbacks( 'rsvp:maybe' ) ) : ?>
 	<h4><?php _e( 'Maybe', 'semantic-linkbacks' ); ?></h4>
 	<?php
 	list_linkbacks(
@@ -169,7 +169,7 @@
 	?>
 	<?php endif; ?>
 
-	<?php if ( in_array( 'rsvp', $facepiles, true ) && has_linkbacks( 'rsvp:no' ) ) : ?>
+	<?php if ( in_array( 'rsvp:no', $facepiles, true ) && has_linkbacks( 'rsvp:no' ) ) : ?>
 	<h4><?php _e( 'No', 'semantic-linkbacks' ); ?></h4>
 	<?php
 	list_linkbacks(
@@ -181,7 +181,7 @@
 	?>
 	<?php endif; ?>
 
-	<?php if ( in_array( 'rsvp', $facepiles, true ) && has_linkbacks( 'rsvp:interested' ) ) : ?>
+	<?php if ( in_array( 'rsvp:interested', $facepiles, true ) && has_linkbacks( 'rsvp:interested' ) ) : ?>
 	<h4><?php _e( 'Interested', 'semantic-linkbacks' ); ?></h4>
 	<?php
 	list_linkbacks(

@@ -39,6 +39,9 @@ class Semantic_Linkbacks_Plugin {
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-walker-comment.php';
 		require_once dirname( __FILE__ ) . '/includes/functions.php';
 
+		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-avatar-handler.php';
+		add_action( 'init', array( 'Linkbacks_Avatar_Handler', 'init' ) );
+
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-handler.php';
 		add_action( 'init', array( 'Linkbacks_Handler', 'init' ) );
 
@@ -82,28 +85,12 @@ class Semantic_Linkbacks_Plugin {
 		);
 	}
 
-	public static function facepile_list() {
-		return array(
-			'mention'  => __( 'Mentions', 'semantic-linkbacks' ),
-			'repost'   => __( 'Reposts', 'semantic-linkbacks' ),
-			'like'     => __( 'Likes', 'semantic-linkbacks' ),
-			'reaction' => __( 'Reactions (emoji)', 'semantic-linkbacks' ),
-			'favorite' => __( 'Favorites', 'semantic-linkbacks' ),
-			'tag'      => __( 'Tags', 'semantic-linkbacks' ),
-			'bookmark' => __( 'Bookmarks', 'semantic-linkbacks' ),
-			'rsvp'     => __( 'RSVPs', 'semantic-linkbacks' ),
-			'read'     => __( 'Reads', 'semantic-linkbacks' ),
-			'listen'   => __( 'Listens', 'semantic-linkbacks' ),
-			'watch'    => __( 'Watches', 'semantic-linkbacks' ),
-		);
-	}
-
 	public static function facepile_fold_limit() {
 		printf( '<input type="number" min="0" step="1" name="semantic_linkbacks_facepiles_fold_limit" id="semantic_linkbacks_facepiles_fold_limit" class="small-text" value="%d" />', get_option( 'semantic_linkbacks_facepiles_fold_limit' ) );
 	}
 
 	public static function facepile_checkboxes() {
-		$strings  = self::facepile_list();
+		$strings  = Linkbacks_Handler::get_comment_type_strings();
 		$facepile = get_option( 'semantic_linkbacks_facepiles' );
 		echo '<div id="facepile-all">';
 		foreach ( $strings as $key => $value ) {
@@ -119,7 +106,7 @@ class Semantic_Linkbacks_Plugin {
 				'type'         => 'string',
 				'description'  => __( 'Types to show in Facepiles', 'semantic-linkbacks' ),
 				'show_in_rest' => true,
-				'default'      => array_keys( self::facepile_list() ),
+				'default'      => array_keys( Linkbacks_Handler::get_comment_type_strings() ),
 			)
 		);
 		register_setting(
