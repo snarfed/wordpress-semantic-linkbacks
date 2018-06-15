@@ -39,7 +39,7 @@ class Semantic_Linkbacks_Plugin {
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-walker-comment.php';
 		require_once dirname( __FILE__ ) . '/includes/functions.php';
 
-		require_once dirname( __FILE__ ) . '/includes/class-avatar-handler.php';
+		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-avatar-handler.php';
 		add_action( 'init', array( 'Linkbacks_Avatar_Handler', 'init' ) );
 
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-handler.php';
