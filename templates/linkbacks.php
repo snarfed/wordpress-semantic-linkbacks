@@ -1,5 +1,5 @@
 <?php $facepiles = get_option( 'semantic_linkbacks_facepiles' ); ?>
-<?php if ( in_array( 'reaction', $facepiles, true ) && Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
+<?php if ( in_array( 'reacji', $facepiles, true ) && Semantic_Linkbacks_Walker_Comment::$reactions ) : ?>
 <div class="reactions">
 	<h3><?php echo __( 'Reacjis', 'semantic-linkbacks' ); ?></h3>
 	<?php
