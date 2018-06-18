@@ -25,24 +25,17 @@ class Linkbacks_Handler {
 		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'update_meta' ), 10, 2 );
 		add_action( 'edit_comment', array( 'Linkbacks_Handler', 'save_comment_meta' ) );
 
-		add_filter( 'pre_get_avatar_data', array( 'Linkbacks_Handler', 'pre_get_avatar_data' ), 11, 2 );
-		add_filter( 'get_avatar_data', array( 'Linkbacks_Handler', 'anonymous_avatar_data' ), 12, 2 );
-
-		// All the default gravatars come from Gravatar instead of being generated locally so add a local default
-		add_filter( 'avatar_defaults', array( 'Linkbacks_Handler', 'anonymous_avatar' ) );
-
 		// To extend or to override the default behavior, just use the `comment_text` filter with a lower
 		// priority (so that it's called after this one) or remove the filters completely in
 		// your code: `remove_filter('comment_text', array('Linkbacks_Handler', 'comment_text_add_cite'), 11);`
 		if ( ! self::render_comments() ) {
-			add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_add_cite' ), 11, 3 );
+			add_filter( 'get_comment_text', array( 'Linkbacks_Handler', 'comment_text_add_cite' ), 11, 3 );
 		}
-		add_filter( 'comment_text', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 12, 3 );
+		add_filter( 'get_comment_text', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 12, 3 );
 		add_filter( 'comment_excerpt', array( 'Linkbacks_Handler', 'comment_text_excerpt' ), 5, 2 );
 
 		add_filter( 'get_comment_link', array( 'Linkbacks_Handler', 'get_comment_link' ), 99, 3 );
 		add_filter( 'get_comment_author_url', array( 'Linkbacks_Handler', 'get_comment_author_url' ), 99, 3 );
-		add_filter( 'get_avatar_comment_types', array( 'Linkbacks_Handler', 'get_avatar_comment_types' ) );
 		add_filter( 'comment_class', array( 'Linkbacks_Handler', 'comment_class' ), 10, 4 );
 		add_filter( 'wp_list_comments_args', array( 'Linkbacks_Handler', 'filter_comment_args' ) );
 		add_action( 'comment_form_before', array( 'Linkbacks_Handler', 'show_mentions' ) );
@@ -68,10 +61,19 @@ class Linkbacks_Handler {
 		);
 	}
 
+	/**
+	 * Load template for comment metabox.
+	 */
 	public static function comment_metabox() {
 		load_template( dirname( __FILE__ ) . '/../templates/linkbacks-edit-comment-form.php' );
 	}
 
+	/**
+	 * Saves Comment Meta Options
+	 *
+	 * @param int $comment_id
+	 *
+	 */
 	public static function save_comment_meta( $comment_id ) {
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -102,12 +104,6 @@ class Linkbacks_Handler {
 		$args['walker'] = new Semantic_Linkbacks_Walker_Comment();
 		return $args;
 	}
-
-	public static function anonymous_avatar( $avatar_defaults ) {
-		$avatar_defaults['anonymous'] = __( 'Anonymous (hosted locally)', 'semantic-linkbacks' );
-		return $avatar_defaults;
-	}
-
 
 	/**
 	 * Filter whether to override comment presentation.
@@ -311,9 +307,10 @@ class Linkbacks_Handler {
 	/**
 	* Returns an array of comment type slugs to their translated and pretty display versions
 	*
+	* @param $type Return only one type. All if null
 	* @return array The array of translated comment type names.
 	*/
-	public static function get_comment_type_strings() {
+	public static function get_comment_type_strings( $type = null ) {
 		$strings = array(
 			// Special case. any value that evals to false will be considered standard
 			'mention'         => __( 'Mention', 'semantic-linkbacks' ),
@@ -324,17 +321,20 @@ class Linkbacks_Handler {
 			'favorite'        => __( 'Favorite', 'semantic-linkbacks' ),
 			'tag'             => __( 'Tag', 'semantic-linkbacks' ),
 			'bookmark'        => __( 'Bookmark', 'semantic-linkbacks' ),
-			'rsvp:yes'        => __( 'RSVP', 'semantic-linkbacks' ),
-			'rsvp:no'         => __( 'RSVP', 'semantic-linkbacks' ),
-			'rsvp:maybe'      => __( 'RSVP', 'semantic-linkbacks' ),
-			'rsvp:interested' => __( 'RSVP', 'semantic-linkbacks' ),
+			'rsvp:yes'        => __( 'RSVP Yes', 'semantic-linkbacks' ),
+			'rsvp:no'         => __( 'RSVP No', 'semantic-linkbacks' ),
+			'rsvp:maybe'      => __( 'RSVP Maybe', 'semantic-linkbacks' ),
+			'rsvp:interested' => __( 'RSVP Interested', 'semantic-linkbacks' ),
 			'invited'         => __( 'Invited', 'semantic-linkbacks' ),
 			'listen'          => __( 'Listen', 'semantic-linkbacks' ),
 			'watch'           => __( 'Watch', 'semantic-linkbacks' ),
 			'read'            => __( 'Read', 'semantic-linkbacks' ),
+			'reacji'          => __( 'Reacji', 'semantic-linkbacks' )
 		);
-
-		return $strings;
+		if ( ! $type ) {
+			return $strings;
+		}
+		return isset( $strings[ $type ] ) ? $strings[ $type ] : $strings['mention'];
 	}
 
 	public static function comment_type_select( $type, $echo = false ) {
@@ -590,106 +590,6 @@ class Linkbacks_Handler {
 	}
 
 	/**
-	 * Function to retrieve Avatar URL if stored in meta
-	 *
-	 *
-	 * @param int|WP_Comment $comment
-	 *
-	 * @return string $url
-	 */
-	public static function get_avatar_url( $comment ) {
-		if ( is_numeric( $comment ) ) {
-			$comment = get_comment( $comment );
-		}
-		return get_comment_meta( $comment->comment_ID, 'semantic_linkbacks_avatar', true );
-	}
-
-	/**
-	 * Replaces the default avatar with the WebMention uf2 photo
-	 *
-	 * @param array             $args Arguments passed to get_avatar_data(), after processing.
-	 * @param int|string|object $id_or_email A user ID, email address, or comment object
-	 *
-	 * @return array $args
-	 */
-	public static function anonymous_avatar_data( $args, $id_or_email ) {
-		// The comment list table in WordPress always uses the mystery even when the default is not that
-		if ( 'mm' === $args['default'] && 'anonymous' === get_option( 'avatar_default', 'anonymous' ) ) {
-			$args['default'] = 'anonymous';
-		}
-		if ( 'anonymous' !== $args['default'] ) {
-			return $args;
-		}
-		// Always override if default forced
-		if ( $args['force_default'] ) {
-			$args['url'] = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
-			return $args;
-		}
-		// Replace gravatar
-		if ( strpos( $args['url'], 'gravatar.com' ) ) {
-			if ( $id_or_email instanceof WP_Comment && ! $id_or_email->comment_author_email ) {
-				$args['url'] = plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.svg';
-			} else {
-				$args['url'] = str_replace( 'd=mm', 'd=' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.png', $args['url'] );
-				$args['url'] = str_replace( 'd=anonymous', 'd=' . plugin_dir_url( dirname( __FILE__ ) ) . 'img/user-secret.png', $args['url'] );
-			}
-		}
-		return $args;
-	}
-
-	/**
-	 * Replaces the default avatar with the WebMention uf2 photo
-	 *
-	 * @param array             $args Arguments passed to get_avatar_data(), after processing.
-	 * @param int|string|object $id_or_email A user ID, email address, or comment object
-	 *
-	 * @return array $args
-	 */
-	public static function pre_get_avatar_data( $args, $id_or_email ) {
-		if ( ! $id_or_email instanceof WP_Comment ||
-			! isset( $id_or_email->comment_type ) ||
-			$id_or_email->user_id ) {
-			return $args;
-		}
-
-		$allowed_comment_types = apply_filters( 'get_avatar_comment_types', array( 'comment' ) );
-		if ( ! empty( $id_or_email->comment_type ) && ! in_array( $id_or_email->comment_type, (array) $allowed_comment_types, true ) ) {
-			$args['url'] = false;
-			/** This filter is documented in wp-includes/link-template.php */
-			return apply_filters( 'get_avatar_data', $args, $id_or_email );
-		}
-
-		$type = self::get_type( $id_or_email );
-		$type = explode( ':', $type );
-
-		if ( is_array( $type ) ) {
-			$type = $type[0];
-		}
-
-		$option = 'semantic_linkbacks_facepile_' . $type;
-
-		if ( get_option( $option, false ) && 'blank' === $args['default'] ) {
-			$args['default'] = 'anonymous';
-		}
-
-		// check if comment has an avatar
-		$avatar = self::get_avatar_url( $id_or_email->comment_ID );
-
-		if ( $avatar ) {
-			if ( ! isset( $args['class'] ) || ! is_array( $args['class'] ) ) {
-				$args['class'] = array( 'u-photo' );
-			} else {
-				$args['class'][] = 'u-photo';
-				$args['class']   = array_unique( $args['class'] );
-			}
-			$args['url']     = $avatar;
-			$args['class'][] = 'avatar-semantic-linkbacks';
-		}
-
-		return $args;
-	}
-
-	/**
 	 * Replace comment url with canonical url
 	 *
 	 * @param string     $link the link url
@@ -765,19 +665,4 @@ class Linkbacks_Handler {
 		$classes[] = 'h-cite';
 		return $classes;
 	}
-
-	/**
-	 * Show avatars also on trackbacks and pingbacks
-	 *
-	 * @param array $types list of avatar enabled comment types
-	 *
-	 * @return array show avatars also on trackbacks and pingbacks
-	 */
-	public static function get_avatar_comment_types( $types ) {
-		$types[] = 'pingback';
-		$types[] = 'trackback';
-
-		return array_unique( $types );
-	}
-
 }

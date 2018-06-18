@@ -39,89 +39,78 @@ class Semantic_Linkbacks_Plugin {
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-walker-comment.php';
 		require_once dirname( __FILE__ ) . '/includes/functions.php';
 
+		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-avatar-handler.php';
+		add_action( 'init', array( 'Linkbacks_Avatar_Handler', 'init' ) );
+
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-handler.php';
 		add_action( 'init', array( 'Linkbacks_Handler', 'init' ) );
 
 		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-mf2-handler.php';
 		add_action( 'init', array( 'Linkbacks_MF2_Handler', 'init' ) );
 
+		require_once dirname( __FILE__ ) . '/includes/class-linkbacks-notifications.php';
+		add_action( 'init', array( 'Linkbacks_Notifications', 'init' ) );
+
 		add_action( 'wp_enqueue_scripts', array( 'Semantic_Linkbacks_Plugin', 'enqueue_scripts' ) );
 
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_title_filter' ), 21 );
 		remove_filter( 'webmention_comment_data', array( 'Webmention_Receiver', 'default_content_filter' ), 22 );
 
+		self::register_settings();
 		self::plugin_textdomain();
 	}
 
 	public static function admin_init() {
 		self::privacy_declaration();
-		add_settings_field( 'semantic_linkbacks_discussion_settings', __( 'Semantic Linkbacks Settings', 'semantic-linkbacks' ), array( 'Semantic_Linkbacks_Plugin', 'discussion_settings' ), 'discussion', 'default' );
+		$page = class_exists( 'Webmention_Plugin' ) ? 'webmention' : 'discussion';
+		add_settings_section(
+			'semantic-linkbacks',
+			__( 'Semantic Linkbacks Settings', 'semantic-linkbacks' ),
+			array( 'Semantic_Linkbacks_Plugin', 'settings' ),
+			$page
+		);
+		add_settings_field(
+			'semantic_linkbacks_facepiles',
+			__( 'Automatically embed facepiles <small>(may not work on all themes)</small> for:', 'semantic-linkbacks' ),
+			array( 'Semantic_Linkbacks_Plugin', 'facepile_checkboxes' ),
+			$page,
+			'semantic-linkbacks'
+		);
+		add_settings_field(
+			'semantic_linkbacks_facepile_fold_limit',
+			__( 'Initial number of faces to show in facepiles <small>(0 for all)</small>', 'semantic-linkbacks' ),
+			array( 'Semantic_Linkbacks_Plugin', 'facepile_fold_limit' ),
+			$page,
+			'semantic-linkbacks'
+		);
+	}
+
+	public static function facepile_fold_limit() {
+		printf( '<input type="number" min="0" step="1" name="semantic_linkbacks_facepiles_fold_limit" id="semantic_linkbacks_facepiles_fold_limit" class="small-text" value="%d" />', get_option( 'semantic_linkbacks_facepiles_fold_limit' ) );
+	}
+
+	public static function facepile_checkboxes() {
+		$strings  = Linkbacks_Handler::get_comment_type_strings();
+		$facepile = get_option( 'semantic_linkbacks_facepiles' );
+		echo '<div id="facepile-all">';
+		foreach ( $strings as $key => $value ) {
+			printf( '<input name="semantic_linkbacks_facepiles[]" type="checkbox" value="%1$s" %2$s />%3$s<br />', $key, checked( in_array( $key, $facepile, true ), true, false ), $value );
+		}
+		echo '</div>';
+	}
+
+	public static function register_settings() {
+		$option_group = class_exists( 'Webmention_Plugin' ) ? 'webmention' : 'discussion';
 		register_setting(
-			'discussion', 'semantic_linkbacks_facepile_mention', array(
-				'type'         => 'boolean',
-				'description'  => __( 'Facepile Mentions', 'semantic-linkbacks' ),
+			$option_group, 'semantic_linkbacks_facepiles', array(
+				'type'         => 'string',
+				'description'  => __( 'Types to show in Facepiles', 'semantic-linkbacks' ),
 				'show_in_rest' => true,
-				'default'      => 1,
+				'default'      => array_keys( Linkbacks_Handler::get_comment_type_strings() ),
 			)
 		);
 		register_setting(
-			'discussion', 'semantic_linkbacks_facepile_repost', array(
-				'type'         => 'boolean',
-				'description'  => __( 'Facepile Reposts', 'semantic-linkbacks' ),
-				'show_in_rest' => true,
-				'default'      => 1,
-			)
-		);
-		register_setting(
-			'discussion', 'semantic_linkbacks_facepile_like', array(
-				'type'         => 'boolean',
-				'description'  => __( 'Facepile Likes', 'semantic-linkbacks' ),
-				'show_in_rest' => true,
-				'default'      => 1,
-			)
-		);
-		register_setting(
-			'discussion', 'semantic_linkbacks_facepile_reaction', array(
-				'type'         => 'boolean',
-				'description'  => __( 'Facepile Reactions (emoji)', 'semantic-linkbacks' ),
-				'show_in_rest' => true,
-				'default'      => 1,
-			)
-		);
-		register_setting(
-			'discussion', 'semantic_linkbacks_facepile_favorite', array(
-				'type'         => 'boolean',
-				'description'  => __( 'Facepile Favorite', 'semantic-linkbacks' ),
-				'show_in_rest' => true,
-				'default'      => 1,
-			)
-		);
-		register_setting(
-			'discussion', 'semantic_linkbacks_facepile_tag', array(
-				'type'         => 'boolean',
-				'description'  => __( 'Facepile Tags', 'semantic-linkbacks' ),
-				'show_in_rest' => true,
-				'default'      => 1,
-			)
-		);
-		register_setting(
-			'discussion', 'semantic_linkbacks_facepile_bookmark', array(
-				'type'         => 'boolean',
-				'description'  => __( 'Facepile Bookmarks', 'semantic-linkbacks' ),
-				'show_in_rest' => true,
-				'default'      => 1,
-			)
-		);
-		register_setting(
-			'discussion', 'semantic_linkbacks_facepile_rsvp', array(
-				'type'         => 'boolean',
-				'description'  => __( 'Facepile RSVPs', 'semantic-linkbacks' ),
-				'show_in_rest' => true,
-				'default'      => 1,
-			)
-		);
-		register_setting(
-			'discussion', 'semantic_linkbacks_facepiles_fold_limit', array(
+			$option_group, 'semantic_linkbacks_facepiles_fold_limit', array(
 				'type'         => 'integer',
 				'description'  => __( 'Initial number of faces to show in facepiles', 'semantic-linkbacks' ),
 				'show_in_rest' => true,
@@ -139,10 +128,10 @@ class Semantic_Linkbacks_Plugin {
 	}
 
 	/**
-	 * Add Semantic Linkbacks options to the WordPress discussion settings page.
+	 * Add Semantic Linkbacks options to the webmentions settings page.
 	 */
-	public static function discussion_settings() {
-		load_template( plugin_dir_path( __FILE__ ) . 'templates/discussion-settings.php' );
+	public static function settings() {
+		_e( 'For webmentions that do not have avatars you can pick from several locally served default avatars in the Discussion Settings', 'semantic-linkbacks' );
 	}
 
 	/**
