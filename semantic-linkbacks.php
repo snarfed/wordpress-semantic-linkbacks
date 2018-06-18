@@ -23,7 +23,7 @@ add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
  * @author Matthias Pfefferle
  */
 class Semantic_Linkbacks_Plugin {
-	public static $version = '3.7.6';
+	public static $version = '3.8.0';
 	/**
 	 * Initialize the plugin, registering WordPress hooks.
 	 */
