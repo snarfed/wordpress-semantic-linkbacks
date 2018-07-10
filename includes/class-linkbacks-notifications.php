@@ -77,7 +77,7 @@ class Linkbacks_Notifications {
 	 */
 	public static function comment_notification_text( $notify_message, $comment_id ) {
 		$comment = get_comment( $comment_id );
-		if ( ! Linkbacks_Handlerget_type( $comment ) ) {
+		if ( ! Linkbacks_Handler::get_type( $comment ) ) {
 			return $notify_message;
 		}
 		$notify_message  = self::notification( $comment );
