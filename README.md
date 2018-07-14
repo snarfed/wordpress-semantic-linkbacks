@@ -46,6 +46,7 @@ The IndieWeb community defines several types of feedback:
 * Listen: <http://indieweb.org/listen>
 * Watch: <http://indieweb.org/watch>
 * Read: <http://indieweb.org/read>
+* Follow: <http://indieweb.org/follow>
 * Classic "Mentions": <http://indieweb.org/mentions>
 
 ### How do I extend this plugin? ###
@@ -84,6 +85,9 @@ The plugin uses a locally cached version of the mystery icon normally provided b
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.8.1 ###
+* All follow post as type
 
 ### 3.8.0 ###
 

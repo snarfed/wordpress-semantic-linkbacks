@@ -98,6 +98,13 @@ class Linkbacks_MF2_Handler {
 		$class_mapper['watch-of'] = 'watch';
 		$class_mapper['watch']    = 'watch';
 
+		/*
+		 * follow
+		 * @link http://indieweb.org/follow
+		 */
+		$class_mapper['follow-of'] = 'follow';
+
+
 		return apply_filters( 'semantic_linkbacks_microformats_class_mapper', $class_mapper );
 	}
 

@@ -116,7 +116,19 @@ if ( ! is_array( $facepiles ) ) {
 </div>
 <?php endif; ?>
 
-
+<?php if ( in_array( 'follow', $facepiles, true ) && has_linkbacks( 'follow' ) ) : ?>
+<div class="follows">
+	<h3><?php echo __( 'Following', 'semantic-linkbacks' ); ?></h3>
+	<?php
+	list_linkbacks(
+		array(
+			'type' => 'follow',
+		),
+		get_linkbacks( 'follow' )
+	);
+	?>
+</div>
+<?php endif; ?>
 
 <?php if ( in_array( 'watch', $facepiles, true ) && has_linkbacks( 'watch' ) ) : ?>
 <div class="watches">
