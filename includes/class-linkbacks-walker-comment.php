@@ -90,8 +90,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 		$host  = wp_parse_url( $url, PHP_URL_HOST );
 		// strip leading www, if any
 		$host = preg_replace( '/^www\./', '', $host );
-
-?>
+		?>
 		<<?php echo $tag; ?> id="comment-<?php comment_ID(); ?>" <?php comment_class( $this->has_children ? 'parent' : '', $comment ); ?>>
 			<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
 				<footer class="comment-meta">
@@ -99,7 +98,7 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 						<?php
 						if ( 0 !== $args['avatar_size'] ) {
 							echo get_avatar( $comment, $args['avatar_size'] );}
-?>
+						?>
 						<?php
 							/* translators: %s: comment author */
 							printf(
@@ -159,6 +158,6 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 				);
 				?>
 			</article><!-- .comment-body -->
-<?php
+			<?php
 	}
 }

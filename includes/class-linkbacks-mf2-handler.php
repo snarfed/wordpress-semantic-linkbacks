@@ -104,7 +104,6 @@ class Linkbacks_MF2_Handler {
 		 */
 		$class_mapper['follow-of'] = 'follow';
 
-
 		return apply_filters( 'semantic_linkbacks_microformats_class_mapper', $class_mapper );
 	}
 
@@ -137,8 +136,7 @@ class Linkbacks_MF2_Handler {
 		// Use new webmention source meta key.
 		if ( array_key_exists( 'webmention_source_url', $commentdata['comment_meta'] ) ) {
 			$source = $commentdata['comment_meta']['webmention_source_url'];
-		} // Fallback to comment author url.
-		else {
+		} else { // Fallback to comment author url.
 			$source = $commentdata['comment_author_url'];
 		}
 

@@ -300,7 +300,7 @@ class Linkbacks_Handler {
 			// translators: Name verb on domain
 			'read'            => __( '%1$s <strong>read</strong> %2$s (via <a href="%3$s">%4$s</a>).', 'semantic-linkbacks' ),
 			// translators: Name verb on domain
-			'follow'            => __( '%1$s <strong>followed</strong> %2$s (via <a href="%3$s">%4$s</a>).', 'semantic-linkbacks' ),
+			'follow'          => __( '%1$s <strong>followed</strong> %2$s (via <a href="%3$s">%4$s</a>).', 'semantic-linkbacks' ),
 
 		);
 
@@ -332,8 +332,8 @@ class Linkbacks_Handler {
 			'listen'          => __( 'Listen', 'semantic-linkbacks' ),
 			'watch'           => __( 'Watch', 'semantic-linkbacks' ),
 			'read'            => __( 'Read', 'semantic-linkbacks' ),
-			'follow'            => __( 'Follow', 'semantic-linkbacks' ),
-			'reacji'          => __( 'Reacji', 'semantic-linkbacks' )
+			'follow'          => __( 'Follow', 'semantic-linkbacks' ),
+			'reacji'          => __( 'Reacji', 'semantic-linkbacks' ),
 		);
 		if ( ! $type ) {
 			return $strings;
@@ -657,7 +657,7 @@ class Linkbacks_Handler {
 			'listen'          => array( 'u-listen' ),
 			'read'            => array( 'u-read' ),
 			'watch'           => array( 'u-watch' ),
-			'follow'           => array( 'u-follow' ),
+			'follow'          => array( 'u-follow' ),
 		);
 
 		$semantic_linkbacks_type = self::get_type( $comment );
