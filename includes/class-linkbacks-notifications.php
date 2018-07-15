@@ -23,7 +23,7 @@ class Linkbacks_Notifications {
 		if ( WP_DEBUG ) {
 			// For testing outgoing comment email
 			add_filter( 'bulk_actions-edit-comments', array( 'Linkbacks_Notifications', 'register_bulk_send' ) );
-			add_filter( 'handle_bulk_actions-edit-comments', array( 'Linkbacks_Notifications', 'bulk_send_Notifications' ), 10, 3 );
+			add_filter( 'handle_bulk_actions-edit-comments', array( 'Linkbacks_Notifications', 'bulk_send_notifications' ), 10, 3 );
 		}
 	}
 
@@ -45,7 +45,7 @@ class Linkbacks_Notifications {
 	/**
 	 * Handle Bulk Send Outgoing EMail
 	 */
-	public static function bulk_send_Notifications( $redirect_to, $doaction, $comment_ids ) {
+	public static function bulk_send_notifications( $redirect_to, $doaction, $comment_ids ) {
 		if ( ! in_array( $doaction, array( 'resend_notification_email', 'resend_moderation_email', 'send_pushover_text' ), true ) ) {
 			return $redirect_to;
 		}
@@ -77,6 +77,7 @@ class Linkbacks_Notifications {
 	 */
 	public static function comment_notification_text( $notify_message, $comment_id ) {
 		$comment = get_comment( $comment_id );
+		$post    = get_post( $comment->comment_post_ID );
 		if ( ! Linkbacks_Handler::get_type( $comment ) ) {
 			return $notify_message;
 		}
@@ -88,7 +89,7 @@ class Linkbacks_Notifications {
 		return $notify_message;
 
 	}
-	
+
 	/**
 	 * Generate the moderation text
 	 *
@@ -97,9 +98,11 @@ class Linkbacks_Notifications {
 	 */
 	public static function moderate_text( $comment ) {
 		$comment = get_comment( $comment );
+		/* translators: Comment moderation. 1: Comment action URL */
+		$message = sprintf( __( 'Approve it: %s', 'semantic-linkbacks' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) ) . "\r\n";
 		if ( EMPTY_TRASH_DAYS ) {
 			/* translators: Trash it URL */
-			$message = sprintf( __( 'Trash it: %s', 'semantic-linkbacks' ), admin_url( "comment.php?action=trash&c={$comment->comment_ID}#wpbody-content" ) ) . "\r\n";
+			$message .= sprintf( __( 'Trash it: %s', 'semantic-linkbacks' ), admin_url( "comment.php?action=trash&c={$comment->comment_ID}#wpbody-content" ) ) . "\r\n";
 		} else {
 			/* translators: Delete it URL */
 			$message .= sprintf( __( 'Delete it: %s', 'semantic-linkbacks' ), admin_url( "comment.php?action=delete&c={$comment->comment_ID}#wpbody-content" ) ) . "\r\n";
@@ -108,7 +111,7 @@ class Linkbacks_Notifications {
 		$message .= sprintf( __( 'Spam it: %s', 'semantic-linkbacks' ), admin_url( "comment.php?action=spam&c={$comment->comment_ID}#wpbody-content" ) ) . "\r\n";
 		return $message;
 	}
-	
+
 	/**
 	 * Filter the comment notification subject
 	 *

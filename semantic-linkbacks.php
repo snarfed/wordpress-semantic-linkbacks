@@ -5,7 +5,7 @@
  * Description: Semantic Linkbacks for WebMentions, Trackbacks and Pingbacks
  * Author: Matthias Pfefferle
  * Author URI: https://notiz.blog/
- * Version: 3.8.0
+ * Version: 3.8.1
  * License: MIT
  * License URI: http://opensource.org/licenses/MIT
  * Text Domain: semantic-linkbacks
@@ -23,7 +23,7 @@ add_action( 'admin_init', array( 'Semantic_Linkbacks_Plugin', 'admin_init' ) );
  * @author Matthias Pfefferle
  */
 class Semantic_Linkbacks_Plugin {
-	public static $version = '3.8.0';
+	public static $version = '3.8.1';
 	/**
 	 * Initialize the plugin, registering WordPress hooks.
 	 */
@@ -132,6 +132,12 @@ class Semantic_Linkbacks_Plugin {
 	 */
 	public static function settings() {
 		_e( 'For webmentions that do not have avatars you can pick from several locally served default avatars in the Discussion Settings', 'semantic-linkbacks' );
+
+		if ( ! function_exists( 'mb_internal_encoding' ) ) {
+?>
+		<p class="notice notice-warning"><?php _e( 'This server does not have the php-mbstring package installed and Emoji reactions have been disabled.', 'semantic-linkbacks' ); ?></p>
+<?php
+		}
 	}
 
 	/**
