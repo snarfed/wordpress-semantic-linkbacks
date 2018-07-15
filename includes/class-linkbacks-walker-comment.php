@@ -53,6 +53,10 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 	}
 
 	protected static function is_reaction( $comment ) {
+		// If this library is not installed then emoji detection will not work
+		if ( ! function_exists( 'mb_internal_encoding' ) ) {
+			return false;
+		}
 		return Emoji\is_single_emoji( trim( wp_strip_all_tags( $comment->comment_content ) ) ) && empty( $comment->comment_parent );
 	}
 

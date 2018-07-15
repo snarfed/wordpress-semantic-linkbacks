@@ -132,6 +132,12 @@ class Semantic_Linkbacks_Plugin {
 	 */
 	public static function settings() {
 		_e( 'For webmentions that do not have avatars you can pick from several locally served default avatars in the Discussion Settings', 'semantic-linkbacks' );
+
+		if ( ! function_exists( 'mb_internal_encoding' ) ) {
+?>
+		<p class="notice notice-warning"><?php _e( 'This server does not have the php-mbstring package installed and Emoji reactions have been disabled.', 'semantic-linkbacks' ); ?></p>
+<?php
+		}
 	}
 
 	/**

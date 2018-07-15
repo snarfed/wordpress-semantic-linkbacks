@@ -5,7 +5,7 @@ Tags: webmention, pingback, trackback, linkback, microformats, comments, indiewe
 Requires at least: 4.8.2
 Requires PHP: 5.4
 Tested up to: 4.9.7
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
@@ -87,7 +87,10 @@ The plugin uses a locally cached version of the mystery icon normally provided b
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
 
 = 3.8.1 =
-* All follow post as type
+* Add follow post as type
+* Add warning to settings page if php-mbstring not installed
+* Return false in Emoji function if php-mbstring not installed
+* Add approve link to emails sent
 
 = 3.8.0 =
 
