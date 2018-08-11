@@ -437,7 +437,7 @@ class Linkbacks_MF2_Handler {
 	}
 
 	public static function has_alternate_url( $mf_array ) {
-		return ( bool ) self::get_alternate_url( $mf_array );
+		return (bool) self::get_alternate_url( $mf_array );
 	}
 
 	public static function get_alternate_url( $mf_array ) {
@@ -445,11 +445,11 @@ class Linkbacks_MF2_Handler {
 			return false;
 		}
 
-		foreach ( $mf_array['rel-urls'] as $url => $meta ) ) {
+		foreach ( $mf_array['rel-urls'] as $url => $meta ) {
 			if (
-				$meta['type'] === 'application/mf2+json' &&
-				in_array( 'alternate', $meta['rels'] ) &&
-				filter_var($url, FILTER_VALIDATE_URL) !== false
+				'application/mf2+json' === trim( $meta['type'] ) &&
+				in_array( 'alternate', $meta['rels'], true ) &&
+				filter_var( $url, FILTER_VALIDATE_URL ) !== false
 			) {
 				return $url;
 			}
@@ -472,6 +472,7 @@ class Linkbacks_MF2_Handler {
 			'redirection'         => 20,
 			'user-agent'          => "$user_agent; Semantic-Linkbacks/Webmention read rel-alternate source",
 		);
+
 		$response = wp_safe_remote_get( $url, $args );
 		// check if source is accessible
 		if ( is_wp_error( $response ) ) {
