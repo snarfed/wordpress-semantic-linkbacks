@@ -171,7 +171,7 @@ class Linkbacks_Handler {
 	 */
 	public static function enhance( $commentdata, $comment = array(), $commentarr = array() ) {
 		// check if comment is a linkback
-		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback' ), true ) ) {
+		if ( ! in_array( $commentdata['comment_type'], array( 'webmention', 'pingback', 'trackback', 'refback' ), true ) ) {
 			return $commentdata;
 		}
 
