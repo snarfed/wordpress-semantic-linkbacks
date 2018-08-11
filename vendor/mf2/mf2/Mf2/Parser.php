@@ -167,7 +167,7 @@ function nestedMfPropertyNamesFromClass($class) {
 			}
 		}
 	}
-	
+
 	foreach ($propertyNames as $property => $prefixes) {
 		$propertyNames[$property] = array_unique($prefixes);
 	}
@@ -338,14 +338,14 @@ class Parser {
 		libxml_use_internal_errors(true);
 		if (is_string($input)) {
 			if (class_exists('Masterminds\\HTML5')) {
-			    $doc = new \Masterminds\HTML5(array('disable_html_ns' => true));
-			    $doc = $doc->loadHTML($input);
+					$doc = new \Masterminds\HTML5(array('disable_html_ns' => true));
+					$doc = $doc->loadHTML($input);
 			} else {
 				$doc = new DOMDocument();
 				@$doc->loadHTML(unicodeToHtmlEntities($input));
 			}
 		} elseif (is_a($input, 'DOMDocument')) {
-			$doc = $input;
+			$doc = clone $input;
 		} else {
 			$doc = new DOMDocument();
 			@$doc->loadHTML('');
@@ -402,7 +402,7 @@ class Parser {
 		if (!$this->parsed->contains($e)) {
 			return false;
 		}
-			
+
 		$prefixes = $this->parsed[$e];
 
 		if (!in_array($prefix, $prefixes)) {
@@ -443,101 +443,49 @@ class Parser {
 		}
 	}
 
-	public function textContent(DOMElement $el) {
-		$excludeTags = array('noframe', 'noscript', 'script', 'style', 'frames', 'frameset');
-		
-		if (isset($el->tagName) and in_array(strtolower($el->tagName), $excludeTags)) {
-			return '';
-		}
-		
-		$this->resolveChildUrls($el);
-
-		$clonedEl = $el->cloneNode(true);
-
-		foreach ($this->xpath->query('.//img', $clonedEl) as $imgEl) {
-			$newNode = $this->doc->createTextNode($imgEl->getAttribute($imgEl->hasAttribute('alt') ? 'alt' : 'src'));
-			$imgEl->parentNode->replaceChild($newNode, $imgEl);
-		}
-		
-		foreach ($excludeTags as $tagName) {
-			foreach ($this->xpath->query(".//{$tagName}", $clonedEl) as $elToRemove) {
-				$elToRemove->parentNode->removeChild($elToRemove);
-			}
-		}
-
-		return $this->innerText($clonedEl);
+		/**
+		 * The following two methods implements plain text parsing.
+		 * @see https://wiki.zegnat.net/media/textparsing.html
+		 **/
+	public function textContent(DOMElement $element)
+	{
+				return preg_replace(
+						'/(^[\t\n\f\r ]+| +(?=\n)|(?<=\n) +| +(?= )|[\t\n\f\r ]+$)/',
+						'',
+						$this->elementToString($element)
+				);
 	}
-
-	/**
-	 * This method attempts to return a better 'innerText' representation than DOMNode::textContent
-	 *
-	 * @param DOMElement|DOMText $el
-	 * @param bool $implied when parsing for implied name for h-*, rules may be slightly different
-	 * @see: https://github.com/glennjones/microformat-shiv/blob/dev/lib/text.js
-	 */
-	public function innerText($el, $implied=false) {
-		$out = '';
-
-		$blockLevelTags = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'hr', 'pre', 'table',
-			'address', 'article', 'aside', 'blockquote', 'caption', 'col', 'colgroup', 'dd', 'div', 
-			'dt', 'dir', 'fieldset', 'figcaption', 'figure', 'footer', 'form',  'header', 'hgroup', 'hr', 
-			'li', 'map', 'menu', 'nav', 'optgroup', 'option', 'section', 'tbody', 'testarea', 
-			'tfoot', 'th', 'thead', 'tr', 'td', 'ul', 'ol', 'dl', 'details');
-
-		$excludeTags = array('noframe', 'noscript', 'script', 'style', 'frames', 'frameset');
-		
-		// PHP DOMDocument doesn’t correctly handle whitespace around elements it doesn’t recognise.
-		$unsupportedTags = array('data');
-		
-		if (isset($el->tagName)) {
-			if (in_array(strtolower($el->tagName), $excludeTags)) {
-				return $out;
-			} else if ($el->tagName == 'img') {
-				if ($el->hasAttribute('alt')) {
-					return $el->getAttribute('alt');
-				} else if (!$implied && $el->hasAttribute('src')) {
-					return $this->resolveUrl($el->getAttribute('src'));
-				}
-			} else if ($el->tagName == 'area' and $el->hasAttribute('alt')) {
-				return $el->getAttribute('alt');
-			} else if ($el->tagName == 'abbr' and $el->hasAttribute('title')) {
-				return $el->getAttribute('title');
+	private function elementToString(DOMElement $input)
+	{
+			$output = '';
+			foreach ($input->childNodes as $child) {
+					if ($child->nodeType === XML_TEXT_NODE) {
+							$output .= str_replace(array("\t", "\n", "\r") , ' ', $child->textContent);
+					} else if ($child->nodeType === XML_ELEMENT_NODE) {
+							$tagName = strtoupper($child->tagName);
+							if (in_array($tagName, array('SCRIPT', 'STYLE'))) {
+									continue;
+							} else if ($tagName === 'IMG') {
+									if ($child->hasAttribute('alt')) {
+											$output .= ' ' . trim($child->getAttribute('alt'), "\t\n\f\r ") . ' ';
+									} else if ($child->hasAttribute('src')) {
+											$output .= ' ' . $this->resolveUrl(trim($child->getAttribute('src'), "\t\n\f\r ")) . ' ';
+									}
+							} else if ($tagName === 'BR') {
+									$output .= "\n";
+							} else if ($tagName === 'P') {
+									$output .= "\n" . $this->elementToString($child);
+							} else {
+									$output .= $this->elementToString($child);
+							}
+					}
 			}
-		}
-
-		// if node is a text node get its text
-		if (isset($el->nodeType) && $el->nodeType === 3) {
-			$out .= $el->textContent;
-		}
-
-		// get the text of the child nodes
-		if ($el->childNodes && $el->childNodes->length > 0) {
-			for ($j = 0; $j < $el->childNodes->length; $j++) {
-				$text = $this->innerText($el->childNodes->item($j), $implied);
-				if (!is_null($text)) {
-					$out .= $text;
-				}
-			}
-		}
-
-		if (isset($el->tagName)) {
-			// if its a block level tag add an additional space at the end
-			if (in_array(strtolower($el->tagName), $blockLevelTags)) {
-				$out .= ' ';
-			} elseif ($implied and in_array(strtolower($el->tagName), $unsupportedTags)) {
-				$out .= ' ';
-			} else if (strtolower($el->tagName) == 'br') {
-				// else if its a br, replace with newline 
-				$out .= "\n";
-			}
-		} 
-
-		return ($out === '') ? NULL : $out;
+			return $output;
 	}
 
 	/**
 	 * This method parses the language of an element
-	 * @param DOMElement $el 
+	 * @param DOMElement $el
 	 * @access public
 	 * @return string
 	 */
@@ -547,7 +495,7 @@ class Parser {
 		if ($el->hasAttribute('lang')) {
 			return unicodeTrim($el->getAttribute('lang'));
 		}
-		
+
 		if ($el->tagName == 'html') {
 			// we're at the <html> element and no lang; check <meta> http-equiv Content-Language
 			foreach ( $this->xpath->query('.//meta[@http-equiv]') as $node )
@@ -558,7 +506,7 @@ class Parser {
 			}
 		} elseif ($el->parentNode instanceof DOMElement) {
 			// check the parent node
-			return $this->language($el->parentNode);			
+			return $this->language($el->parentNode);
 		}
 
 		return '';
@@ -648,7 +596,7 @@ class Parser {
 		} elseif (in_array($p->tagName, array('data', 'input')) and $p->hasAttribute('value')) {
 			$pValue = $p->getAttribute('value');
 		} else {
-			$pValue = unicodeTrim($this->innerText($p));
+			$pValue = $this->textContent($p);
 		}
 
 		return $pValue;
@@ -670,23 +618,16 @@ class Parser {
 			$uValue = $u->getAttribute('poster');
 		} elseif ($u->tagName == 'object' and $u->hasAttribute('data')) {
 			$uValue = $u->getAttribute('data');
-		}
-
-		if (isset($uValue)) {
-			return $this->resolveUrl($uValue);
-		}
-
-		$classTitle = $this->parseValueClassTitle($u);
-
-		if ($classTitle !== null) {
-			return $classTitle;
+		} elseif (($classTitle = $this->parseValueClassTitle($u)) !== null) {
+				$uValue = $classTitle;
 		} elseif (($u->tagName == 'abbr' or $u->tagName == 'link') and $u->hasAttribute('title')) {
-			return $u->getAttribute('title');
+			$uValue = $u->getAttribute('title');
 		} elseif (in_array($u->tagName, array('data', 'input')) and $u->hasAttribute('value')) {
-			return $u->getAttribute('value');
+			$uValue = $u->getAttribute('value');
 		} else {
-			return unicodeTrim($this->textContent($u));
+			$uValue = $this->textContent($u);
 		}
+				return $this->resolveUrl($uValue);
 	}
 
 	/**
@@ -861,7 +802,7 @@ class Parser {
 
 			$dtValue = unicodeTrim($dtValue);
 
-      // Store the date part so that we can use it when assembling the final timestamp if the next one is missing a date part
+			// Store the date part so that we can use it when assembling the final timestamp if the next one is missing a date part
 			if (preg_match('/(\d{4}-\d{2}-\d{2})/', $dtValue, $matches)) {
 				$dates[] = $matches[0];
 			}
@@ -912,11 +853,13 @@ class Parser {
 		}
 		$html = $e->ownerDocument->saveHtml($innerNodes);
 		// Put the nodes back in place.
-		$e->appendChild($innerNodes);
+		if($innerNodes->hasChildNodes()) {
+			$e->appendChild($innerNodes);
+		}
 
 		$return = array(
 			'html' => unicodeTrim($html),
-			'value' => unicodeTrim($this->innerText($e)),
+			'value' => $this->textContent($e),
 		);
 
 		if($this->lang) {
@@ -970,7 +913,7 @@ class Parser {
 
 		// Handle p-*
 		foreach ($this->xpath->query('.//*[contains(concat(" ", @class) ," p-")]', $e) as $p) {
-			// element is already parsed 
+			// element is already parsed
 			if ($this->isElementParsed($p, 'p')) {
 				continue;
 			// backcompat parsing and element was not upgraded; skip it
@@ -1123,7 +1066,7 @@ class Parser {
 					}
 				}
 
-				throw new Exception($this->innerText($e, true));
+				throw new Exception($this->textContent($e, true));
 			} catch (Exception $exc) {
 				$return['name'][] = unicodeTrim($exc->getMessage());
 			}
@@ -1175,6 +1118,11 @@ class Parser {
 		$mfTypes = array_unique($mfTypes);
 		sort($mfTypes);
 
+		// Properties should be an object when JSON serialised
+		if (empty($return) and $this->jsonMode) {
+			$return = new stdClass();
+		}
+
 		// Phew. Return the final result.
 		$parsed = array(
 			'type' => $mfTypes,
@@ -1218,8 +1166,8 @@ class Parser {
 		$xpaths = array(
 			'./img',
 			'./object',
-			'./*[count(preceding-sibling::*)+count(following-sibling::*)=0]/img',
-			'./*[count(preceding-sibling::*)+count(following-sibling::*)=0]/object',
+			'./*[not(contains(concat(" ", @class), " h-"))]/img[count(preceding-sibling::img)+count(following-sibling::img)=0]',
+			'./*[not(contains(concat(" ", @class), " h-"))]/object[count(preceding-sibling::object)+count(following-sibling::object)=0]',
 		);
 
 		foreach ($xpaths as $path) {
@@ -1351,7 +1299,7 @@ class Parser {
 
 	/**
 	 * Find rel=tag elements that don't have class=category and have an href.
-	 * For each element, get the last non-empty URL segment. Append a <data> 
+	 * For each element, get the last non-empty URL segment. Append a <data>
 	 * element with that value as the category. Uses the mf1 class 'category'
 	 * which will then be upgraded to p-category during backcompat.
 	 * @param DOMElement $el
@@ -1553,6 +1501,8 @@ class Parser {
 			$mf1Classes = array_intersect($classes, array_keys($this->classicRootMap));
 		}
 
+		$elHasMf2 = $this->hasRootMf2($el);
+
 		foreach ($mf1Classes as $classname) {
 			// special handling for specific properties
 			switch ( $classname )
@@ -1647,7 +1597,7 @@ class Parser {
 				}
 			}
 
-			if ( empty($context) && isset($this->classicRootMap[$classname]) && !$this->hasRootMf2($el) ) {
+			if ( empty($context) && isset($this->classicRootMap[$classname]) && !$elHasMf2 ) {
 				$this->addMfClasses($el, $this->classicRootMap[$classname]);
 			}
 		}
@@ -2155,8 +2105,8 @@ function resolveUrl($baseURI, $referenceURI) {
 
 	# 5.2.1 Pre-parse the Base URI
 	# The base URI (Base) is established according to the procedure of
-  # Section 5.1 and parsed into the five main components described in
-  # Section 3
+	# Section 5.1 and parsed into the five main components described in
+	# Section 3
 	$base = parseUriToComponents($baseURI);
 
 	# If base path is blank (http://example.com) then set it to /
