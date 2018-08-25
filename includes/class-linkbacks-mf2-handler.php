@@ -145,8 +145,8 @@ class Linkbacks_MF2_Handler {
 		$mf_array = $parser->parse( true );
 
 		// check for rel-alternate links
-		if ( $source = self::get_alternate_source( $mf_array ) ) {
-			$mf_array = $source;
+		if ( $alternate_source = self::get_alternate_source( $mf_array ) ) {
+			$mf_array = $alternate_source;
 		}
 
 		// get all 'relevant' entries

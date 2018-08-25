@@ -1,11 +1,11 @@
 <?php
 class MicroformatsTest extends WP_UnitTestCase {
 
-	public static function assertArraySubset( array $expectation, array $reality, $strict = false, $message = '' ) {
+	public static function assert_array_subset( array $expectation, array $reality, $strict = false, $message = '' ) {
 		foreach ( $expectation as $key => $value ) {
 			self::assertArrayHasKey( $key, $reality, $message );
 			if ( is_array( $value ) ) {
-				self::assertArraySubset( $value, $reality[ $key ], $strict, $message . '[' . $key . ']' );
+				self::assert_array_subset( $value, $reality[ $key ], $strict, $message . '[' . $key . ']' );
 			} else {
 				self::assertEquals( $value, $reality[ $key ], $message . '[' . $key . ']' );
 			}
@@ -27,7 +27,7 @@ class MicroformatsTest extends WP_UnitTestCase {
 		);
 
 		$subset = json_decode( file_get_contents( substr( $path, 0, -4 ) . 'json' ), true );
-		$this->assertArraySubset( $subset, $comment );
+		$this->assert_array_subset( $subset, $comment );
 	}
 
 	public function templateProvider() {

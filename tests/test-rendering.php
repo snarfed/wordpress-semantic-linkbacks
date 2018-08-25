@@ -41,7 +41,7 @@ class RenderingTest extends WP_UnitTestCase {
 		$this->assertStringMatchesFormat(
 			'<ul class="mention-list linkback-mention"><li class="webmention even thread-even depth-1 linkback-mention-single u-like h-cite" id="comment-2">
 				<span class="p-author h-card">
-					<a class="u-url" title="Person 0 liked this Article on example.com." href="http://example.com/person0"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /> </a>
+					<a class="u-url" title="Person 0 liked this Post on example.com." href="http://example.com/person0"><img alt=\'\' src=\'http://example.com/photo\' srcset=\'http://example.com/photo 2x\' class=\'avatar avatar-64 photo avatar-default u-photo avatar-semantic-linkbacks\' height=\'64\' width=\'64\' /> </a>
 					<span class="hide-name p-name">Person 0</span>
 				</span>
 				<a class="u-url" href=""></a>
@@ -52,8 +52,8 @@ class RenderingTest extends WP_UnitTestCase {
 	public function test_facepile_fold() {
 		$comments = $this->make_comments( 3 );
 		$html     = list_linkbacks( array( 'echo' => false ), $comments );
-		$person_0 = strpos( $html, '<a class="u-url" title="Person 0 liked this Article on example.com."' );
-		$person_1 = strpos( $html, '<a class="u-url" title="Person 1 liked this Article on example.com."' );
+		$person_0 = strpos( $html, '<a class="u-url" title="Person 0 liked this Post on example.com."' );
+		$person_1 = strpos( $html, '<a class="u-url" title="Person 1 liked this Post on example.com."' );
 		$person_2 = strpos( $html, 'additional-facepile' );
 		$ellipsis = strpos( $html, '<li class="toggle-additional-facepiles">' );
 		$this->assertGreaterThan( 0, $person_0 );
