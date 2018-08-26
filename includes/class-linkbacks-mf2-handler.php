@@ -147,6 +147,8 @@ class Linkbacks_MF2_Handler {
 		// check for rel-alternate links
 		if ( $alternate_source = self::get_alternate_source( $mf_array ) ) {
 			$mf_array = $alternate_source;
+
+			var_dump($mf_array);
 		}
 
 		// get all 'relevant' entries
@@ -479,7 +481,9 @@ class Linkbacks_MF2_Handler {
 			return false;
 		}
 
-		return wp_remote_retrieve_body( $response );
+		$body = wp_remote_retrieve_body( $response );
+
+		return json_decode( $body, true );
 	}
 
 	/**
