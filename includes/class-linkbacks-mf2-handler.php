@@ -144,6 +144,13 @@ class Linkbacks_MF2_Handler {
 		$parser   = new Parser( $commentdata['remote_source_original'], $source );
 		$mf_array = $parser->parse( true );
 
+		// check for rel-alternate links
+		if ( $alternate_source = self::get_alternate_source( $mf_array ) ) {
+			$mf_array = $alternate_source;
+
+			var_dump($mf_array);
+		}
+
 		// get all 'relevant' entries
 		$entries = self::get_entries( $mf_array );
 
@@ -431,6 +438,53 @@ class Linkbacks_MF2_Handler {
 		return $flat;
 	}
 
+	public static function has_alternate_url( $mf_array ) {
+		return (bool) self::get_alternate_url( $mf_array );
+	}
+
+	public static function get_alternate_url( $mf_array ) {
+		if ( ! array_key_exists( 'rel-urls', $mf_array ) ) {
+			return false;
+		}
+
+		foreach ( $mf_array['rel-urls'] as $url => $meta ) {
+			if (
+				'application/mf2+json' === trim( $meta['type'] ) &&
+				in_array( 'alternate', $meta['rels'], true ) &&
+				filter_var( $url, FILTER_VALIDATE_URL ) !== false
+			) {
+				return $url;
+			}
+		}
+
+		return false;
+	}
+
+	public static function get_alternate_source( $mf_array ) {
+		$url = self::get_alternate_url( $mf_array );
+
+		if ( ! $url ) {
+			return false;
+		}
+
+		$user_agent = apply_filters( 'http_headers_useragent', 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ) );
+		$args       = array(
+			'timeout'             => 100,
+			'limit_response_size' => 153600,
+			'redirection'         => 20,
+			'user-agent'          => "$user_agent; Semantic-Linkbacks/Webmention read rel-alternate source",
+		);
+
+		$response = wp_safe_remote_get( $url, $args );
+		// check if source is accessible
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+
+		return json_decode( $body, true );
+	}
 
 	/**
 	 * get all h-entry items

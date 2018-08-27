@@ -33,6 +33,11 @@
       "composer update",
       "bin/install-wp-tests.sh wordpress wordpress wordpress",
       "vendor/bin/phpunit"
+    ],
+    "test-local": [
+      "composer update",
+      "bin/install-wp-tests.sh wordpress wordpress wordpress 127.0.0.1 4.9.8 true",
+      "vendor/bin/phpunit"
     ]
   }
 }
