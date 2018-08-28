@@ -89,6 +89,7 @@ Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks]
 = 3.9.0 =
 
 * Support rel-alternate (mf2-json)
+* New php-mf2 version
 
 = 3.8.1 =
 

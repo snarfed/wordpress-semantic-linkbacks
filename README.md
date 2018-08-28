@@ -4,8 +4,8 @@
 **Tags:** webmention, pingback, trackback, linkback, microformats, comments, indieweb  
 **Requires at least:** 4.8.2  
 **Requires PHP:** 5.4  
-**Tested up to:** 4.9.7  
-**Stable tag:** 3.8.1  
+**Tested up to:** 4.9.8  
+**Stable tag:** 3.9.0  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -85,6 +85,11 @@ The plugin uses a locally cached version of the mystery icon normally provided b
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.9.0 ###
+
+* Support rel-alternate (mf2-json)
+* New php-mf2 version
 
 ### 3.8.1 ###
 
