@@ -39,6 +39,7 @@ class Linkbacks_Handler {
 		add_filter( 'comment_class', array( 'Linkbacks_Handler', 'comment_class' ), 10, 4 );
 		add_filter( 'wp_list_comments_args', array( 'Linkbacks_Handler', 'filter_comment_args' ) );
 		add_action( 'comment_form_before', array( 'Linkbacks_Handler', 'show_mentions' ) );
+		add_action( 'comment_form_comments_closed', array( 'Linkbacks_Handler', 'show_mentions' ) );
 
 		// Domain Approval Check
 		add_filter( 'semantic_linkbacks_commentdata', array( 'Linkbacks_Handler', 'domain_approval_check' ), 99, 1 );
