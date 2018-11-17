@@ -5,7 +5,7 @@
 **Requires at least:** 4.8.2  
 **Requires PHP:** 5.4  
 **Tested up to:** 4.9.8  
-**Stable tag:** 3.9.1  
+**Stable tag:** 3.9.2  
 **License:** MIT  
 **License URI:** http://opensource.org/licenses/MIT  
 
@@ -85,6 +85,10 @@ The plugin uses a locally cached version of the mystery icon normally provided b
 ## Changelog ##
 
 Project actively developed on Github at [pfefferle/wordpress-semantic-linkbacks](https://github.com/pfefferle/wordpress-semantic-linkbacks). Please file support issues there.
+
+### 3.9.2 ###
+* Only load MF2 parser inside parsing function to ensure bundled version is loaded
+* Update development dependencies
 
 ### 3.9.1 ###
 

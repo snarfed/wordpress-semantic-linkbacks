@@ -147,7 +147,8 @@ class Semantic_Linkbacks_Walker_Comment extends Walker_Comment {
 				<?php
 				comment_reply_link(
 					array_merge(
-						$args, array(
+						$args,
+						array(
 							'add_below' => 'div-comment',
 							'depth'     => $depth,
 							'max_depth' => $args['max_depth'],

@@ -5,7 +5,7 @@
  * Description: Semantic Linkbacks for WebMentions, Trackbacks and Pingbacks
  * Author: Matthias Pfefferle
  * Author URI: https://notiz.blog/
- * Version: 3.9.1
+ * Version: 3.9.2
  * License: MIT
  * License URI: http://opensource.org/licenses/MIT
  * Text Domain: semantic-linkbacks
@@ -28,9 +28,6 @@ class Semantic_Linkbacks_Plugin {
 	 * Initialize the plugin, registering WordPress hooks.
 	 */
 	public static function init() {
-		if ( ! class_exists( 'Mf2\Parser' ) ) {
-			require_once dirname( __FILE__ ) . '/vendor/mf2/mf2/Mf2/Parser.php';
-		}
 
 		if ( ! function_exists( 'Emoji\detect_emoji' ) ) {
 			require_once dirname( __FILE__ ) . '/vendor/p3k/emoji-detector/src/Emoji.php';
@@ -102,7 +99,9 @@ class Semantic_Linkbacks_Plugin {
 	public static function register_settings() {
 		$option_group = class_exists( 'Webmention_Plugin' ) ? 'webmention' : 'discussion';
 		register_setting(
-			$option_group, 'semantic_linkbacks_facepiles', array(
+			$option_group,
+			'semantic_linkbacks_facepiles',
+			array(
 				'type'         => 'string',
 				'description'  => __( 'Types to show in Facepiles', 'semantic-linkbacks' ),
 				'show_in_rest' => true,
@@ -110,7 +109,9 @@ class Semantic_Linkbacks_Plugin {
 			)
 		);
 		register_setting(
-			$option_group, 'semantic_linkbacks_facepiles_fold_limit', array(
+			$option_group,
+			'semantic_linkbacks_facepiles_fold_limit',
+			array(
 				'type'         => 'integer',
 				'description'  => __( 'Initial number of faces to show in facepiles', 'semantic-linkbacks' ),
 				'show_in_rest' => true,
@@ -134,9 +135,9 @@ class Semantic_Linkbacks_Plugin {
 		_e( 'For webmentions that do not have avatars you can pick from several locally served default avatars in the Discussion Settings', 'semantic-linkbacks' );
 
 		if ( ! function_exists( 'mb_internal_encoding' ) ) {
-?>
+			?>
 		<p class="notice notice-warning"><?php _e( 'This server does not have the php-mbstring package installed and Emoji reactions have been disabled.', 'semantic-linkbacks' ); ?></p>
-<?php
+			<?php
 		}
 	}
 
@@ -156,7 +157,8 @@ class Semantic_Linkbacks_Plugin {
 			$content = __(
 				'For received webmentions, pingbacks and trackbacks, such as responding to a post or article, this site stores information retrieved from the source
 				in order to provide a richer comment. Items such as author name and image, summary of the text, etc may be stored if present in the source and are
-				solely to provide richer comments. We will remove any of this on request.', 'semantic-linkbacks'
+				solely to provide richer comments. We will remove any of this on request.',
+				'semantic-linkbacks'
 			);
 			wp_add_privacy_policy_content(
 				'Semantic-Linkbacks',
