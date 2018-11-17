@@ -139,16 +139,18 @@ class Linkbacks_MF2_Handler {
 		} else { // Fallback to comment author url.
 			$source = $commentdata['comment_author_url'];
 		}
+		if ( ! class_exists( 'Mf2\Parser' ) ) {
+			require_once plugin_dir_path( __DIR__ ) . 'vendor/mf2/mf2/Mf2/Parser.php';
+		}
 
 		// parse source html
 		$parser   = new Parser( $commentdata['remote_source_original'], $source );
 		$mf_array = $parser->parse( true );
 
 		// check for rel-alternate links
-		if ( $alternate_source = self::get_alternate_source( $mf_array ) ) {
+		$alternate_source = self::get_alternate_source( $mf_array );
+		if ( $alternate_source ) {
 			$mf_array = $alternate_source;
-
-			var_dump($mf_array);
 		}
 
 		// get all 'relevant' entries

@@ -6,8 +6,15 @@
 	<file>./includes/</file>
 	<exclude-pattern>*/includes/*\.(inc|css|js|svg)</exclude-pattern>
 	<rule ref="PHPCompatibility"/>
+	<rule ref="PHPCompatibilityWP" />
+	<config name="minimum_supported_wp_version" value="4.7"/>
+	<rule ref="WordPress.WP.DeprecatedFunctions" />
 	<config name="testVersion" value="5.4-"/>
-	<rule ref="WordPress-Core" />
+	<rule ref="WordPress-Core">
+		<exclude name="WordPress.Security.ValidatedSanitizedInput" />
+		<exclude name="WordPress.Security.NonceVerification" />
+		<exclude name="WordPress.Security.EscapeOutput" />
+	</rule>
 	<rule ref="WordPress.Files.FileName">
 		<properties>
 			<property name="strict_class_file_names" value="false" />
@@ -16,15 +23,4 @@
 	<rule ref="WordPress-Extra" />
 	<rule ref="WordPress.WP.I18n"/>
 	<config name="text_domain" value="semantic-linkbacks"/>
-	<rule ref="WordPress-VIP">
-		<exclude name="WordPress.VIP.FileSystemWritesDisallow" />
-		<exclude name="WordPress.VIP.RestrictedFunctions" />
-		<exclude name="WordPress.VIP.RestrictedVariables" />
-		<exclude name="WordPress.VIP.SuperGlobalInputUsage" />
-		<exclude name="WordPress.VIP.ValidatedSanitizedInput" />
-		<exclude name="WordPress.CSRF.NonceVerification" />
-		<exclude name="WordPress.XSS.EscapeOutput" />
-		<exclude name="WordPress.VIP.PostsPerPage.posts_per_page" />
-		<exclude name="WordPress.VIP.PostsPerPage.posts_per_page_nopaging" />
-	</rule>
 </ruleset>
